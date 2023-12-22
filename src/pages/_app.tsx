@@ -1,24 +1,14 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+// src/pages/_app.tsx
 import { ChakraProvider } from '@chakra-ui/react';
+import '@/app/globals.css'; // Import global CSS
+import { MetaMaskProvider } from '../contexts/MetaMaskContext';
 
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata: Metadata = {
-  title: 'DeFi insurance platform for smart contract exploitation',
-  description: 'by Memo Khoury',
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-      <ChakraProvider>{children}</ChakraProvider></body>
-    </html>
-  )
+export default function MyApp({ Component, pageProps }) {
+    return (
+        <ChakraProvider>
+            <MetaMaskProvider>
+                <Component {...pageProps} />
+            </MetaMaskProvider>
+        </ChakraProvider>
+    );
 }
