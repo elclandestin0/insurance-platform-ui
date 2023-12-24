@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae58f35e-deb5-4d75-be05-db70c4e19c85" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/contexts/MetaMaskContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MetaMaskConnect.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MetaMaskConnect.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ethereum.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ethereum.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/page.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/page.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +37,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform-ui/README.md",
+    "last_opened_file_path": "/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -78,7 +76,7 @@
       <updated>1703252487671</updated>
       <workItem from="1703252488931" duration="66000" />
       <workItem from="1703252555522" duration="700000" />
-      <workItem from="1703253727541" duration="6571000" />
+      <workItem from="1703253727541" duration="13384000" />
     </task>
     <servers />
   </component>
