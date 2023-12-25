@@ -4,8 +4,10 @@ import MetaMaskConnect from "@/components/MetaMaskConnect";
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import Link from 'next/link';
 import styles from './page.module.css';
+import {ethers} from "ethers";
 
 export default function Home() {
+    const provider = new ethers.providers.JsonRpcProvider('https://kovan.optimism.io');
     const {isConnected} = useMetaMask();
     const gridTemplateColumns = useBreakpointValue({
         base: 'repeat(1, 1fr)',
