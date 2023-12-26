@@ -1,19 +1,30 @@
 // src/pages/index.tsx
 import {Box, Flex,Grid, Heading, useBreakpointValue} from '@chakra-ui/react';
+import React, { useEffect } from 'react';
 import MetaMaskConnect from "@/components/MetaMaskConnect";
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import Link from 'next/link';
-import styles from './page.module.css';
-import {ethers} from "ethers";
+import styles from '@/pages/page.module.css';
+import { policyMakerContract } from '@/utils/ethereum';
 
 export default function Home() {
-    const provider = new ethers.providers.JsonRpcProvider('https://kovan.optimism.io');
     const {isConnected} = useMetaMask();
-    const gridTemplateColumns = useBreakpointValue({
-        base: 'repeat(1, 1fr)',
-        md: 'repeat(2, 1fr)',
-        lg: 'repeat(4, 1fr)'
-    });
+    // Function to interact with the contract
+    const fetchDataFromContract = async () => {
+        try {
+            // Call a read function from your contract
+            const result = await policyMakerContract.isActive(0);
+            console.log(result);
+        } catch (error) {
+            console.error('Error fetching data from the contract:', error);
+        }
+    };
+
+    // Fetch data on component mount
+    useEffect(() => {
+        fetchDataFromContract();
+    }, []);
+
 
     // If MetaMask is not connected, show the landing page with the connect button
     if (!isConnected) {
