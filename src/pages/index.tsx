@@ -5,28 +5,16 @@ import MetaMaskConnect from "@/components/MetaMaskConnect";
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import Link from 'next/link';
 import styles from '@/pages/page.module.css';
-import { policyMakerContract } from '@/utils/ethereum';
 
-export default function Home() {
-    const {isConnected} = useMetaMask();
-    // Function to interact with the contract
-    const fetchDataFromContract = async () => {
-        try {
-            // Call a read function from your contract
-            const result = await policyMakerContract.isActive(0);
-            console.log(result);
-        } catch (error) {
-            console.error('Error fetching data from the contract:', error);
-        }
-    };
+const Home: React.FC = ()=> {
+    const {isConnected, account} = useMetaMask();
 
-    // Fetch data on component mount
     useEffect(() => {
-        fetchDataFromContract();
-    }, []);
+        console.log(isConnected);
+        console.log(account);
+    }, [isConnected, account]);
 
 
-    // If MetaMask is not connected, show the landing page with the connect button
     if (!isConnected) {
         return (
             <Flex
@@ -78,3 +66,5 @@ export default function Home() {
         </Flex>
     );
 }
+
+export default Home;
