@@ -6,11 +6,11 @@ import {
 } from '@chakra-ui/react';import styles from "@/pages/page.module.css";
 import {policyMakerContract} from '@/utils/ethereum';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
-import {ethers} from "ethers";
+import {ethers, BigNumber} from "ethers";
 
 const PolicyCreators: React.FC = () => {
     const {account} = useMetaMask();
-    const [policies, setPolicies] = useState([]);
+    const [policies, setPolicies]: any[] = useState([]);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [coverageAmount, setCoverageAmount] = useState('');
@@ -24,14 +24,34 @@ const PolicyCreators: React.FC = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
+    const fetchNextPolicyId = async (): Promise<number> => {
+        try {
+            const nextId = await policyMakerContract.nextPolicyId();
+            console.log(BigNumber.from(nextId).toNumber());
+            return BigNumber.from(nextId).toNumber();
+        } catch (error) {
+            console.error("Error fetching next policy ID:", error);
+            return 0;
+        }
+    };
+
     const fetchPolicies = async (): Promise<any[]> => {
         try {
-            return await policyMakerContract.policies(account);
+            const nextId = await fetchNextPolicyId();
+            const allPolicies = [];
+
+            for (let i = 0; i <= nextId; i++) {
+                const policy = await policyMakerContract.policies(i);
+                allPolicies.push(policy);
+            }
+
+            return allPolicies;
         } catch (error) {
-            console.log(error);
-            return [];
+            console.error("Error fetching all policies:", error);
+            return []; // or handle this case as needed
         }
-    }
+    };
+
 
     useEffect(() => {
         const getPolicies = async () => {
@@ -39,13 +59,12 @@ const PolicyCreators: React.FC = () => {
                 const fetchedPolicies = await fetchPolicies();
                 setPolicies(fetchedPolicies);
             } catch (err) {
-                setError(err.message);
+                // setError(err.message);
                 console.error('Error fetching policies:', err);
             }
         };
-
         getPolicies();
-    }, []); // Empty dependency array means this runs once when the component mounts
+    }, []);
 
     if (error) {
         return <Box>Error: {error}</Box>;
@@ -53,15 +72,16 @@ const PolicyCreators: React.FC = () => {
 
     const handleSubmit = async (event: Event) => {
         event.preventDefault();
+        console.log("clicking handle submit..");
             try {
                 // Parse values to appropriate format
-                const parsedCoverageAmount = ethers.parseEther(coverageAmount); // Assuming ether units
-                const parsedInitialPremiumFee = ethers.parseEther(initialPremiumFee); // Adjust based on the unit
-                const parsedInitialCoveragePercentage = ethers.parseUnits(initialCoveragePercentage, 0);
-                const parsedPremiumRate = ethers.parseEther(premiumRate);
-                const parsedDuration = ethers.parseUnits(duration, 0);
-                const parsedPenaltyRate = ethers.parseUnits(penaltyRate, 0);
-                const parsedMonthsGracePeriod = ethers.parseUnits(monthsGracePeriod, 0);
+                const parsedCoverageAmount = ethers.utils.parseEther(coverageAmount); // Assuming ether units
+                const parsedInitialPremiumFee = ethers.utils.parseEther(initialPremiumFee); // Adjust based on the unit
+                const parsedInitialCoveragePercentage = ethers.utils.parseUnits(initialCoveragePercentage, 0);
+                const parsedPremiumRate = ethers.utils.parseEther(premiumRate);
+                const parsedDuration = ethers.utils.parseUnits(duration, 0);
+                const parsedPenaltyRate = ethers.utils.parseUnits(penaltyRate, 0);
+                const parsedMonthsGracePeriod = ethers.utils.parseUnits(monthsGracePeriod, 0);
                 
                 console.log(parsedCoverageAmount);
                 // Call the createPolicy function of the smart contract
@@ -121,6 +141,9 @@ const PolicyCreators: React.FC = () => {
                             <Input placeholder="Duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
                             <Input placeholder="Penalty Rate" value={penaltyRate} onChange={(e) => setPenaltyRate(e.target.value)} />
                             <Input placeholder="Months Grace Period" value={monthsGracePeriod} onChange={(e) => setMonthsGracePeriod(e.target.value)} />
+                            <Button type="submit">
+                                Create Policy
+                            </Button>
                         </form>
 
                     </ModalBody>
@@ -128,9 +151,6 @@ const PolicyCreators: React.FC = () => {
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} onClick={closeModal}>
                             Close
-                        </Button>
-                        <Button variant="ghost" type="submit" form="form-id">
-                            Create Policy
                         </Button>
                     </ModalFooter>
                 </ModalContent>
