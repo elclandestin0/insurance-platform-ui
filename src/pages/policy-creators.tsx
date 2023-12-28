@@ -36,15 +36,19 @@ const PolicyCreators: React.FC = () => {
             const nextIdBigNumber = await policyMakerContract.nextPolicyId();
             console.log(nextIdBigNumber);
             if (nextIdBigNumber != null) {
-                for (let i = 1; i < 2; i++) {
+                for (let i = 3; i < 4; i++) {
                     const policy = await policyMakerContract.policies(i.toString());
                     console.log(policy);
                     // Format the policy details correctly
                     const formattedPolicy = {
                         id: i,
-                        coverageAmount: ethers.utils.formatEther(policy.coverageAmount),
-                        premiumRate: ethers.utils.formatEther(policy.premiumRate),
-                        duration: policy.duration, 
+                        coverageAmount: policy.coverageAmount.toString(),
+                        initialPremiumFee: policy.initialPremiumFee.toString(),
+                        initialCoveragePercentage: policy.initialCoveragePercentage.toString(),
+                        premiumRate: policy.premiumRate.toString(),
+                        duration: Number(policy.duration),
+                        penaltyRate: Number(policy.penaltyRate),
+                        monthsGracePeriod: Number(policy.monthsGracePeriod),
                     };
 
                     allPolicies.push(formattedPolicy);
@@ -85,14 +89,14 @@ const PolicyCreators: React.FC = () => {
         console.log("clicking handle submit..");
             try {
                 // Parse values to appropriate format
-                const parsedCoverageAmount = ethers.utils.parseEther(coverageAmount); // Assuming ether units
-                const parsedInitialPremiumFee = ethers.utils.parseEther(initialPremiumFee); // Adjust based on the unit
-                const parsedInitialCoveragePercentage = ethers.utils.parseUnits(initialCoveragePercentage, 0);
-                const parsedPremiumRate = ethers.utils.parseEther(premiumRate);
-                const parsedDuration = ethers.utils.parseUnits(duration, 0);
-                const parsedPenaltyRate = ethers.utils.parseUnits(penaltyRate, 0);
-                const parsedMonthsGracePeriod = ethers.utils.parseUnits(monthsGracePeriod, 0);
-                
+                const parsedCoverageAmount = ethers.BigNumber.from(coverageAmount);
+                const parsedInitialPremiumFee = ethers.BigNumber.from(initialPremiumFee);
+                const parsedInitialCoveragePercentage = ethers.BigNumber.from(initialCoveragePercentage);
+                const parsedPremiumRate = ethers.BigNumber.from(premiumRate);
+                const parsedDuration = Number(duration);
+                const parsedPenaltyRate = Number(penaltyRate);
+                const parsedMonthsGracePeriod = Number(monthsGracePeriod);
+
                 console.log(parsedCoverageAmount);
                 // Call the createPolicy function of the smart contract
                 const tx = await policyMakerContract.createPolicy(
