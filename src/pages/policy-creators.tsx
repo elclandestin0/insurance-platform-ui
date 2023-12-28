@@ -5,7 +5,7 @@ import {
     ModalCloseButton, ModalBody, ModalFooter, Input
 } from '@chakra-ui/react';
 import styles from "@/pages/page.module.css";
-import { useContracts } from '@/utils/ethereum';
+import { useContracts } from '@/hooks/useContracts';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import {ethers, BigNumber} from "ethers";
 
@@ -26,33 +26,41 @@ const PolicyCreators: React.FC = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    const fetchNextPolicyId = async (): Promise<number> => {
-        try {
-            const nextId = await policyMakerContract.nextPolicyId();
-            console.log(BigNumber.from(nextId).toNumber());
-            return BigNumber.from(nextId).toNumber();
-        } catch (error) {
-            console.error("Error fetching next policy ID:", error);
-            return 0;
-        }
-    };
-
     const fetchPolicies = async (): Promise<any[]> => {
+        if (!policyMakerContract) {
+            console.error("Contract not initialized.");
+            return [];
+        }
         try {
-            const nextId = await fetchNextPolicyId();
             const allPolicies = [];
+            const nextIdBigNumber = await policyMakerContract.nextPolicyId();
+            console.log(nextIdBigNumber);
+            if (nextIdBigNumber != null) {
+                for (let i = 1; i < 2; i++) {
+                    const policy = await policyMakerContract.policies(i.toString());
+                    console.log(policy);
+                    // Format the policy details correctly
+                    const formattedPolicy = {
+                        id: i,
+                        coverageAmount: ethers.utils.formatEther(policy.coverageAmount),
+                        premiumRate: ethers.utils.formatEther(policy.premiumRate),
+                        duration: policy.duration, 
+                    };
 
-            for (let i = 0; i <= nextId; i++) {
-                const policy = await policyMakerContract.policies(i);
-                allPolicies.push(policy);
+                    allPolicies.push(formattedPolicy);
+                }
+
+                return allPolicies;
+            } else {
+                console.error("nextPolicyId did not return a BigNumber.");
+                return [];
             }
-
-            return allPolicies;
         } catch (error) {
             console.error("Error fetching all policies:", error);
             return []; // or handle this case as needed
         }
     };
+
 
 
     useEffect(() => {
@@ -66,7 +74,7 @@ const PolicyCreators: React.FC = () => {
             }
         };
         getPolicies();
-    }, []);
+    }, [policyMakerContract ]);
 
     if (error) {
         return <Box>Error: {error}</Box>;
@@ -116,11 +124,14 @@ const PolicyCreators: React.FC = () => {
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
                         {policies.map((policy, index) => (
                             <Box key={index} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}>
-                                <Text fontWeight="bold">Policy ID: {policy.id}</Text>
+                                <Text fontWeight="bold">Policy ID: {policy.id.toString()}</Text> {/* Assuming policy.id is a BigNumber */}
                                 <Divider my={3}/>
                                 {/* Render other policy details here */}
-                                <Text>Coverage Amount: {ethers.utils.formatUnits(policy.coverageAmount, 18)}</Text>
+                                <Text>Coverage Amount: {policy.coverageAmount}</Text>
                                 {/* Add more policy details as needed */}
+                                <Text>Duration: {policy.duration} days</Text> {/* Assuming policy.duration is a BigNumber */}
+                                <Text>Premium Rate: {policy.premiumRate.toString()} ETH</Text>
+                                {/* ...and so on for the other attributes */}
                             </Box>
                         ))}
                     </SimpleGrid>

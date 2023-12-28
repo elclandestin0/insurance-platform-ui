@@ -37,8 +37,7 @@ const Home: React.FC = ()=> {
         <Flex className={styles.main} height="100vh" alignItems="center" justifyContent="center">
             <Grid templateColumns="repeat(2, 1fr)" gap={10}>
                 <Link href="/policy-owners" passHref>
-                    <Box as="a"
-                         borderWidth="1px"
+                    <Box borderWidth="1px"
                          borderRadius="xl"
                          overflow="hidden"
                          p={10} // Increased padding
@@ -50,8 +49,7 @@ const Home: React.FC = ()=> {
                     </Box>
                 </Link>
                 <Link href="/policy-creators" passHref>
-                    <Box as="a"
-                         borderWidth="1px"
+                    <Box borderWidth="1px"
                          borderRadius="xl"
                          overflow="hidden"
                          p={10}
