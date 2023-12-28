@@ -3,12 +3,14 @@ import {
     Box, Flex, Text, SimpleGrid, Divider, Button,
     Modal, ModalOverlay, ModalContent, ModalHeader,
     ModalCloseButton, ModalBody, ModalFooter, Input
-} from '@chakra-ui/react';import styles from "@/pages/page.module.css";
-import {policyMakerContract} from '@/utils/ethereum';
+} from '@chakra-ui/react';
+import styles from "@/pages/page.module.css";
+import { useContracts } from '@/utils/ethereum';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import {ethers, BigNumber} from "ethers";
 
 const PolicyCreators: React.FC = () => {
+    const { policyMakerContract } = useContracts();
     const {account} = useMetaMask();
     const [policies, setPolicies]: any[] = useState([]);
     const [error, setError] = useState(null);
@@ -117,7 +119,7 @@ const PolicyCreators: React.FC = () => {
                                 <Text fontWeight="bold">Policy ID: {policy.id}</Text>
                                 <Divider my={3}/>
                                 {/* Render other policy details here */}
-                                <Text>Coverage Amount: {policy.coverageAmount}</Text>
+                                <Text>Coverage Amount: {ethers.utils.formatUnits(policy.coverageAmount, 18)}</Text>
                                 {/* Add more policy details as needed */}
                             </Box>
                         ))}
