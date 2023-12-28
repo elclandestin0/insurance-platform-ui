@@ -36,7 +36,7 @@ const PolicyCreators: React.FC = () => {
             const nextIdBigNumber = await policyMakerContract.nextPolicyId();
             console.log(nextIdBigNumber);
             if (nextIdBigNumber != null) {
-                for (let i = 3; i < 4; i++) {
+                for (let i = 1; i < nextIdBigNumber; i++) {
                     const policy = await policyMakerContract.policies(i.toString());
                     console.log(policy);
                     // Format the policy details correctly
