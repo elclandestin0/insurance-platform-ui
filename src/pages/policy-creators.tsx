@@ -8,12 +8,12 @@ import styles from "@/pages/page.module.css";
 import { useContracts } from '@/hooks/useContracts';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import {ethers, BigNumber} from "ethers";
+import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
 
 const PolicyCreators: React.FC = () => {
     const { policyMakerContract } = useContracts();
+    const { policies, isLoading, error } = usePolicyContract();
     const {account} = useMetaMask();
-    const [policies, setPolicies]: any[] = useState([]);
-    const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [coverageAmount, setCoverageAmount] = useState('');
     const [initialPremiumFee, setInitialPremiumFee] = useState('');
@@ -25,58 +25,8 @@ const PolicyCreators: React.FC = () => {
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-
-    const fetchPolicies = async (): Promise<any[]> => {
-        if (!policyMakerContract) {
-            console.error("Contract not initialized.");
-            return [];
-        }
-        try {
-            const allPolicies = [];
-            const nextIdBigNumber = await policyMakerContract.nextPolicyId();
-            console.log(nextIdBigNumber);
-            if (nextIdBigNumber != null) {
-                for (let i = 1; i < nextIdBigNumber; i++) {
-                    const policy = await policyMakerContract.policies(i.toString());
-                    console.log(policy);
-                    // Format the policy details correctly
-                    const formattedPolicy = {
-                        id: i,
-                        coverageAmount: policy.coverageAmount.toString(),
-                        initialPremiumFee: policy.initialPremiumFee.toString(),
-                        initialCoveragePercentage: policy.initialCoveragePercentage.toString(),
-                        premiumRate: policy.premiumRate.toString(),
-                        duration: Number(policy.duration),
-                        penaltyRate: Number(policy.penaltyRate),
-                        monthsGracePeriod: Number(policy.monthsGracePeriod),
-                    };
-
-                    allPolicies.push(formattedPolicy);
-                }
-
-                return allPolicies;
-            } else {
-                console.error("nextPolicyId did not return a BigNumber.");
-                return [];
-            }
-        } catch (error) {
-            console.error("Error fetching all policies:", error);
-            return []; // or handle this case as needed
-        }
-    };
-
-    useEffect(() => {
-        const getPolicies = async () => {
-            try {
-                const fetchedPolicies = await fetchPolicies();
-                setPolicies(fetchedPolicies);
-            } catch (err) {
-                // setError(err.message);
-                console.error('Error fetching policies:', err);
-            }
-        };
-        getPolicies();
-    }, [policyMakerContract ]);
+    
+    
 
     if (error) {
         return <Box>Error: {error}</Box>;
