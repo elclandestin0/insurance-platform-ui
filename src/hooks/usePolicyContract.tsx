@@ -31,10 +31,11 @@ const usePolicyContract = () => {
                         monthsGracePeriod: Number(policy.monthsGracePeriod),
                     };
 
-                    allPolicies.push(formattedPolicy)
-                    setPolicies(allPolicies);
-                    setIsLoading(false); // Update loading state
+                    allPolicies.push(formattedPolicy); // Update loading state
                 }
+
+                setPolicies(allPolicies);
+                setIsLoading(false);
 
                 return allPolicies;
             } else {

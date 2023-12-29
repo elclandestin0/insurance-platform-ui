@@ -2,8 +2,8 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import '@/app/globals.css'; // Import global CSS
 import { MetaMaskProvider } from '../contexts/MetaMaskContext';
-
 import { extendTheme } from '@chakra-ui/react';
+import NavBar from "@/components/NavBar";
 
 const theme: Record<string, any> = extendTheme({
     fonts: {
@@ -17,6 +17,7 @@ export default function MyApp({ Component, pageProps }) {
     return (
         <ChakraProvider theme={theme}>
             <MetaMaskProvider>
+                <NavBar/>
                 <Component {...pageProps} />
             </MetaMaskProvider>
         </ChakraProvider>

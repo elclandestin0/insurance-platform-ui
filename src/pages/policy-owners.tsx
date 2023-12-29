@@ -6,6 +6,7 @@ import styles from "@/pages/page.module.css";
 import { useMetaMask } from "@/contexts/MetaMaskContext";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
 
+
 const PolicyOwners: React.FC = () => {
     const { policies, isLoading, error } = usePolicyContract();
     const { account } = useMetaMask();
