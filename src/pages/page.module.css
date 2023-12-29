@@ -7,7 +7,7 @@
   min-height: 100vh;
   background-color: #243b55; /* Deep navy blue for trust and professionalism */
   color: #ffffff; /* White color for text to ensure contrast and readability */
-  font-family: 'Open Sans', sans-serif; /* Robust and clear font for financial platforms */
+  /*font-family: 'Open Sans', sans-serif; !* Robust and clear font for financial platforms *!*/
 }
 
 .description {

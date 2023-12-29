@@ -110,9 +110,7 @@ const PolicyCreators: React.FC = () => {
                                 Create Policy
                             </Button>
                         </form>
-
                     </ModalBody>
-
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} onClick={closeModal}>
                             Close

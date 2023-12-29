@@ -1,13 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useContracts } from './useContracts'; // Import your useContracts hook
+import { useMetaMask } from '@/contexts/MetaMaskContext'; // Import the MetaMask context
+
 
 const usePolicyContract = () => {
     const { policyMakerContract } = useContracts();
+    const { account } = useMetaMask(); // Get the current account from MetaMask
     const [policies, setPolicies] = useState([]);
+    const [ownedPolicies, setOwnedPolicies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Function to fetch policies
+    const checkPolicyOwnership = useCallback(async (policyId: number, accountAddress: string) => {
+        if (!policyMakerContract || !policyId || !accountAddress) {
+            return false;
+        }
+        try {
+            const isOwner = await policyMakerContract.policyOwners(policyId, accountAddress);
+            return isOwner;
+        } catch (err) {
+            console.error('Error checking policy ownership:', err);
+            return false;
+        }
+    }, [policyMakerContract]);
+    
     const fetchPolicies = async (): Promise<any[]> => {
         if (!policyMakerContract) {
             console.error("Contract not initialized.");
@@ -60,7 +76,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error };
+    return { policies, isLoading, error, checkPolicyOwnership };
 };
 
 export default usePolicyContract;
