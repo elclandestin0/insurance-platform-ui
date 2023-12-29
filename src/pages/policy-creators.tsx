@@ -65,8 +65,6 @@ const PolicyCreators: React.FC = () => {
         }
     };
 
-
-
     useEffect(() => {
         const getPolicies = async () => {
             try {
