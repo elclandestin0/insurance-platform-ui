@@ -11,7 +11,7 @@ const usePolicyContract = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const checkPolicyOwnership = useCallback(async (policyId: number, accountAddress: string) => {
+    const checkPolicyOwnership = useCallback(async (policyId: number, accountAddress: String) => {
         if (!policyMakerContract || !policyId || !accountAddress) {
             return false;
         }

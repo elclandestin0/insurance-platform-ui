@@ -44,8 +44,7 @@ const PolicyCreators: React.FC = () => {
                 const parsedDuration = Number(duration);
                 const parsedPenaltyRate = Number(penaltyRate);
                 const parsedMonthsGracePeriod = Number(monthsGracePeriod);
-
-                console.log(parsedCoverageAmount);
+                
                 // Call the createPolicy function of the smart contract
                 const tx = await policyMakerContract.createPolicy(
                     parsedCoverageAmount,
@@ -78,12 +77,9 @@ const PolicyCreators: React.FC = () => {
                             <Box key={index} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}>
                                 <Text fontWeight="bold">Policy ID: {policy.id.toString()}</Text> {/* Assuming policy.id is a BigNumber */}
                                 <Divider my={3}/>
-                                {/* Render other policy details here */}
                                 <Text>Coverage Amount: {policy.coverageAmount}</Text>
-                                {/* Add more policy details as needed */}
                                 <Text>Duration: {policy.duration} days</Text> {/* Assuming policy.duration is a BigNumber */}
                                 <Text>Premium Rate: {policy.premiumRate.toString()} ETH</Text>
-                                {/* ...and so on for the other attributes */}
                             </Box>
                         ))}
                     </SimpleGrid>

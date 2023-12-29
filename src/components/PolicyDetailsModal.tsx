@@ -1,5 +1,5 @@
 // components/PolicyDetailsModal.tsx
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Modal,
@@ -8,10 +8,12 @@ import {
     ModalHeader,
     ModalCloseButton,
     ModalBody,
-    Text,
+    Text, Divider,
 } from '@chakra-ui/react';
 
 import usePolicyContract from '@/hooks/usePolicyContract';
+import {useMetaMask} from "@/contexts/MetaMaskContext";
+import PolicyCTAComponent from "@/components/PolicyCTAComponent";
 
 // Define the structure of a single policy
 interface Policy {
@@ -29,11 +31,35 @@ interface Policy {
 interface PolicyDetailsModalProps {
     isOpen: boolean;
     onClose: () => void;
-    selectedPolicy: Policy | null; // selectedPolicy can be a Policy object or null
+    selectedPolicy: Policy | null;
+    checkOwnership: (policyId: number, accountAddress: String) => Promise<boolean>;
 }
 
-const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose, selectedPolicy }) => {
-    const { checkPolicyOwnership } = usePolicyContract();
+const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose, selectedPolicy, checkOwnership}) => {
+    const [isOwner, setIsOwner] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const {account} = useMetaMask();
+
+    useEffect(() => {
+        const checkOwnershipStatus = async () => {
+            if (account) {
+                setIsLoading(true);
+                try {
+                    const ownershipStatus = await checkOwnership(selectedPolicy.id, account);
+                    console.log("account " + account + " ownership status of this policy :" + ownershipStatus);
+                    setIsOwner(ownershipStatus);
+                } catch (error) {
+                    console.error('Error checking policy ownership:', error);
+                    // Handle error appropriately
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+        checkOwnershipStatus();
+    }, [selectedPolicy, account]);
+    
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
             <ModalOverlay />
@@ -66,6 +92,8 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
                             <Text fontSize="md" mb={2}>
                                 <Text as="span" fontWeight="bold">Months Grace Period:</Text> {selectedPolicy.monthsGracePeriod}
                             </Text>
+                            <Divider my={3}/>
+                            <PolicyCTAComponent ownership={isOwner}/>
                         </Box>
                     )}
                 </ModalBody>

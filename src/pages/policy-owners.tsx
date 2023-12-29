@@ -24,6 +24,7 @@ const PolicyOwners: React.FC = () => {
     const {account} = useMetaMask();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [selectedPolicy, setSelectedPolicy] = useState(null);
+    const { checkPolicyOwnership } = usePolicyContract();
 
     const handlePolicyClick = (policy) => {
         setSelectedPolicy(policy);
@@ -64,6 +65,7 @@ const PolicyOwners: React.FC = () => {
                 isOpen={isOpen}
                 onClose={onClose}
                 selectedPolicy={selectedPolicy}
+                checkOwnership={checkPolicyOwnership}
             />
         </Flex>
     );
