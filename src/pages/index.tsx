@@ -1,9 +1,9 @@
 // src/pages/index.tsx
-import {Box, Flex,Grid, Heading, useBreakpointValue} from '@chakra-ui/react';
+import {Box, Flex, Grid, Heading, Link, useBreakpointValue} from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import MetaMaskConnect from "@/components/MetaMaskConnect";
 import {useMetaMask} from "@/contexts/MetaMaskContext";
-import Link from 'next/link';
+import NextLink from 'next/link';
 import styles from '@/pages/page.module.css';
 
 const Home: React.FC = ()=> {
@@ -36,30 +36,34 @@ const Home: React.FC = ()=> {
     return (
         <Flex className={styles.main} height="100vh" alignItems="center" justifyContent="center">
             <Grid templateColumns="repeat(2, 1fr)" gap={10}>
-                <Link href="/policy-owners" passHref>
-                    <Box borderWidth="1px"
-                         borderRadius="xl"
-                         overflow="hidden"
-                         p={10} // Increased padding
-                         textAlign="center"
-                         w="lg" // Increased width
-                         h="lg" // Increased height
-                         _hover={{ bg: "blue.100" }}>
-                        Policy Owners
-                    </Box>
-                </Link>
-                <Link href="/policy-creators" passHref>
-                    <Box borderWidth="1px"
-                         borderRadius="xl"
-                         overflow="hidden"
-                         p={10}
-                         textAlign="center"
-                         w="lg"
-                         h="lg"
-                         _hover={{ bg: "blue.100" }}>
-                        Policy Creators
-                    </Box>
-                </Link>
+                <NextLink href="/policy-owners" passHref>
+                    <Link>
+                        <Box borderWidth="1px"
+                             borderRadius="xl"
+                             overflow="hidden"
+                             p={10}
+                             textAlign="center"
+                             w="lg"
+                             h="lg"
+                             _hover={{ bg: "blue.100" }}>
+                            Policy Owners
+                        </Box>
+                    </Link>
+                </NextLink>
+                <NextLink href="/policy-creators" passHref>
+                    <Link>
+                        <Box borderWidth="1px"
+                             borderRadius="xl"
+                             overflow="hidden"
+                             p={10}
+                             textAlign="center"
+                             w="lg"
+                             h="lg"
+                             _hover={{ bg: "blue.100" }}>
+                            Policy Creators
+                        </Box>
+                    </Link>
+                </NextLink>
             </Grid>
         </Flex>
     );

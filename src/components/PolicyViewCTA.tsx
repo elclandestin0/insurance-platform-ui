@@ -2,16 +2,23 @@ import React from 'react';
 import { Button, Flex, Divider, Text, Icon } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
 
-const PolicyCTAButton = ({ isOwner, initialPremium }) => {
-    const buttonBgColor = isOwner ? 'blue.500' : 'purple.500'; // or any color from your theme
-    const buttonHoverColor = isOwner ? 'blue.600' : 'purple.600'; // for hover state
+const PolicyCTAButton = ({ isOwner, initialPremium, policyId, onPayPremium }) => {
+    const buttonBgColor = isOwner ? 'blue.500' : 'purple.500';
+    const buttonHoverColor = isOwner ? 'blue.600' : 'purple.600';
+
+    const handleButtonClick = () => {
+        if (!isOwner) {
+            onPayPremium(policyId, initialPremium);
+        }
+    };
 
     return (
         <Button
-            colorScheme={isOwner ? 'blue' : 'purple'} // Chakra UI color scheme
+            colorScheme={isOwner ? 'blue' : 'purple'}
             backgroundColor={buttonBgColor}
             _hover={{ bg: buttonHoverColor }}
             p={4}
+            onClick={handleButtonClick}
         >
             <Flex direction="row" align="center" justify="center" width="100%">
                 {isOwner ? (

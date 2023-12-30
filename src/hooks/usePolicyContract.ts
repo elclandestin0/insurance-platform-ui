@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useContracts } from './useContracts'; // Import your useContracts hook
-import { useMetaMask } from '@/contexts/MetaMaskContext'; // Import the MetaMask context
+import { useMetaMask } from '@/contexts/MetaMaskContext';
+import {ethers} from "ethers"; // Import the MetaMask context
 
 
 const usePolicyContract = () => {
@@ -32,6 +33,7 @@ const usePolicyContract = () => {
         try {
             const allPolicies = [];
             const nextIdBigNumber = await policyMakerContract.nextPolicyId();
+            console.log(nextIdBigNumber);
             if (nextIdBigNumber != null) {
                 for (let i = 1; i < nextIdBigNumber; i++) {
                     const policy = await policyMakerContract.policies(i.toString());
@@ -65,6 +67,25 @@ const usePolicyContract = () => {
         
     };
 
+    const payInitialPremium = useCallback(async (policyId: any, premiumAmount: any) => {
+        if (!policyMakerContract || !policyId || !premiumAmount) {
+            console.error("Contract not initialized or invalid parameters.");
+            return;
+        }
+        try {
+            // Assuming you have ethers.js or a similar library
+            console.log(premiumAmount);
+            const transaction = await policyMakerContract.payInitialPremium(policyId, {
+                from: account,
+                value: ethers.utils.parseEther(premiumAmount)
+            });
+            await transaction.wait(); // Wait for the transaction to be mined
+            console.log('Premium paid successfully');
+        } catch (err) {
+            console.error('Error paying initial premium:', err);
+        }
+    }, [policyMakerContract, account]);
+
     useEffect(() => {
         if (policyMakerContract) {
             setIsLoading(true); // Set loading state before fetching
@@ -76,7 +97,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium };
 };
 
 export default usePolicyContract;

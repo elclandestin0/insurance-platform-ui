@@ -36,13 +36,14 @@ interface PolicyDetailsModalProps {
 }
 
 const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose, selectedPolicy, checkOwnership}) => {
+    const { payInitialPremium } = usePolicyContract();
     const [isOwner, setIsOwner] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const {account} = useMetaMask();
 
     useEffect(() => {
         const checkOwnershipStatus = async () => {
-            if (account) {
+            if (account && selectedPolicy) {
                 setIsLoading(true);
                 try {
                     const ownershipStatus = await checkOwnership(selectedPolicy.id, account);
@@ -58,6 +59,10 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
         };
         checkOwnershipStatus();
     }, [selectedPolicy, account]);
+
+    const handlePayPremium = async (id, amount) => {
+        await payInitialPremium(id, amount);
+    };
     
 
     return (
@@ -93,6 +98,8 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
                             <PolicyViewCTA
                                 isOwner={isOwner}
                                 initialPremium={selectedPolicy ? selectedPolicy.initialPremiumFee : '0'}
+                                policyId={selectedPolicy.id}
+                                onPayPremium={handlePayPremium}
                             />
                         </Box>
                     )}

@@ -16,8 +16,8 @@ const NavBar = () => {
                     </Link>
                 </NextLink>
                 <NextLink href="/policy-creators" passHref>
-                        Policy Creators
                     <Link p="4"  fontSize="16px" _hover={{ textDecoration: 'none', bg: 'blue.700' }}>
+                        Policy Creators
                     </Link>
                 </NextLink>
             </Flex>
