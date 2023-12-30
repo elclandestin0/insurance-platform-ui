@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useContracts } from './useContracts'; // Import your useContracts hook
-import { useMetaMask } from '@/contexts/MetaMaskContext';
+import {useCallback, useEffect, useState} from 'react';
+import {useContracts} from './useContracts'; // Import your useContracts hook
+import {useMetaMask} from '@/contexts/MetaMaskContext';
 import {ethers} from "ethers"; // Import the MetaMask context
 
 
@@ -33,7 +33,6 @@ const usePolicyContract = () => {
         try {
             const allPolicies = [];
             const nextIdBigNumber = await policyMakerContract.nextPolicyId();
-            console.log(nextIdBigNumber);
             if (nextIdBigNumber != null) {
                 for (let i = 1; i < nextIdBigNumber; i++) {
                     const policy = await policyMakerContract.policies(i.toString());
@@ -66,6 +65,29 @@ const usePolicyContract = () => {
         }
         
     };
+    
+    const fetchPolicy = useCallback(async (policyId: String, address: String) => {
+        if (!policyMakerContract || !policyId || !address) {
+            return null;
+        }
+        try {
+            const policy = await policyMakerContract.policies(policyId);
+            return {
+                id: policyId,
+                coverageAmount: policy.coverageAmount.toString(),
+                initialPremiumFee: policy.initialPremiumFee.toString(),
+                initialCoveragePercentage: policy.initialCoveragePercentage.toString(),
+                premiumRate: policy.premiumRate.toString(),
+                duration: Number(policy.duration),
+                penaltyRate: Number(policy.penaltyRate),
+                monthsGracePeriod: Number(policy.monthsGracePeriod),
+            };
+
+        } catch (err) {
+            console.error('Error checking for policy: ', err);
+            return false;
+        }
+    }, [policyMakerContract]);
 
     const payInitialPremium = useCallback(async (policyId: any, premiumAmount: any) => {
         if (!policyMakerContract || !policyId || !premiumAmount) {
@@ -97,7 +119,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy };
 };
 
 export default usePolicyContract;

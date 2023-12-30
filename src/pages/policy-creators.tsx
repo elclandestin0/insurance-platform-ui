@@ -34,18 +34,21 @@ const PolicyCreators: React.FC = () => {
 
     const handleSubmit = async (event: Event) => {
         event.preventDefault();
-        console.log("clicking handle submit..");
+        const coverageAmountInWei = ethers.utils.parseEther(coverageAmount); // Convert 0.1 ETH to Wei
+        const initialFeeInWei = ethers.utils.parseEther(initialPremiumFee); // Convert 0.1 ETH to Wei
+        
             try {
                 // Parse values to appropriate format
-                const parsedCoverageAmount = ethers.BigNumber.from(coverageAmount);
-                const parsedInitialPremiumFee = ethers.BigNumber.from(initialPremiumFee);
+                const parsedCoverageAmount = ethers.utils.parseEther(coverageAmount);
+                const parsedInitialPremiumFee = ethers.utils.parseEther(initialPremiumFee);
                 const parsedInitialCoveragePercentage = ethers.BigNumber.from(initialCoveragePercentage);
-                const parsedPremiumRate = ethers.BigNumber.from(premiumRate);
+                const parsedPremiumRate = ethers.utils.parseEther(premiumRate);
                 const parsedDuration = Number(duration);
                 const parsedPenaltyRate = Number(penaltyRate);
                 const parsedMonthsGracePeriod = Number(monthsGracePeriod);
                 
-                // Call the createPolicy function of the smart contract
+                
+                // Call the createPolicy function of the smart contract 
                 const tx = await policyMakerContract.createPolicy(
                     parsedCoverageAmount,
                     parsedInitialPremiumFee,
@@ -77,9 +80,9 @@ const PolicyCreators: React.FC = () => {
                             <Box key={index} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}>
                                 <Text fontWeight="bold">Policy ID: {policy.id.toString()}</Text> {/* Assuming policy.id is a BigNumber */}
                                 <Divider my={3}/>
-                                <Text>Coverage Amount: {policy.coverageAmount}</Text>
+                                <Text>Coverage Amount: {ethers.utils.formatEther(policy.coverageAmount)} ETH </Text>
                                 <Text>Duration: {policy.duration} days</Text> {/* Assuming policy.duration is a BigNumber */}
-                                <Text>Premium Rate: {policy.premiumRate.toString()} ETH</Text>
+                                <Text>Premium Rate: {ethers.utils.formatEther(policy.premiumRate)} ETH</Text>
                             </Box>
                         ))}
                     </SimpleGrid>

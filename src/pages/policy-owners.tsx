@@ -16,7 +16,8 @@ import {
 import styles from "@/pages/page.module.css";
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import usePolicyContract from '@/hooks/usePolicyContract';
-import PolicyDetailsModal from "@/components/PolicyDetailsModal"; // Import the custom hook
+import PolicyDetailsModal from "@/components/PolicyDetailsModal";
+import {ethers} from "ethers"; // Import the custom hook
 
 
 const PolicyOwners: React.FC = () => {
@@ -51,9 +52,9 @@ const PolicyOwners: React.FC = () => {
                                  onClick={() => handlePolicyClick(policy)} cursor="pointer">
                                 <Text fontWeight="bold">Policy ID: {policy.id.toString()}</Text>
                                 <Divider my={3}/>
-                                <Text>Coverage Amount: {policy.coverageAmount}</Text>
+                                <Text>Coverage Amount: {ethers.utils.formatEther(policy.coverageAmount)} ETH</Text>
                                 <Text>Duration: {policy.duration} days</Text>
-                                <Text>Premium Rate: {policy.premiumRate.toString()} ETH</Text>
+                                <Text>Premium Rate: {ethers.utils.formatEther(policy.premiumRate)} ETH</Text>
                             </Box>
                         ))}
                     </SimpleGrid>

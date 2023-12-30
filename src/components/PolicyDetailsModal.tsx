@@ -14,6 +14,7 @@ import {
 import usePolicyContract from '@/hooks/usePolicyContract';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import PolicyViewCTA from "@/components/PolicyViewCTA";
+import {ethers} from "ethers";
 
 // Define the structure of a single policy
 interface Policy {
@@ -47,11 +48,9 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
                 setIsLoading(true);
                 try {
                     const ownershipStatus = await checkOwnership(selectedPolicy.id, account);
-                    console.log("account " + account + " ownership status of this policy :" + ownershipStatus);
                     setIsOwner(ownershipStatus);
                 } catch (error) {
                     console.error('Error checking policy ownership:', error);
-                    // Handle error appropriately
                 } finally {
                     setIsLoading(false);
                 }
@@ -77,13 +76,13 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
                     {selectedPolicy && (
                         <Box>
                             <Text fontSize="md" mb={2}>
-                                <Text as="span" fontWeight="bold">Coverage Amount:</Text> {selectedPolicy.coverageAmount}
+                                <Text as="span" fontWeight="bold">Coverage Amount:</Text> {ethers.utils.formatEther(selectedPolicy.coverageAmount)}
                             </Text>
                             <Text fontSize="md" mb={2}>
                                 <Text as="span" fontWeight="bold">Initial Coverage Percentage:</Text> {selectedPolicy.initialCoveragePercentage}
                             </Text>
                             <Text fontSize="md" mb={2}>
-                                <Text as="span" fontWeight="bold">Premium Rate:</Text> {selectedPolicy.premiumRate}
+                                <Text as="span" fontWeight="bold">Premium Rate:</Text> {ethers.utils.formatEther(selectedPolicy.premiumRate)}
                             </Text>
                             <Text fontSize="md" mb={2}>
                                 <Text as="span" fontWeight="bold">Duration:</Text> {selectedPolicy.duration} days
@@ -97,7 +96,7 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
                             <Divider my={3}/>
                             <PolicyViewCTA
                                 isOwner={isOwner}
-                                initialPremium={selectedPolicy ? selectedPolicy.initialPremiumFee : '0'}
+                                initialPremium={selectedPolicy ? ethers.utils.formatEther(selectedPolicy.initialPremiumFee) : '0'}
                                 policyId={selectedPolicy.id}
                                 onPayPremium={handlePayPremium}
                             />
