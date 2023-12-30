@@ -13,7 +13,7 @@ import {
 
 import usePolicyContract from '@/hooks/usePolicyContract';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
-import PolicyCTAComponent from "@/components/PolicyCTAComponent";
+import PolicyViewCTA from "@/components/PolicyViewCTA";
 
 // Define the structure of a single policy
 interface Policy {
@@ -63,7 +63,7 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
             <ModalOverlay />
-            <ModalContent borderRadius="10px" bg="#f7fafc">
+            <ModalContent borderRadius="10px" bg="#FDF6EC">
                 <ModalHeader fontSize="lg" fontWeight="bold" textAlign="center" bg="#3182ce" color="#ffffff" borderTopRadius="10px">
                     Policy Details
                 </ModalHeader>
@@ -73,9 +73,6 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
                         <Box>
                             <Text fontSize="md" mb={2}>
                                 <Text as="span" fontWeight="bold">Coverage Amount:</Text> {selectedPolicy.coverageAmount}
-                            </Text>
-                            <Text fontSize="md" mb={2}>
-                                <Text as="span" fontWeight="bold">Initial Premium Fee:</Text> {selectedPolicy.initialPremiumFee}
                             </Text>
                             <Text fontSize="md" mb={2}>
                                 <Text as="span" fontWeight="bold">Initial Coverage Percentage:</Text> {selectedPolicy.initialCoveragePercentage}
@@ -93,7 +90,10 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({ isOpen, onClose
                                 <Text as="span" fontWeight="bold">Months Grace Period:</Text> {selectedPolicy.monthsGracePeriod}
                             </Text>
                             <Divider my={3}/>
-                            <PolicyCTAComponent ownership={isOwner}/>
+                            <PolicyViewCTA
+                                isOwner={isOwner}
+                                initialPremium={selectedPolicy ? selectedPolicy.initialPremiumFee : '0'}
+                            />
                         </Box>
                     )}
                 </ModalBody>
