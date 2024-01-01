@@ -95,7 +95,7 @@ const PolicyManager = () => {
                     </Grid>
                     <Divider my={4}/>
                     <>
-                        <PayPremiumCTA premiumRate={ethers.utils.formatEther(policy.premiumRate)} onPayPremium={handlePayPremium}/>
+                        <PayPremiumCTA premiumRate={ethers.utils.formatEther(policy.premiumRate)} onPayPremium={handlePayPremium} policyId={policyId}/>
                     </>
                 </Box>
             ) : (

@@ -2,13 +2,13 @@ import React from 'react';
 import { Button, Flex, Divider, Text, Icon } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
 
-const PayPremiumCTA = ({ premiumRate, onPayPremium }) => {
+const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
     // Define button colors
     const buttonBgColor = 'green.500';
     const buttonHoverColor = 'green.600';
 
     const handleButtonClick = () => {
-        onPayPremium(policyId, initialPremium);
+        onPayPremium(policyId, premiumRate);
     };
 
     return (

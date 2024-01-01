@@ -116,7 +116,7 @@ const usePolicyContract = () => {
         try {
             // Assuming you have ethers.js or a similar library
             console.log(premiumAmount);
-            const transaction = await policyMakerContract.payPremiun(policyId, {
+            const transaction = await policyMakerContract.payPremium(policyId, {
                 from: account,
                 value: ethers.utils.parseEther(premiumAmount)
             });
