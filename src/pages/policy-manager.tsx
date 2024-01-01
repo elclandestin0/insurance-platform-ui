@@ -4,14 +4,17 @@ import usePolicyContract from '@/hooks/usePolicyContract';
 import { ethers } from "ethers";
 import { useMetaMask } from "@/contexts/MetaMaskContext";
 import {
-    Flex, Box, Text, Divider, VStack, Heading, Stat, StatLabel, StatNumber, StatGroup, Grid
+    Flex, Box, Text, Divider, VStack, Heading, Stat, StatLabel, StatNumber, StatGroup, Grid, Icon
 } from '@chakra-ui/react';
+import {FaEthereum} from "react-icons/fa";
+import PayPremiumCTA from "@/components/PayPremiumCTA";
 
 const PolicyManager = () => {
     const router = useRouter();
     const { policyId } = router.query;
     const { fetchPolicy } = usePolicyContract();
     const { account } = useMetaMask();
+    const { payPremium } = usePolicyContract();
     const [policy, setPolicy] = useState(null);
 
     useEffect(() => {
@@ -24,6 +27,10 @@ const PolicyManager = () => {
 
         loadPolicy();
     }, [policyId, fetchPolicy, account]);
+
+    const handlePayPremium = async (id, amount) => {
+        await payPremium(id, amount);
+    };
 
     return (
         <Flex
@@ -59,11 +66,11 @@ const PolicyManager = () => {
                     <Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)' }} gap={6}>
                         <Stat>
                             <StatLabel>Coverage Amount</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} ETH</StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum} color="currentcolor" /></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Initial Premium Fee</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.initialPremiumFee)} ETH</StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.initialPremiumFee)} <Icon as={FaEthereum} color="currentcolor" /></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Initial Coverage Percentage</StatLabel>
@@ -71,7 +78,7 @@ const PolicyManager = () => {
                         </Stat>
                         <Stat>
                             <StatLabel>Premium Rate</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.premiumRate)} ETH</StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.premiumRate)} <Icon as={FaEthereum} ml={1} color="currentcolor" /></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Duration</StatLabel>
@@ -86,6 +93,10 @@ const PolicyManager = () => {
                             <StatNumber>{policy.monthsGracePeriod}</StatNumber>
                         </Stat>
                     </Grid>
+                    <Divider my={4}/>
+                    <>
+                        <PayPremiumCTA premiumRate={ethers.utils.formatEther(policy.premiumRate)} onPayPremium={handlePayPremium}/>
+                    </>
                 </Box>
             ) : (
                 <Text>Loading policy details...</Text>

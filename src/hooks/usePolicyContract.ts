@@ -108,6 +108,27 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const payPremium = useCallback(async (policyId: any, premiumAmount: any) => {
+        if (!policyMakerContract || !policyId || !premiumAmount) {
+            console.error("Contract not initialized or invalid parameters.");
+            return;
+        }
+        try {
+            // Assuming you have ethers.js or a similar library
+            console.log(premiumAmount);
+            const transaction = await policyMakerContract.payPremiun(policyId, {
+                from: account,
+                value: ethers.utils.parseEther(premiumAmount)
+            });
+            await transaction.wait(); // Wait for the transaction to be mined
+            console.log('Premium paid successfully');
+        } catch (err) {
+            console.error('Error paying initial premium:', err);
+        }
+    }, [policyMakerContract, account]);
+    
+    
+
     useEffect(() => {
         if (policyMakerContract) {
             setIsLoading(true); // Set loading state before fetching
@@ -119,7 +140,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium };
 };
 
 export default usePolicyContract;

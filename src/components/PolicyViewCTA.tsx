@@ -3,7 +3,7 @@ import { Button, Flex, Divider, Text, Icon } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
 import { useRouter } from 'next/router'; // Import useRouter
 
-const PolicyCTAButton = ({ isOwner, initialPremium, policyId, onPayPremium }) => {
+const PolicyViewCTA = ({ isOwner, initialPremium, policyId, onPayPremium }) => {
     const buttonBgColor = isOwner ? 'blue.500' : 'purple.500';
     const buttonHoverColor = isOwner ? 'blue.600' : 'purple.600';
     const router = useRouter(); // Initialize useRouter
@@ -42,4 +42,4 @@ const PolicyCTAButton = ({ isOwner, initialPremium, policyId, onPayPremium }) =>
     );
 };
 
-export default PolicyCTAButton;
+export default PolicyViewCTA;
