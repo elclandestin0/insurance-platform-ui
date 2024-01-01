@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Flex, Divider, Text, Icon } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
+import { ethers } from 'ethers';
 
 const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
     // Define button colors
@@ -23,7 +24,7 @@ const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
                 <Text>Pay</Text>
                 <Divider orientation="vertical" height="20px" mx={2} borderColor="currentcolor" />
                 <Flex align="center">
-                    <Text fontSize="md" fontWeight="bold">{premiumRate}</Text>
+                    <Text fontSize="md" fontWeight="bold">{ethers.utils.formatEther(premiumRate)}</Text>
                     <Icon as={FaEthereum} ml={1} color="currentcolor" />
                 </Flex>
             </Flex>

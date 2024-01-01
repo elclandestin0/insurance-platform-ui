@@ -11,14 +11,15 @@ const usePolicyContract = () => {
     const [ownedPolicies, setOwnedPolicies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [calculatedPremium, setCalculatedPremium] = useState('');
+    
+    
     const checkPolicyOwnership = useCallback(async (policyId: number, accountAddress: String) => {
         if (!policyMakerContract || !policyId || !accountAddress) {
             return false;
         }
         try {
-            const isOwner = await policyMakerContract.policyOwners(policyId, accountAddress);
-            return isOwner;
+            return await policyMakerContract.policyOwners(policyId, accountAddress);
         } catch (err) {
             console.error('Error checking policy ownership:', err);
             return false;
@@ -36,7 +37,6 @@ const usePolicyContract = () => {
             if (nextIdBigNumber != null) {
                 for (let i = 1; i < nextIdBigNumber; i++) {
                     const policy = await policyMakerContract.policies(i.toString());
-                    console.log(policy);
                     const formattedPolicy = {
                         id: i,
                         coverageAmount: policy.coverageAmount.toString(),
@@ -126,8 +126,20 @@ const usePolicyContract = () => {
             console.error('Error paying initial premium:', err);
         }
     }, [policyMakerContract, account]);
-    
-    
+
+    const calculatePremium = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId || !account) {
+            console.error("Contract not initialized or missing parameters.");
+            return;
+        }
+        try {
+            const premium = await policyMakerContract.calculatePremium(policyId);
+            // Format the calculated premium for display if necessary
+            setCalculatedPremium(ethers.utils.formatEther(premium));
+        } catch (err) {
+            console.error('Error calculating premium:', err);
+        }
+    }, [policyMakerContract, account]);
 
     useEffect(() => {
         if (policyMakerContract) {
@@ -140,7 +152,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, calculatedPremium };
 };
 
 export default usePolicyContract;

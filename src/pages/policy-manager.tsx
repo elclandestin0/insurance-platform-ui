@@ -8,13 +8,14 @@ import {
 } from '@chakra-ui/react';
 import {FaEthereum} from "react-icons/fa";
 import PayPremiumCTA from "@/components/PayPremiumCTA";
+import { truncateToDecimalPlace } from '@/utils/helpers'; // Import the helper function
 
 const PolicyManager = () => {
     const router = useRouter();
     const { policyId } = router.query;
     const { fetchPolicy } = usePolicyContract();
     const { account } = useMetaMask();
-    const { payPremium } = usePolicyContract();
+    const { payPremium, calculatePremium, calculatedPremium } = usePolicyContract();
     const [policy, setPolicy] = useState(null);
 
     useEffect(() => {
@@ -22,16 +23,18 @@ const PolicyManager = () => {
             if (policyId && account) {
                 const policyDetails = await fetchPolicy(policyId, account);
                 setPolicy(policyDetails);
+                await calculatePremium(policyId);
+                console.log(ethers.utils.formatEther(calculatedPremium));
             }
         };
 
         loadPolicy();
-    }, [policyId, fetchPolicy, account]);
+    }, [policyId, fetchPolicy, account, calculatePremium, calculatedPremium]);
 
     const handlePayPremium = async (id, amount) => {
         await payPremium(id, amount);
     };
-
+    
     return (
         <Flex
             width="100vw"
@@ -54,7 +57,7 @@ const PolicyManager = () => {
                     boxShadow="lg"
                 >
                     <Flex justify="space-between" align="center">
-                        <Heading as="h1" size="xl">Policy Details</Heading>
+                        <Heading as="h1" size="xl">Policy Manager</Heading>
                         <StatGroup>
                             <Stat>
                                 <StatLabel>ID</StatLabel>
@@ -92,11 +95,16 @@ const PolicyManager = () => {
                             <StatLabel>Months Grace Period</StatLabel>
                             <StatNumber>{policy.monthsGracePeriod}</StatNumber>
                         </Stat>
+                        <Divider my={4}/>
+                        {/*<Stat>*/}
+                        {/*    <StatLabel>Calculated Premium</StatLabel>*/}
+                        {/*    <StatNumber>{ethers.utils.formatEther(calculatedPremium)} <Icon as={FaEthereum} color="currentcolor" /></StatNumber>*/}
+                        {/*</Stat>*/}
                     </Grid>
                     <Divider my={4}/>
-                    <>
-                        <PayPremiumCTA premiumRate={ethers.utils.formatEther(policy.premiumRate)} onPayPremium={handlePayPremium} policyId={policyId}/>
-                    </>
+                    {/*<>*/}
+                    {/*    <PayPremiumCTA premiumRate={calculatedPremium} onPayPremium={handlePayPremium} policyId={policyId}/>*/}
+                    {/*</>*/}
                 </Box>
             ) : (
                 <Text>Loading policy details...</Text>
