@@ -1,42 +1,96 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import usePolicyContract from '@/hooks/usePolicyContract';
-import {ethers} from "ethers";
-import {useMetaMask} from "@/contexts/MetaMaskContext"; // Import the usePolicyContract hook
+import { ethers } from "ethers";
+import { useMetaMask } from "@/contexts/MetaMaskContext";
+import {
+    Flex, Box, Text, Divider, VStack, Heading, Stat, StatLabel, StatNumber, StatGroup, Grid
+} from '@chakra-ui/react';
 
 const PolicyManager = () => {
     const router = useRouter();
-    const { policyId } = router.query; // Retrieve the policyId from query parameters
-    const { fetchPolicy } = usePolicyContract(); // Initialize the usePolicyContract hook
+    const { policyId } = router.query;
+    const { fetchPolicy } = usePolicyContract();
     const { account } = useMetaMask();
     const [policy, setPolicy] = useState(null);
 
     useEffect(() => {
         const loadPolicy = async () => {
-            if (policyId) {
+            if (policyId && account) {
                 const policyDetails = await fetchPolicy(policyId, account);
                 setPolicy(policyDetails);
             }
         };
 
         loadPolicy();
-    }, [policyId, fetchPolicy]);
+    }, [policyId, fetchPolicy, account]);
 
-    // Render your component with policy and owner details
     return (
-        <div>
+        <Flex
+            width="100vw"
+            justifyContent="center"
+            p={4}
+            overflow="auto"
+            align="start"
+            height="auto"
+            mt={10}
+        >
             {policy ? (
-                <div>
-                    {/* Render policy details here */}
-                    <h1>Policy Details</h1>
-                    <p>ID: {policy.id}</p>
-                    <p>Coverage Amount: {ethers.utils.formatEther(policy.coverageAmount)}</p>
-                    {/* Add more details as needed */}
-                </div>
+                <Box
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    p={6}
+                    width="80%"
+                    maxWidth="1000px"
+                    bg="white"
+                    boxShadow="lg"
+                >
+                    <Flex justify="space-between" align="center">
+                        <Heading as="h1" size="xl">Policy Details</Heading>
+                        <StatGroup>
+                            <Stat>
+                                <StatLabel>ID</StatLabel>
+                                <StatNumber>{policy.id}</StatNumber>
+                            </Stat>
+                        </StatGroup>
+                    </Flex>
+                    <Divider my={4}/>
+                    <Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)' }} gap={6}>
+                        <Stat>
+                            <StatLabel>Coverage Amount</StatLabel>
+                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} ETH</StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel>Initial Premium Fee</StatLabel>
+                            <StatNumber>{ethers.utils.formatEther(policy.initialPremiumFee)} ETH</StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel>Initial Coverage Percentage</StatLabel>
+                            <StatNumber>{policy.initialCoveragePercentage}%</StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel>Premium Rate</StatLabel>
+                            <StatNumber>{ethers.utils.formatEther(policy.premiumRate)} ETH</StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel>Duration</StatLabel>
+                            <StatNumber>{policy.duration} days</StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel>Penalty Rate</StatLabel>
+                            <StatNumber>{policy.penaltyRate}%</StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel>Months Grace Period</StatLabel>
+                            <StatNumber>{policy.monthsGracePeriod}</StatNumber>
+                        </Stat>
+                    </Grid>
+                </Box>
             ) : (
-                <p>Loading policy details...</p>
+                <Text>Loading policy details...</Text>
             )}
-        </div>
+        </Flex>
     );
 };
 
