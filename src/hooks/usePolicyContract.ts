@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useState} from 'react';
-import {useContracts} from './useContracts'; // Import your useContracts hook
-import {useMetaMask} from '@/contexts/MetaMaskContext';
-import {ethers} from "ethers"; // Import the MetaMask context
+import { useCallback, useEffect, useState } from 'react';
+import { useContracts } from './useContracts'; // Import your useContracts hook
+import { useMetaMask } from '@/contexts/MetaMaskContext';
+import { ethers } from "ethers"; // Import the MetaMask context
 
 
 const usePolicyContract = () => {
@@ -11,7 +11,7 @@ const usePolicyContract = () => {
     const [ownedPolicies, setOwnedPolicies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    
+
     const checkPolicyOwnership = useCallback(async (policyId: number, accountAddress: String) => {
         if (!policyMakerContract || !policyId || !accountAddress) {
             return false;
@@ -23,7 +23,7 @@ const usePolicyContract = () => {
             return false;
         }
     }, [policyMakerContract]);
-    
+
     const fetchPolicies = async (): Promise<any[]> => {
         if (!policyMakerContract) {
             console.error("Contract not initialized.");
@@ -61,9 +61,9 @@ const usePolicyContract = () => {
             console.error("Error fetching all policies:", error);
             return [];
         }
-        
+
     };
-    
+
     const fetchPolicy = useCallback(async (policyId: String, address: String) => {
         if (!policyMakerContract || !policyId || !address) {
             return null;
@@ -137,6 +137,19 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const fetchPremiumsPaid = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.premiumsPaid(policyId, account);
+        } catch (err) {
+            console.error('Error retrieving premiums paid:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
     useEffect(() => {
         if (policyMakerContract) {
             setIsLoading(true); // Set loading state before fetching
@@ -148,7 +161,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid };
 };
 
 export default usePolicyContract;

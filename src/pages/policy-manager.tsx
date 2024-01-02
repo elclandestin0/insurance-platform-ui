@@ -13,24 +13,30 @@ import { truncateToDecimalPlace } from '@/utils/helpers'; // Import the helper f
 const PolicyManager = () => {
     const router = useRouter();
     const { policyId } = router.query;
-    const { fetchPolicy } = usePolicyContract();
+    const { fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid } = usePolicyContract();
     const { account } = useMetaMask();
-    const { payPremium, calculatePremium } = usePolicyContract();
     const [policy, setPolicy] = useState(null);
     const [calculatedPremium, setCalculatedPremium] = useState(null);
+    const [premiumsPaid, setPremiumsPaid] = useState(null);
 
     useEffect(() => {
-        const loadPolicy = async () => {
+        const loadData = async () => {
             if (policyId && account) {
-                const policyDetails = await fetchPolicy(policyId, account);
+                // Load policy data 
+                const policyDetails: any = await fetchPolicy(policyId, account);
                 setPolicy(policyDetails);
+
+                // load premium data
                 const calcPremium: any = await calculatePremium(policyId);
                 setCalculatedPremium(calcPremium);
+
+                const premiumsPaid: any = await fetchPremiumsPaid(policyId);
+                setPremiumsPaid(premiumsPaid);
             }
         };
 
-        loadPolicy();
-    }, [policyId, fetchPolicy, account, calculatePremium, calculatedPremium]);
+        loadData();
+    }, [policyId, fetchPolicy, account, calculatePremium, calculatedPremium, fetchPremiumsPaid, premiumsPaid]);
 
     const handlePayPremium = async (id, amount) => {
         await payPremium(id, amount);
@@ -96,10 +102,13 @@ const PolicyManager = () => {
                             <StatLabel>Months Grace Period</StatLabel>
                             <StatNumber>{policy.monthsGracePeriod}</StatNumber>
                         </Stat>
-                        <Divider my={4}/>
                         <Stat>
                             <StatLabel>Calculated Premium</StatLabel>
                             <StatNumber>{calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel> Premiums Paid </StatLabel>
+                            <StatNumber>{premiumsPaid ? ethers.utils.formatEther(premiumsPaid) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
                         </Stat>
                     </Grid>
                     <Divider my={4}/>
