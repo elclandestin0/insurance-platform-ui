@@ -9,7 +9,8 @@ const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
     const buttonHoverColor = 'green.600';
 
     const handleButtonClick = () => {
-        onPayPremium(policyId, premiumRate);
+        console.log(premiumRate);
+        onPayPremium(policyId, ethers.utils.formatEther(premiumRate));
     };
 
     return (

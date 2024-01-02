@@ -11,8 +11,6 @@ const usePolicyContract = () => {
     const [ownedPolicies, setOwnedPolicies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [calculatedPremium, setCalculatedPremium] = useState('');
-    
     
     const checkPolicyOwnership = useCallback(async (policyId: number, accountAddress: String) => {
         if (!policyMakerContract || !policyId || !accountAddress) {
@@ -133,9 +131,7 @@ const usePolicyContract = () => {
             return;
         }
         try {
-            const premium = await policyMakerContract.calculatePremium(policyId);
-            // Format the calculated premium for display if necessary
-            setCalculatedPremium(ethers.utils.formatEther(premium));
+            return await policyMakerContract.calculatePremium(policyId, account);
         } catch (err) {
             console.error('Error calculating premium:', err);
         }
@@ -152,7 +148,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, calculatedPremium };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium };
 };
 
 export default usePolicyContract;

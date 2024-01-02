@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import usePolicyContract from '@/hooks/usePolicyContract';
-import { ethers } from "ethers";
+import {BigNumber, ethers} from "ethers";
 import { useMetaMask } from "@/contexts/MetaMaskContext";
 import {
     Flex, Box, Text, Divider, VStack, Heading, Stat, StatLabel, StatNumber, StatGroup, Grid, Icon
@@ -15,16 +15,17 @@ const PolicyManager = () => {
     const { policyId } = router.query;
     const { fetchPolicy } = usePolicyContract();
     const { account } = useMetaMask();
-    const { payPremium, calculatePremium, calculatedPremium } = usePolicyContract();
+    const { payPremium, calculatePremium } = usePolicyContract();
     const [policy, setPolicy] = useState(null);
+    const [calculatedPremium, setCalculatedPremium] = useState(null);
 
     useEffect(() => {
         const loadPolicy = async () => {
             if (policyId && account) {
                 const policyDetails = await fetchPolicy(policyId, account);
                 setPolicy(policyDetails);
-                await calculatePremium(policyId);
-                console.log(ethers.utils.formatEther(calculatedPremium));
+                const calcPremium: any = await calculatePremium(policyId);
+                setCalculatedPremium(calcPremium);
             }
         };
 
@@ -96,15 +97,13 @@ const PolicyManager = () => {
                             <StatNumber>{policy.monthsGracePeriod}</StatNumber>
                         </Stat>
                         <Divider my={4}/>
-                        {/*<Stat>*/}
-                        {/*    <StatLabel>Calculated Premium</StatLabel>*/}
-                        {/*    <StatNumber>{ethers.utils.formatEther(calculatedPremium)} <Icon as={FaEthereum} color="currentcolor" /></StatNumber>*/}
-                        {/*</Stat>*/}
+                        <Stat>
+                            <StatLabel>Calculated Premium</StatLabel>
+                            <StatNumber>{calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                        </Stat>
                     </Grid>
                     <Divider my={4}/>
-                    {/*<>*/}
-                    {/*    <PayPremiumCTA premiumRate={calculatedPremium} onPayPremium={handlePayPremium} policyId={policyId}/>*/}
-                    {/*</>*/}
+                    <PayPremiumCTA premiumRate={calculatedPremium} onPayPremium={handlePayPremium} policyId={policyId}/>
                 </Box>
             ) : (
                 <Text>Loading policy details...</Text>
