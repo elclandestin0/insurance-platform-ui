@@ -9,8 +9,8 @@ const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
     const buttonHoverColor = 'green.600';
 
     const handleButtonClick = () => {
-        console.log(premiumRate);
         onPayPremium(policyId, ethers.utils.formatEther(premiumRate));
+        console.log(ethers.utils.formatEther(premiumRate));
     };
 
     return (
@@ -25,7 +25,8 @@ const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
                 <Text>Pay</Text>
                 <Divider orientation="vertical" height="20px" mx={2} borderColor="currentcolor" />
                 <Flex align="center">
-                    <Text fontSize="md" fontWeight="bold">{ethers.utils.formatEther(premiumRate)}</Text>
+                    
+                    <Text fontSize="md" fontWeight="bold">{premiumRate ? ethers.utils.formatEther(premiumRate) : '0.0'}</Text>
                     <Icon as={FaEthereum} ml={1} color="currentcolor" />
                 </Flex>
             </Flex>
