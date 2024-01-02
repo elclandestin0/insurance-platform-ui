@@ -150,6 +150,19 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const fetchLastPaidTime = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.lastPremiumPaidTime(policyId, account);
+        } catch (err) {
+            console.error('Error retrieving premiums paid:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
     useEffect(() => {
         if (policyMakerContract) {
             setIsLoading(true); // Set loading state before fetching
@@ -161,7 +174,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime };
 };
 
 export default usePolicyContract;

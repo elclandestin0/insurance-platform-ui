@@ -8,16 +8,17 @@ import {
 } from '@chakra-ui/react';
 import {FaEthereum} from "react-icons/fa";
 import PayPremiumCTA from "@/components/PayPremiumCTA";
-import { truncateToDecimalPlace } from '@/utils/helpers'; // Import the helper function
+import { convertEpochToReadableDate } from '@/utils/helpers'; // Import the helper function
 
 const PolicyManager = () => {
     const router = useRouter();
     const { policyId } = router.query;
-    const { fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid } = usePolicyContract();
+    const { fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime } = usePolicyContract();
     const { account } = useMetaMask();
     const [policy, setPolicy] = useState(null);
     const [calculatedPremium, setCalculatedPremium] = useState(null);
     const [premiumsPaid, setPremiumsPaid] = useState(null);
+    const [lastPaidTime, setLastPaidTime] = useState(null);
 
     useEffect(() => {
         const loadData = async () => {
@@ -32,6 +33,9 @@ const PolicyManager = () => {
 
                 const premiumsPaid: any = await fetchPremiumsPaid(policyId);
                 setPremiumsPaid(premiumsPaid);
+
+                const lastPaidTime: any = await fetchLastPaidTime(policyId);
+                setLastPaidTime(lastPaidTime);
             }
         };
 
@@ -109,6 +113,10 @@ const PolicyManager = () => {
                         <Stat>
                             <StatLabel> Premiums Paid </StatLabel>
                             <StatNumber>{premiumsPaid ? ethers.utils.formatEther(premiumsPaid) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel> Last Paid time </StatLabel>
+                            <StatNumber>{lastPaidTime ? convertEpochToReadableDate(lastPaidTime) : '0.0'}</StatNumber>
                         </Stat>
                     </Grid>
                     <Divider my={4}/>
