@@ -14,28 +14,27 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import styles from "@/pages/page.module.css";
-import {useMetaMask} from "@/contexts/MetaMaskContext";
 import usePolicyContract from '@/hooks/usePolicyContract';
 import PolicyDetailsModal from "@/components/PolicyDetailsModal";
 import {ethers} from "ethers"; // Import the custom hook
 
 
-const PolicyOwners: React.FC = () => {
-    const {policies, isLoading, error} = usePolicyContract();
-    const {account} = useMetaMask();
+const PolicyOwners: React.FC = ({policy}) => {
+    const {policies, error, fetchSubscribers} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [selectedPolicy, setSelectedPolicy] = useState(null);
     const { checkPolicyOwnership } = usePolicyContract();
+
+
+    if (error) {
+        return <Box>Error: {error}</Box>;
+    }
 
     const handlePolicyClick = (policy) => {
         setSelectedPolicy(policy);
         onOpen();
     };
 
-
-    if (error) {
-        return <Box>Error: {error}</Box>;
-    }
 
     return (
         <Flex className={styles.main}

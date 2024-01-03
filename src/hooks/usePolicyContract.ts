@@ -163,6 +163,37 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const fetchSubscribers = useCallback(async (policyId: any) => {
+        const subscribersSet = new Set();
+        if (!policyMakerContract || !policyId) {
+            return;
+        }
+
+        try {
+            // convert policyId to hex string and then pad it to 32 bytes
+            const policyIdTopic = ethers.utils.hexZeroPad(ethers.utils.hexlify(policyId), 32);
+            const filter = {
+                fromBlock: 0,
+                toBlock: 'latest',
+                topics: [
+                    ethers.utils.id("PremiumPaid(uint32,address,uint256,bool)"),
+                    policyIdTopic,
+                ],
+            };
+
+            const logs = await policyMakerContract.provider.getLogs(filter);
+            logs.forEach((log) => {
+                // Decode the log to get the claimant's address
+                const decoded = policyMakerContract.interface.decodeEventLog("PremiumPaid", log.data, log.topics);
+                subscribersSet.add(decoded.claimant);
+            });
+        } catch (err) {
+            console.error('Error fetching subscribers:', err);
+        }
+
+        return Array.from(subscribersSet);
+    }, [policyMakerContract]);
+
     useEffect(() => {
         if (policyMakerContract) {
             setIsLoading(true); // Set loading state before fetching
@@ -174,7 +205,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers };
 };
 
 export default usePolicyContract;

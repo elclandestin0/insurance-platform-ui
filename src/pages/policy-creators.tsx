@@ -9,11 +9,11 @@ import { useContracts } from '@/hooks/useContracts';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import {ethers, BigNumber} from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
+import { useRouter } from 'next/router';
 
 const PolicyCreators: React.FC = () => {
     const { policyMakerContract } = useContracts();
-    const { policies, isLoading, error } = usePolicyContract();
-    const {account} = useMetaMask();
+    const { policies, error } = usePolicyContract();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [coverageAmount, setCoverageAmount] = useState('');
     const [initialPremiumFee, setInitialPremiumFee] = useState('');
@@ -22,10 +22,14 @@ const PolicyCreators: React.FC = () => {
     const [duration, setDuration] = useState('');
     const [penaltyRate, setPenaltyRate] = useState('');
     const [monthsGracePeriod, setMonthsGracePeriod] = useState('');
+    const router = useRouter(); // Initialize useRouter
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
     
+    const handleButtonClick = (policyId: any) => {
+        router.push(`/policy-settings?policyId=${policyId}`);
+    };
     
 
     if (error) {
@@ -34,8 +38,6 @@ const PolicyCreators: React.FC = () => {
 
     const handleSubmit = async (event: Event) => {
         event.preventDefault();
-        const coverageAmountInWei = ethers.utils.parseEther(coverageAmount); // Convert 0.1 ETH to Wei
-        const initialFeeInWei = ethers.utils.parseEther(initialPremiumFee); // Convert 0.1 ETH to Wei
         
             try {
                 // Parse values to appropriate format
@@ -77,7 +79,8 @@ const PolicyCreators: React.FC = () => {
                 {policies.length > 0 ? (
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
                         {policies.map((policy, index) => (
-                            <Box key={index} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}>
+                            <Box key={index} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}
+                                onClick={() => handleButtonClick(policy.id)} cursor="pointer">
                                 <Text fontWeight="bold">Policy ID: {policy.id.toString()}</Text> {/* Assuming policy.id is a BigNumber */}
                                 <Divider my={3}/>
                                 <Text>Coverage Amount: {ethers.utils.formatEther(policy.coverageAmount)} ETH </Text>
