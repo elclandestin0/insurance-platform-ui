@@ -137,7 +137,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
-    const fetchPremiumsPaid = useCallback(async (policyId: any) => {
+    const fetchPremiumsPaid = useCallback(async (policyId: any, account: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
             return ethers.BigNumber.from(0);
@@ -171,7 +171,7 @@ const usePolicyContract = () => {
 
         try {
             // convert policyId to hex string and then pad it to 32 bytes
-            const policyIdTopic = ethers.utils.hexZeroPad(ethers.utils.hexlify(policyId), 32);
+            const policyIdTopic = ethers.utils.hexZeroPad(ethers.BigNumber.from(policyId).toHexString(), 32);
             const filter = {
                 fromBlock: 0,
                 toBlock: 'latest',

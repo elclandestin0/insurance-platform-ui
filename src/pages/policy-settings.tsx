@@ -15,32 +15,40 @@ const PolicySettings: React.FC = () => {
     
     useEffect(() => {
         if (!isLoading) {
-            console.log(policyId);
             let subscribers = 0;
             let totalPremiums = ethers.BigNumber.from(0);
-
-            // const fetchPremiums = async () => {
-            //         const policyPremiums = await fetchPremiumsPaid(policy.id);
-            //         totalPremiums = totalPremiums.add(policyPremiums);
-            // };
             
             const fetchAllSubscribers = async (policyId: any) => {
                 subscribers = await fetchSubscribers(policyId);
-                console.log(subscribers);
             }
+
+            const fetchPremiums = async () => {
+                let totalPremiums = 0;
+                if (!totalSubscribers) return;
+                for (let i = 0; i < totalSubscribers.length; i++) {
+                    totalPremiums += await fetchPremiumsPaid(policyId, totalSubscribers[i]);
+                }
+                console.log(totalPremiums);
+             };
 
             // fetchPremiums().catch((err) => {
             //     console.error('Error fetching premiums:', err);
             // });
 
-            fetchAllSubscribers(policyId).catch((err) => {
+            fetchAllSubscribers(policyId)
+            .then(()=> {
+                setTotalSubscribers(subscribers.length);
+            }).then(()=>{
+                fetchPremiums();
+            })
+            .catch((err) => {
+                console.log(subscribers.length);
                 console.error('Error fetching subscribers:', err);
             });
             
-            setTotalSubscribers(subscribers);
             setTotalPremiumsPaid(totalPremiums);
         }
-    }, [isLoading, fetchPremiumsPaid, policyId]);
+    }, [isLoading, fetchPremiumsPaid, fetchSubscribers, policyId, totalSubscribers]);
 
     if (isLoading) {
         return <Box>Loading...</Box>;

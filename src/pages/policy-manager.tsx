@@ -31,7 +31,7 @@ const PolicyManager = () => {
                 const calcPremium: any = await calculatePremium(policyId);
                 setCalculatedPremium(calcPremium);
 
-                const premiumsPaid: any = await fetchPremiumsPaid(policyId);
+                const premiumsPaid: any = await fetchPremiumsPaid(policyId, account);
                 setPremiumsPaid(premiumsPaid);
 
                 const lastPaidTime: any = await fetchLastPaidTime(policyId);
