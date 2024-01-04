@@ -10,6 +10,15 @@
   /*font-family: 'Open Sans', sans-serif; !* Robust and clear font for financial platforms *!*/
 }
 
+.subscribersContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background-color: #243b55; /* Deep navy blue */
+  color: #ffffff; /* White color for text */
+}
+
 .description {
   display: inherit;
   justify-content: inherit;
