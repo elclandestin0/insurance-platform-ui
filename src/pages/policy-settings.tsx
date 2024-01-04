@@ -8,47 +8,48 @@ import { useRouter } from 'next/router';
 const PolicySettings: React.FC = () => {
     const {fetchPremiumsPaid, isLoading, error, fetchSubscribers } = usePolicyContract();
     const router = useRouter();
-    const [totalSubscribers, setTotalSubscribers] = useState(null);
+    const [subscribersCount, setSubscribersCount] = useState(null);
+    const [subscribers, setSubscribers] = useState(null);
     const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
     const { policyId } = router.query;
 
     
     useEffect(() => {
         if (!isLoading) {
-            let subscribers = 0;
-            let totalPremiums = ethers.BigNumber.from(0);
+            let _subscribers = 0;
+            let _totalPremiums = ethers.BigNumber.from(0);
             
             const fetchAllSubscribers = async (policyId: any) => {
-                subscribers = await fetchSubscribers(policyId);
+                _subscribers = await fetchSubscribers(policyId);
+                setSubscribers(_subscribers);
+                setSubscribersCount(_subscribers.length);
             }
 
             const fetchPremiums = async () => {
-                let totalPremiums = 0;
-                if (!totalSubscribers) return;
-                for (let i = 0; i < totalSubscribers.length; i++) {
-                    totalPremiums += await fetchPremiumsPaid(policyId, totalSubscribers[i]);
+                console.log(subscribers);
+                if (!subscribers) return;
+                for (let i = 0; i < subscribers.length; i++) {
+                    console.log(subscribers[i]);
+                    const premiumPaid = await fetchPremiumsPaid(policyId, subscribers[i]);
+                    _totalPremiums += premiumPaid;
                 }
-                console.log(totalPremiums);
+                setTotalPremiumsPaid(_totalPremiums);
              };
 
-            // fetchPremiums().catch((err) => {
-            //     console.error('Error fetching premiums:', err);
-            // });
-
             fetchAllSubscribers(policyId)
-            .then(()=> {
-                setTotalSubscribers(subscribers.length);
-            }).then(()=>{
-                fetchPremiums();
+            .then(() => {
+                fetchPremiums()
+                .catch((err: Error)=>{
+                    console.log("Error fetching premiums: ", err);
+                });
             })
-            .catch((err) => {
+            .catch((err: Error) => {
                 console.log(subscribers.length);
                 console.error('Error fetching subscribers:', err);
             });
             
-            setTotalPremiumsPaid(totalPremiums);
         }
-    }, [isLoading, fetchPremiumsPaid, fetchSubscribers, policyId, totalSubscribers]);
+    }, [isLoading, fetchPremiumsPaid, fetchSubscribers, policyId]);
 
     if (isLoading) {
         return <Box>Loading...</Box>;
@@ -63,7 +64,7 @@ const PolicySettings: React.FC = () => {
             <Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
                 <Stat>
                     <StatLabel>Total Subscribers</StatLabel>
-                    <StatNumber>{totalSubscribers}</StatNumber>
+                    <StatNumber>{subscribersCount}</StatNumber>
                 </Stat>
                 <Stat>
                     <StatLabel>Total Premiums Paid</StatLabel>

@@ -48,7 +48,7 @@ const usePolicyContract = () => {
 
                     allPolicies.push(formattedPolicy); // Update loading state
                 }
-
+                
                 setPolicies(allPolicies);
                 setIsLoading(false);
 
