@@ -5,6 +5,7 @@ export function truncateToDecimalPlace(num: number, digits: number): string {
 }
 
 export function convertEpochToReadableDate(epoch: number): string {
+    console.log(epoch);
     const date = new Date(epoch * 1000); 
     const formattedDate = date.toLocaleDateString();
     return formattedDate;

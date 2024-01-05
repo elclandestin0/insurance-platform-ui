@@ -34,13 +34,13 @@ const PolicyManager = () => {
                 const premiumsPaid: any = await fetchPremiumsPaid(policyId, account);
                 setPremiumsPaid(premiumsPaid);
 
-                const lastPaidTime: any = await fetchLastPaidTime(policyId);
+                const lastPaidTime: any = await fetchLastPaidTime(policyId, account);
                 setLastPaidTime(lastPaidTime);
             }
         };
 
         loadData();
-    }, [policyId, fetchPolicy, account, calculatePremium, calculatedPremium, fetchPremiumsPaid, premiumsPaid]);
+    }, [policyId, fetchPolicy, account, calculatePremium,  fetchPremiumsPaid]);
 
     const handlePayPremium = async (id, amount) => {
         await payPremium(id, amount);

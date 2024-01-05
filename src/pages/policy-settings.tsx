@@ -8,11 +8,12 @@ import SubscribersTable from '@/components/SubsribersTable';
 import styles from "@/pages/page.module.css"; // Make sure the path is correct
 
 const PolicySettings: React.FC = () => {
-    const {fetchPremiumsPaid, isLoading, error, fetchSubscribers } = usePolicyContract();
+    const {fetchPremiumsPaid, isLoading, error, fetchSubscribers, fetchLastPaidTime } = usePolicyContract();
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
     const [premiumsPerSubscriber, setPremiumsPerSubscriber] = useState(null);
+    const [timePerSubscriber, setTimePerSubscriber] = useState(null);
     const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
     const { policyId } = router.query;
 
@@ -26,17 +27,21 @@ const PolicySettings: React.FC = () => {
                     const _subscribers = await fetchSubscribers(policyId);
                     let _totalPremiums = ethers.BigNumber.from(0);
                     let _premiumsPerSubscriber = {};
+                    let _timePerSubscriber = {};
         
                     for (const subscriber of _subscribers) {
                         const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
+                        const lastPaidTime = await fetchLastPaidTime(policyId, subscriber);
                         _totalPremiums = _totalPremiums.add(premiumPaid);
                         _premiumsPerSubscriber[subscriber] = premiumPaid;
+                        _timePerSubscriber[subscriber] = lastPaidTime;
                     }
         
                     setSubscribers(_subscribers);
                     setSubscribersCount(_subscribers.length);
                     setTotalPremiumsPaid(_totalPremiums);
                     setPremiumsPerSubscriber(_premiumsPerSubscriber);
+                    setTimePerSubscriber(_timePerSubscriber);
         
                 } catch (err) {
                     console.error('Error fetching data:', err);
@@ -75,7 +80,7 @@ const PolicySettings: React.FC = () => {
                 </Grid>
             </Box>
             {subscribers != null && (
-                <SubscribersTable subscribers={subscribers} premiumsPerSubscriber={premiumsPerSubscriber} />
+                <SubscribersTable subscribers={subscribers} premiumsPerSubscriber={premiumsPerSubscriber} timePerSubscriber={timePerSubscriber} />
             )}
         </div>
     );

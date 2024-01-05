@@ -150,7 +150,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
-    const fetchLastPaidTime = useCallback(async (policyId: any) => {
+    const fetchLastPaidTime = useCallback(async (policyId: any, account: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
             return ethers.BigNumber.from(0);

@@ -14,8 +14,9 @@ import {
 } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
 import { ethers } from 'ethers';
+import { convertEpochToReadableDate } from '@/utils/helpers';
 
-const SubscribersTable = ({ subscribers, premiumsPerSubscriber }) => {
+const SubscribersTable = ({ subscribers, premiumsPerSubscriber, timePerSubscriber }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const handleRowClick = (index) => {
@@ -30,6 +31,7 @@ const SubscribersTable = ({ subscribers, premiumsPerSubscriber }) => {
             <Th>Subscriber ID</Th>
             <Th>Address</Th>
             <Th>Premium paid</Th>
+            <Th>Last paid date</Th>
             <Th isNumeric>Actions</Th>
           </Tr>
         </Thead>
@@ -40,6 +42,7 @@ const SubscribersTable = ({ subscribers, premiumsPerSubscriber }) => {
                 <Td>Subscriber {index + 1}</Td>
                 <Td>{address}</Td>
                 <Td>{ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)} <Icon as={FaEthereum} /></Td>
+                <Td>{convertEpochToReadableDate(timePerSubscriber[address])}</Td>
                 <Td isNumeric>
                   <Button size="sm">View Details</Button>
                 </Td>
@@ -48,10 +51,7 @@ const SubscribersTable = ({ subscribers, premiumsPerSubscriber }) => {
                 <Td colSpan={3}>
                   <Collapse in={selectedRow === index} animateOpacity>
                     <Box p={4} mt={2} shadow="md" borderWidth="1px">
-                      {/* Here you can fetch and display more details about the subscriber */}
                       <Text>Address: {address}</Text>
-                      {/* Fetch and display more data about the subscriber using their address */}
-                      {/* Add more details you want to show here */}
                     </Box>
                   </Collapse>
                 </Td>
