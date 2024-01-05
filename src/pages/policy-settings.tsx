@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stat, StatLabel, StatNumber, Icon, Box } from '@chakra-ui/react';
+import { Grid, Stat, StatLabel, StatNumber, Icon, Box, Flex } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
 import { ethers } from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
 import { useRouter } from 'next/router';
 import SubscribersTable from '@/components/SubsribersTable';
-import styles from "@/pages/page.module.css"; // Make sure the path is correct
+import styles from "@/pages/page.module.css";
+import DeFiStakingComponent from "@/components/DeFiStakingComponent"; // Make sure the path is correct
 
 const PolicySettings: React.FC = () => {
     const {fetchPremiumsPaid, isLoading, error, fetchSubscribers, fetchLastPaidTime } = usePolicyContract();
@@ -64,7 +65,7 @@ const PolicySettings: React.FC = () => {
     }
 
     return (
-        <div className={styles.subscribersContainer}>
+        <Flex className={styles.subscribersContainer} height="100vh">
             <Box p={5} w="full">
                 <Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
                     <Stat>
@@ -82,7 +83,10 @@ const PolicySettings: React.FC = () => {
             {subscribers != null && (
                 <SubscribersTable subscribers={subscribers} premiumsPerSubscriber={premiumsPerSubscriber} timePerSubscriber={timePerSubscriber} />
             )}
-        </div>
+            <Box flex="1" w="full" p={5} mt={4}> {/* This Box will take up the remaining space */}
+                <DeFiStakingComponent />
+            </Box>
+        </Flex>
     );
 }
 
