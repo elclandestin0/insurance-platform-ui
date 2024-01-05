@@ -4,7 +4,7 @@ import { FaEthereum } from 'react-icons/fa';
 import { ethers } from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
 import { useRouter } from 'next/router';
-import SubscribersAccordion from '@/components/SubsribersTable';
+import SubscribersTable from '@/components/SubsribersTable';
 import styles from "@/pages/page.module.css"; // Make sure the path is correct
 
 const PolicySettings: React.FC = () => {
@@ -12,31 +12,38 @@ const PolicySettings: React.FC = () => {
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
+    const [premiumsPerSubscriber, setPremiumsPerSubscriber] = useState(null);
     const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
     const { policyId } = router.query;
 
     
     useEffect(() => {
         const fetchAllSubscribersAndPremiums = async () => {
-            if (!policyId || isLoading) {
-                return;
-            }
-    
-            try {
-                const _subscribers = await fetchSubscribers(policyId);
-                let _totalPremiums = ethers.BigNumber.from(0);
-    
-                for (let i = 0; i < _subscribers.length; i++) {
-                    const premiumPaid = await fetchPremiumsPaid(policyId, _subscribers[i]);
-                    _totalPremiums = _totalPremiums.add(premiumPaid);
+            const fetchAllData = async () => {
+                if (!policyId || isLoading) return;
+        
+                try {
+                    const _subscribers = await fetchSubscribers(policyId);
+                    let _totalPremiums = ethers.BigNumber.from(0);
+                    let _premiumsPerSubscriber = {};
+        
+                    for (const subscriber of _subscribers) {
+                        const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
+                        _totalPremiums = _totalPremiums.add(premiumPaid);
+                        _premiumsPerSubscriber[subscriber] = premiumPaid;
+                    }
+        
+                    setSubscribers(_subscribers);
+                    setSubscribersCount(_subscribers.length);
+                    setTotalPremiumsPaid(_totalPremiums);
+                    setPremiumsPerSubscriber(_premiumsPerSubscriber);
+        
+                } catch (err) {
+                    console.error('Error fetching data:', err);
                 }
-    
-                setSubscribers(_subscribers);
-                setSubscribersCount(_subscribers.length);
-                setTotalPremiumsPaid(_totalPremiums);
-            } catch (err) {
-                console.error('Error fetching data:', err);
-            }
+            };
+        
+            fetchAllData();
         };
     
         fetchAllSubscribersAndPremiums();
@@ -68,7 +75,7 @@ const PolicySettings: React.FC = () => {
                 </Grid>
             </Box>
             {subscribers != null && (
-                <SubscribersAccordion subscribers={subscribers} />
+                <SubscribersTable subscribers={subscribers} premiumsPerSubscriber={premiumsPerSubscriber} />
             )}
         </div>
     );

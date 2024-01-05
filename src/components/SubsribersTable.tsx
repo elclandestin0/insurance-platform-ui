@@ -10,10 +10,12 @@ import {
   Collapse,
   Button,
   Text,
-  useDisclosure
+  Icon
 } from '@chakra-ui/react';
+import { FaEthereum } from 'react-icons/fa';
+import { ethers } from 'ethers';
 
-const SubscribersTable = ({ subscribers }) => {
+const SubscribersTable = ({ subscribers, premiumsPerSubscriber }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const handleRowClick = (index) => {
@@ -27,6 +29,7 @@ const SubscribersTable = ({ subscribers }) => {
           <Tr>
             <Th>Subscriber ID</Th>
             <Th>Address</Th>
+            <Th>Premium paid</Th>
             <Th isNumeric>Actions</Th>
           </Tr>
         </Thead>
@@ -36,6 +39,7 @@ const SubscribersTable = ({ subscribers }) => {
               <Tr onClick={() => handleRowClick(index)} cursor="pointer">
                 <Td>Subscriber {index + 1}</Td>
                 <Td>{address}</Td>
+                <Td>{ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)} <Icon as={FaEthereum} /></Td>
                 <Td isNumeric>
                   <Button size="sm">View Details</Button>
                 </Td>
