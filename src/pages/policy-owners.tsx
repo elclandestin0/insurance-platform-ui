@@ -20,7 +20,7 @@ import {ethers} from "ethers"; // Import the custom hook
 
 
 const PolicyOwners: React.FC = ({policy}) => {
-    const {policies, error, fetchSubscribers} = usePolicyContract();
+    const {policies, error} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [selectedPolicy, setSelectedPolicy] = useState(null);
     const { checkPolicyOwnership } = usePolicyContract();

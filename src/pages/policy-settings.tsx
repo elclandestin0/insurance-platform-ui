@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stat, StatLabel, StatNumber, Icon, Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Text } from '@chakra-ui/react';
+import { Grid, Stat, StatLabel, StatNumber, Icon, Box } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
 import { ethers } from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
@@ -17,41 +17,31 @@ const PolicySettings: React.FC = () => {
 
     
     useEffect(() => {
-        if (!isLoading) {
-            let _subscribers = 0;
-            let _totalPremiums = ethers.BigNumber.from(0);
-            
-            const fetchAllSubscribers = async (policyId: any) => {
-                _subscribers = await fetchSubscribers(policyId);
+        const fetchAllSubscribersAndPremiums = async () => {
+            if (!policyId || isLoading) {
+                return;
+            }
+    
+            try {
+                const _subscribers = await fetchSubscribers(policyId);
+                let _totalPremiums = ethers.BigNumber.from(0);
+    
+                for (let i = 0; i < _subscribers.length; i++) {
+                    const premiumPaid = await fetchPremiumsPaid(policyId, _subscribers[i]);
+                    _totalPremiums = _totalPremiums.add(premiumPaid);
+                }
+    
                 setSubscribers(_subscribers);
                 setSubscribersCount(_subscribers.length);
-            }
-
-            const fetchPremiums = async () => {
-                console.log(subscribers);
-                if (!subscribers) return;
-                for (let i = 0; i < subscribers.length; i++) {
-                    console.log(subscribers[i]);
-                    const premiumPaid = await fetchPremiumsPaid(policyId, subscribers[i]);
-                    _totalPremiums += premiumPaid;
-                }
                 setTotalPremiumsPaid(_totalPremiums);
-             };
-
-            fetchAllSubscribers(policyId)
-            .then(() => {
-                fetchPremiums()
-                .catch((err: Error)=>{
-                    console.log("Error fetching premiums: ", err);
-                });
-            })
-            .catch((err: Error) => {
-                console.log(subscribers.length);
-                console.error('Error fetching subscribers:', err);
-            });
-            
-        }
-    }, [isLoading, fetchPremiumsPaid, fetchSubscribers, policyId]);
+            } catch (err) {
+                console.error('Error fetching data:', err);
+            }
+        };
+    
+        fetchAllSubscribersAndPremiums();
+    }, [isLoading, fetchPremiumsPaid, fetchSubscribers, policyId]); // Include all used variables in the dependency array
+    
 
     if (isLoading) {
         return <Box>Loading...</Box>;
@@ -71,7 +61,9 @@ const PolicySettings: React.FC = () => {
                     </Stat>
                     <Stat>
                         <StatLabel>Total Premiums Paid</StatLabel>
-                        <StatNumber>{ethers.utils.formatEther(totalPremiumsPaid)} <Icon as={FaEthereum} /></StatNumber>
+                        {totalPremiumsPaid != null && (
+                            <StatNumber>{ethers.utils.formatEther(totalPremiumsPaid)} <Icon as={FaEthereum} /></StatNumber>
+                        )}
                     </Stat>
                 </Grid>
             </Box>
