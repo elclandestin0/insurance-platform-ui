@@ -22,6 +22,8 @@ const PolicyCreators: React.FC = () => {
     const [duration, setDuration] = useState('');
     const [penaltyRate, setPenaltyRate] = useState('');
     const [monthsGracePeriod, setMonthsGracePeriod] = useState('');
+    const [coveragePerentage, setCoveragePercentage] = useState('');
+    const [investmentPercentage, setInvestmentPercentage] = useState('');
     const router = useRouter(); // Initialize useRouter
 
     const openModal = () => setIsModalOpen(true);
@@ -48,6 +50,8 @@ const PolicyCreators: React.FC = () => {
                 const parsedDuration = Number(duration);
                 const parsedPenaltyRate = Number(penaltyRate);
                 const parsedMonthsGracePeriod = Number(monthsGracePeriod);
+                const parsedInvestmentPerentage = Number(investmentPercentage);
+                const parsedCoveragePercentage = Number(coveragePerentage);
                 
                 
                 // Call the createPolicy function of the smart contract 
@@ -58,7 +62,9 @@ const PolicyCreators: React.FC = () => {
                     parsedPremiumRate,
                     parsedDuration,
                     parsedPenaltyRate,
-                    parsedMonthsGracePeriod
+                    parsedMonthsGracePeriod,
+                    parsedInvestmentPerentage,
+                    parsedCoveragePercentage
                 );
                 await tx.wait();
 
@@ -108,6 +114,8 @@ const PolicyCreators: React.FC = () => {
                             <Input placeholder="Duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
                             <Input placeholder="Penalty Rate" value={penaltyRate} onChange={(e) => setPenaltyRate(e.target.value)} />
                             <Input placeholder="Months Grace Period" value={monthsGracePeriod} onChange={(e) => setMonthsGracePeriod(e.target.value)} />
+                            <Input placeholder="Investment Percentage" value={investmentPercentage} onChange={(e) => setInvestmentPercentage(e.target.value)} />
+                            <Input placeholder="Coverage Percentage" value={coveragePerentage} onChange={(e) => setCoveragePercentage(e.target.value)} />
                             <Button type="submit">
                                 Create Policy
                             </Button>

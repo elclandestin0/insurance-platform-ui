@@ -79,6 +79,8 @@ const usePolicyContract = () => {
                 duration: Number(policy.duration),
                 penaltyRate: Number(policy.penaltyRate),
                 monthsGracePeriod: Number(policy.monthsGracePeriod),
+                coverageFundPercentage: Number(policy.coverageFundPercentage),
+                investmentFundPercentage: Number(policy.coverageFundPercentage)
             };
 
         } catch (err) {
@@ -150,6 +152,32 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const fetchCoverageFundBalance = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.fetchCoverageFund(policyId);
+        } catch (err) {
+            console.error('Error retrieving premiums paid:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
+    const fetchInvestmentFundBalance = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.fetchInvestmentFundBalance(policyId);
+        } catch (err) {
+            console.error('Error retrieving premiums paid:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract]);
+
     const fetchLastPaidTime = useCallback(async (policyId: any, account: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
@@ -205,7 +233,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers };
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance };
 };
 
 export default usePolicyContract;
