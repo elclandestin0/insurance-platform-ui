@@ -7,20 +7,26 @@ import {
     Input,
     VStack,
     HStack,
-    Text
+    Text, Stat, StatLabel, StatNumber, Icon
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import {ethers} from "ethers";
+import {FaEthereum} from "react-icons/fa";
 
-const DeFiStakingComponent = () => {
+const DeFiStakingComponent = ({investmentBalance}) => {
     const [selectedPool, setSelectedPool] = useState('');
     const [amountToStake, setAmountToStake] = useState('');
 
     return (
         <Box p={5} borderRadius="md" m={5}>
             <VStack spacing={4}>
-                <Text fontSize="xl" fontWeight="semibold">
-                    Connect to a DeFi Staking Pool
-                </Text>
+
+                <Stat>
+                    <StatLabel>Investment Balance</StatLabel>
+                    {investmentBalance != null && (
+                        <StatNumber>{ethers.utils.formatEther(investmentBalance)} <Icon as={FaEthereum} /></StatNumber>
+                    )}
+                </Stat>
                 <FormControl id="staking-pool">
                     <FormLabel>Select Staking Pool</FormLabel>
                     <Select placeholder="Select pool" onChange={(e) => setSelectedPool(e.target.value)}>

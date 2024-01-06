@@ -13,8 +13,7 @@ const Home: React.FC = ()=> {
         console.log(isConnected);
         console.log(account);
     }, [isConnected, account]);
-
-
+    
     if (!isConnected) {
         return (
             <Flex

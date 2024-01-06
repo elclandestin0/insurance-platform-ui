@@ -158,7 +158,7 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
         try {
-            return await policyMakerContract.fetchCoverageFund(policyId);
+            return await policyMakerContract.coverageFundBalance(policyId);
         } catch (err) {
             console.error('Error retrieving premiums paid:', err);
             return ethers.BigNumber.from(0);
@@ -171,7 +171,7 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
         try {
-            return await policyMakerContract.fetchInvestmentFundBalance(policyId);
+            return await policyMakerContract.investmentFundBalance(policyId);
         } catch (err) {
             console.error('Error retrieving premiums paid:', err);
             return ethers.BigNumber.from(0);
