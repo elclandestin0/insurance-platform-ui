@@ -13,12 +13,13 @@ import { convertEpochToReadableDate } from '@/utils/helpers'; // Import the help
 const PolicyManager = () => {
     const router = useRouter();
     const { policyId } = router.query;
-    const { fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime } = usePolicyContract();
+    const { fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage } = usePolicyContract();
     const { account } = useMetaMask();
     const [policy, setPolicy] = useState(null);
     const [calculatedPremium, setCalculatedPremium] = useState(null);
     const [premiumsPaid, setPremiumsPaid] = useState(null);
     const [lastPaidTime, setLastPaidTime] = useState(null);
+    const [totalCoverage, setTotalCoverage] = useState(null);
 
     useEffect(() => {
         const loadData = async () => {
@@ -36,11 +37,14 @@ const PolicyManager = () => {
 
                 const lastPaidTime: any = await fetchLastPaidTime(policyId, account);
                 setLastPaidTime(lastPaidTime);
+                
+                const coverage: any = await fetchTotalCoverage(policyId, account);
+                setTotalCoverage(coverage);
             }
         };
 
         loadData();
-    }, [policyId, fetchPolicy, account, calculatePremium,  fetchPremiumsPaid]);
+    }, [policyId, fetchPolicy, account, calculatePremium,  fetchPremiumsPaid, fetchTotalCoverage]);
 
     const handlePayPremium = async (id, amount) => {
         await payPremium(id, amount);
@@ -117,6 +121,10 @@ const PolicyManager = () => {
                         <Stat>
                             <StatLabel> Last Paid time </StatLabel>
                             <StatNumber>{lastPaidTime ? convertEpochToReadableDate(lastPaidTime) : '0.0'}</StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel> Total Coverage </StatLabel>
+                            <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
                         </Stat>
                     </Grid>
                     <Divider my={4}/>

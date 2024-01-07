@@ -41,7 +41,6 @@ const PolicySettings: React.FC = () => {
                         _premiumsPerSubscriber[subscriber] = premiumPaid;
                         _timePerSubscriber[subscriber] = lastPaidTime;
                     }
-                    
                     setCoverageBalance(_coverageBalance);
                     setInvestmentBalance(_investmentBalance);
                     setSubscribers(_subscribers);

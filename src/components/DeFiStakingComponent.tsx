@@ -46,9 +46,6 @@ const DeFiStakingComponent = ({investmentBalance}) => {
                     <Button colorScheme="blue" onClick={() => {/* Handle stake action */}}>
                         Stake Funds
                     </Button>
-                    {/*<Button colorScheme="red" onClick={() => /!* Handle unstake action *!/}>*/}
-                    {/*    Unstake Funds*/}
-                    {/*</Button>*/}
             </VStack>
         </Box>
     );
