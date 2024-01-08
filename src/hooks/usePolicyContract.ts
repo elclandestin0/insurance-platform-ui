@@ -224,6 +224,7 @@ const usePolicyContract = () => {
 
             const logs = await policyMakerContract.provider.getLogs(filter);
             logs.forEach((log) => {
+                console.log(log);
                 // Decode the log to get the claimant's address
                 const decoded = policyMakerContract.interface.decodeEventLog("PremiumPaid", log.data, log.topics);
                 subscribersSet.add(decoded.claimant);
