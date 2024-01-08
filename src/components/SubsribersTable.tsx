@@ -36,7 +36,7 @@ const SubscribersTable = ({ subscribers, premiumsPerSubscriber, timePerSubscribe
             <Th>Address</Th>
             <Th>Premium paid</Th>
             <Th>Last paid date</Th>
-            <Th>Total coverage</Th>
+            <Th>Available coverage to claim</Th>
             <Th isNumeric>Actions</Th>
           </Tr>
         </Thead>

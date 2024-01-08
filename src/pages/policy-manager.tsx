@@ -52,18 +52,20 @@ const PolicyManager = () => {
     }, [policyId, account, fetchPolicy, calculatePremium, fetchPremiumsPaid, fetchTotalCoverage, fetchLastPaidTime]);
 
     const handlePayPremium = async (id, amount) => {
-        // Convert the amount from ether to WEI before sending
-        const amountInWei = ethers.utils.parseEther(amount);
-        await payPremium(id, amountInWei);
+        console.log(amount);
+        await payPremium(id, amount);
     };
 
     const handlePremiumInput = (e) => {
-        const inputAmount = e.target.value;
+        const inputAmount = ethers.utils.parseEther(e.target.value || '0');
+        console.log(inputAmount);
+        console.log(calculatedPremium);
         // Compare input amount with calculated premium (both in WEI for accuracy)
-        if (ethers.utils.parseEther(inputAmount).gte(calculatedPremium)) {
+        if (inputAmount.gte(calculatedPremium)) {
             setPremiumAmountToSend(inputAmount);
         } else {
-            // Optionally, you can alert the user or show a message that the input amount is less than the calculated premium
+            console.log("Input amount is less than the calculated premium.");
+            setPremiumAmountToSend(calculatedPremium)
         }
     };
 
@@ -163,7 +165,7 @@ const PolicyManager = () => {
                                                 min={ethers.utils.formatEther(calculatedPremium)} // Set the minimum value to the calculated premium
                                             />
                                             <PayPremiumCTA
-                                                premiumAmountToSend={premiumAmountToSend}
+                                                premiumAmountToSend={ethers.utils.formatEther(premiumAmountToSend)}
                                                 onPayPremium={handlePayPremium}
                                                 policyId={policyId}
                                             />
