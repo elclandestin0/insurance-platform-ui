@@ -25,7 +25,9 @@ const Home: React.FC = ()=> {
                 p={4}
             >
                 <Heading as='h1' size='4xl' noOfLines={1} mb={10}>
-                    🐶 ProteccFi 🐶
+                <Flex>
+                <img src="/unidawg.png" alt="Logo" style={{ width: '96px', height: '96px' }} /> ProteccFi
+                </Flex> 
                 </Heading>
                 <MetaMaskConnect/>
             </Flex>

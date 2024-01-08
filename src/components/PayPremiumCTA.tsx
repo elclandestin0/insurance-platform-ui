@@ -3,14 +3,14 @@ import { Button, Flex, Divider, Text, Icon } from '@chakra-ui/react';
 import { FaEthereum } from 'react-icons/fa';
 import { ethers } from 'ethers';
 
-const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
+const PayPremiumCTA = ({ premiumAmountToSend, onPayPremium, policyId }) => {
     // Define button colors
     const buttonBgColor = 'green.500';
     const buttonHoverColor = 'green.600';
 
     const handleButtonClick = () => {
-        onPayPremium(policyId, ethers.utils.formatEther(premiumRate));
-        console.log(ethers.utils.formatEther(premiumRate));
+        onPayPremium(policyId, premiumAmountToSend);
+        console.log(ethers.utils.formatEther(premiumAmountToSend));
     };
 
     return (
@@ -26,7 +26,7 @@ const PayPremiumCTA = ({ premiumRate, onPayPremium, policyId }) => {
                 <Divider orientation="vertical" height="20px" mx={2} borderColor="currentcolor" />
                 <Flex align="center">
                     
-                    <Text fontSize="md" fontWeight="bold">{premiumRate ? ethers.utils.formatEther(premiumRate) : '0.0'}</Text>
+                    <Text fontSize="md" fontWeight="bold">{premiumAmountToSend ? ethers.utils.formatEther(premiumAmountToSend) : '0.0'}</Text>
                     <Icon as={FaEthereum} ml={1} color="currentcolor" />
                 </Flex>
             </Flex>

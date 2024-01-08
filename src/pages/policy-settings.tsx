@@ -7,19 +7,20 @@ import { useRouter } from 'next/router';
 import SubscribersTable from '@/components/SubsribersTable';
 import styles from "@/pages/page.module.css";
 import DeFiStakingComponent from "@/components/DeFiStakingComponent"; // Make sure the path is correct
+import { formatToWeiIfMoreThanThreeDecimalPlaces } from '@/utils/helpers';
 
 const PolicySettings: React.FC = () => {
-    const {fetchPremiumsPaid, isLoading, error, fetchSubscribers, fetchLastPaidTime, fetchCoverageFundBalance, fetchInvestmentFundBalance } = usePolicyContract();
+    const {fetchPremiumsPaid, isLoading, error, fetchSubscribers, fetchLastPaidTime, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage } = usePolicyContract();
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
     const [premiumsPerSubscriber, setPremiumsPerSubscriber] = useState(null);
     const [timePerSubscriber, setTimePerSubscriber] = useState(null);
+    const [coveragePerSubscriber, setCoveragePerSubscriber] = useState(null);
     const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
     const [coverageBalance, setCoverageBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
     const [investmentBalance, setInvestmentBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
     const { policyId } = router.query;
-
     
     useEffect(() => {
         const fetchAllSubscribersAndPremiums = async () => {
@@ -31,15 +32,19 @@ const PolicySettings: React.FC = () => {
                     let _totalPremiums = ethers.BigNumber.from(0);
                     let _premiumsPerSubscriber = {};
                     let _timePerSubscriber = {};
+                    let _coveragePerSubscriber = {};
                     const _coverageBalance = await fetchCoverageFundBalance(policyId);
                     const _investmentBalance = await fetchInvestmentFundBalance(policyId);
         
                     for (const subscriber of _subscribers) {
                         const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
                         const lastPaidTime = await fetchLastPaidTime(policyId, subscriber);
+                        const coverageAmount = await fetchTotalCoverage(policyId, subscriber);
                         _totalPremiums = _totalPremiums.add(premiumPaid);
                         _premiumsPerSubscriber[subscriber] = premiumPaid;
                         _timePerSubscriber[subscriber] = lastPaidTime;
+                        _coveragePerSubscriber[subscriber] = coverageAmount;
+                        
                     }
                     setCoverageBalance(_coverageBalance);
                     setInvestmentBalance(_investmentBalance);
@@ -48,6 +53,7 @@ const PolicySettings: React.FC = () => {
                     setTotalPremiumsPaid(_totalPremiums);
                     setPremiumsPerSubscriber(_premiumsPerSubscriber);
                     setTimePerSubscriber(_timePerSubscriber);
+                    setCoveragePerSubscriber(_coveragePerSubscriber);
         
                 } catch (err) {
                     console.error('Error fetching data:', err);
@@ -58,7 +64,7 @@ const PolicySettings: React.FC = () => {
         };
     
         fetchAllSubscribersAndPremiums();
-    }, [isLoading, fetchPremiumsPaid, fetchSubscribers, policyId]); // Include all used variables in the dependency array
+    }, [isLoading, fetchPremiumsPaid, fetchSubscribers, fetchTotalCoverage, fetchLastPaidTime, policyId]);
     
 
     if (isLoading) {
@@ -80,19 +86,19 @@ const PolicySettings: React.FC = () => {
                     <Stat>
                         <StatLabel>Total Premiums Paid</StatLabel>
                         {totalPremiumsPaid != null && (
-                            <StatNumber>{ethers.utils.formatEther(totalPremiumsPaid)} <Icon as={FaEthereum} /></StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(totalPremiumsPaid) || 0} <Icon as={FaEthereum} /> </StatNumber>
                         )}
                     </Stat>
                     <Stat>
                         <StatLabel>Total Coverage Balance</StatLabel>
                         {coverageBalance != null && (
-                            <StatNumber>{ethers.utils.formatEther(coverageBalance)} <Icon as={FaEthereum} /></StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(coverageBalance) || 0 } <Icon as={FaEthereum} /></StatNumber>
                         )}
                     </Stat>
                 </Grid>
             </Box>
             {subscribers != null && (
-                <SubscribersTable subscribers={subscribers} premiumsPerSubscriber={premiumsPerSubscriber} timePerSubscriber={timePerSubscriber}  />
+                <SubscribersTable subscribers={subscribers} premiumsPerSubscriber={premiumsPerSubscriber} timePerSubscriber={timePerSubscriber} coveragePerSubscriber={coveragePerSubscriber} />
             )}
             <Box flex="1" w="full" p={5} mt={4}> {/* This Box will take up the remaining space */}
                 <DeFiStakingComponent investmentBalance={investmentBalance} />

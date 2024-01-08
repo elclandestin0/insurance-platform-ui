@@ -53,7 +53,6 @@ const PolicyCreators: React.FC = () => {
                 const parsedInvestmentPerentage = Number(investmentPercentage);
                 const parsedCoveragePercentage = Number(coveragePerentage);
                 
-                
                 // Call the createPolicy function of the smart contract 
                 const tx = await policyMakerContract.createPolicy(
                     parsedCoverageAmount,
@@ -63,8 +62,8 @@ const PolicyCreators: React.FC = () => {
                     parsedDuration,
                     parsedPenaltyRate,
                     parsedMonthsGracePeriod,
+                    parsedCoveragePercentage,
                     parsedInvestmentPerentage,
-                    parsedCoveragePercentage
                 );
                 await tx.wait();
 

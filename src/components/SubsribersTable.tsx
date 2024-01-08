@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   Thead,
@@ -16,12 +16,16 @@ import { FaEthereum } from 'react-icons/fa';
 import { ethers } from 'ethers';
 import { convertEpochToReadableDate } from '@/utils/helpers';
 
-const SubscribersTable = ({ subscribers, premiumsPerSubscriber, timePerSubscriber }) => {
+const SubscribersTable = ({ subscribers, premiumsPerSubscriber, timePerSubscriber, coveragePerSubscriber }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const handleRowClick = (index) => {
     setSelectedRow(selectedRow === index ? null : index);
   };
+
+  useEffect(()=>{
+    console.log(coveragePerSubscriber);
+  }, [coveragePerSubscriber])
 
   return (
     <Box w="full">
@@ -32,6 +36,7 @@ const SubscribersTable = ({ subscribers, premiumsPerSubscriber, timePerSubscribe
             <Th>Address</Th>
             <Th>Premium paid</Th>
             <Th>Last paid date</Th>
+            <Th>Total coverage</Th>
             <Th isNumeric>Actions</Th>
           </Tr>
         </Thead>
@@ -43,6 +48,7 @@ const SubscribersTable = ({ subscribers, premiumsPerSubscriber, timePerSubscribe
                 <Td>{address}</Td>
                 <Td>{ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)} <Icon as={FaEthereum} /></Td>
                 <Td>{convertEpochToReadableDate(timePerSubscriber[address])}</Td>
+                <Td>{ethers.utils.formatEther(coveragePerSubscriber[address] || 0)} <Icon as={FaEthereum} /></Td>
                 <Td isNumeric>
                   <Button size="sm">View Details</Button>
                 </Td>

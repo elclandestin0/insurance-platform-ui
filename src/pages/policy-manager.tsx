@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import usePolicyContract from '@/hooks/usePolicyContract';
-import {BigNumber, ethers} from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useMetaMask } from "@/contexts/MetaMaskContext";
 import {
-    Flex, Box, Text, Divider, VStack, Heading, Stat, StatLabel, StatNumber, StatGroup, Grid, Icon
+    Flex, Box, Text, Divider, VStack, Heading, Stat, StatLabel, StatNumber, StatGroup, Grid, Icon, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Input, Button
 } from '@chakra-ui/react';
-import {FaEthereum} from "react-icons/fa";
+import { FaEthereum } from "react-icons/fa";
 import PayPremiumCTA from "@/components/PayPremiumCTA";
 import { convertEpochToReadableDate } from '@/utils/helpers'; // Import the helper function
 
@@ -20,6 +20,10 @@ const PolicyManager = () => {
     const [premiumsPaid, setPremiumsPaid] = useState(null);
     const [lastPaidTime, setLastPaidTime] = useState(null);
     const [totalCoverage, setTotalCoverage] = useState(null);
+    const [premiumAmountToSend, setPremiumAmountToSend] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -31,25 +35,38 @@ const PolicyManager = () => {
                 // load premium data
                 const calcPremium: any = await calculatePremium(policyId);
                 setCalculatedPremium(calcPremium);
+                setPremiumAmountToSend(calcPremium);
 
                 const premiumsPaid: any = await fetchPremiumsPaid(policyId, account);
                 setPremiumsPaid(premiumsPaid);
 
                 const lastPaidTime: any = await fetchLastPaidTime(policyId, account);
                 setLastPaidTime(lastPaidTime);
-                
+
                 const coverage: any = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
             }
         };
 
         loadData();
-    }, [policyId, fetchPolicy, account, calculatePremium,  fetchPremiumsPaid, fetchTotalCoverage]);
+    }, [policyId, account, fetchPolicy, calculatePremium, fetchPremiumsPaid, fetchTotalCoverage, fetchLastPaidTime]);
 
     const handlePayPremium = async (id, amount) => {
-        await payPremium(id, amount);
+        // Convert the amount from ether to WEI before sending
+        const amountInWei = ethers.utils.parseEther(amount);
+        await payPremium(id, amountInWei);
     };
-    
+
+    const handlePremiumInput = (e) => {
+        const inputAmount = e.target.value;
+        // Compare input amount with calculated premium (both in WEI for accuracy)
+        if (ethers.utils.parseEther(inputAmount).gte(calculatedPremium)) {
+            setPremiumAmountToSend(inputAmount);
+        } else {
+            // Optionally, you can alert the user or show a message that the input amount is less than the calculated premium
+        }
+    };
+
     return (
         <Flex
             width="100vw"
@@ -80,7 +97,7 @@ const PolicyManager = () => {
                             </Stat>
                         </StatGroup>
                     </Flex>
-                    <Divider my={4}/>
+                    <Divider my={4} />
                     <Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)' }} gap={6}>
                         <Stat>
                             <StatLabel>Coverage Amount</StatLabel>
@@ -127,8 +144,40 @@ const PolicyManager = () => {
                             <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
                         </Stat>
                     </Grid>
-                    <Divider my={4}/>
-                    <PayPremiumCTA premiumRate={calculatedPremium} onPayPremium={handlePayPremium} policyId={policyId}/>
+                    <Divider my={4} />
+                    <Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>
+                    <Modal isOpen={isModalOpen} onClose={closeModal}>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Pay Premium</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                <form>
+                                    {premiumAmountToSend != null && (
+                                        <>
+                                            <Input
+                                                placeholder="Premium amount"
+                                                defaultValue={ethers.utils.formatEther(calculatedPremium)}
+                                                onChange={handlePremiumInput}
+                                                type="number" // Ensure input is treated as a numerical value
+                                                min={ethers.utils.formatEther(calculatedPremium)} // Set the minimum value to the calculated premium
+                                            />
+                                            <PayPremiumCTA
+                                                premiumAmountToSend={premiumAmountToSend}
+                                                onPayPremium={handlePayPremium}
+                                                policyId={policyId}
+                                            />
+                                        </>
+                                    )}
+                                </form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button colorScheme="blue" mr={3} onClick={closeModal}>
+                                    Close
+                                </Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
                 </Box>
             ) : (
                 <Text>Loading policy details...</Text>
