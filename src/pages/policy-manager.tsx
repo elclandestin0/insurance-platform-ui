@@ -9,11 +9,13 @@ import {
 import { FaEthereum } from "react-icons/fa";
 import PayPremiumCTA from "@/components/PayPremiumCTA";
 import { convertEpochToReadableDate } from '@/utils/helpers'; // Import the helper function
+import usePayoutContract from '@/hooks/usePayoutContract';
 
 const PolicyManager = () => {
     const router = useRouter();
     const { policyId } = router.query;
     const { fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage } = usePolicyContract();
+    const { processClaim } = usePayoutContract();
     const { account } = useMetaMask();
     const [policy, setPolicy] = useState(null);
     const [calculatedPremium, setCalculatedPremium] = useState(null);
@@ -56,10 +58,13 @@ const PolicyManager = () => {
         await payPremium(id, amount);
     };
 
+    const handleClaim = async (id) => {
+        console.log(totalCoverage);
+        await processClaim(id, totalCoverage);
+    };
+
     const handlePremiumInput = (e) => {
         const inputAmount = ethers.utils.parseEther(e.target.value || '0');
-        console.log(inputAmount);
-        console.log(calculatedPremium);
         // Compare input amount with calculated premium (both in WEI for accuracy)
         if (inputAmount.gte(calculatedPremium)) {
             setPremiumAmountToSend(inputAmount);
@@ -147,7 +152,10 @@ const PolicyManager = () => {
                         </Stat>
                     </Grid>
                     <Divider my={4} />
-                    <Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>
+                    <Flex justifyContent="space-between">
+                        <Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>
+                        <Button colorScheme="teal" onClick={handleClaim}>Claim</Button>
+                    </Flex>
                     <Modal isOpen={isModalOpen} onClose={closeModal}>
                         <ModalOverlay />
                         <ModalContent>

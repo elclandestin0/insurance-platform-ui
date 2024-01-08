@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { ethers, Contract } from 'ethers';
 import PolicyMaker from '@/contracts/abis/PolicyMaker.json';
-import { policyMakerAddress } from '@/contracts/addresses';
+import Payout from '@/contracts/abis/Payout.json';
+import { policyMakerAddress, payoutAddress } from '@/contracts/addresses';
 
 export function useContracts() {
     const [policyMakerContract, setPolicyMakerContract] = useState<Contract | null>(null);
+    const [payoutContract, setPayoutContract] = useState<Contract | null>(null);
 
     useEffect(() => {
         const initializeContracts = async () => {
@@ -18,7 +20,14 @@ export function useContracts() {
                         signer
                     );
 
+                    const payout = new ethers.Contract(
+                        payoutAddress,
+                        Payout.abi,
+                        signer
+                    )
+
                     setPolicyMakerContract(policyMaker);
+                    setPayoutContract(payout);
                 } catch (error) {
                     console.error('Error initializing contracts:', error);
                 }
@@ -30,5 +39,5 @@ export function useContracts() {
         initializeContracts();
     }, []);
 
-    return { policyMakerContract };
+    return { policyMakerContract, payoutContract };
 }
