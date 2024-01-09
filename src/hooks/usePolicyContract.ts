@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useContracts } from './useContracts'; // Import your useContracts hook
-import { useMetaMask } from '@/contexts/MetaMaskContext';
+import {useCallback, useEffect, useState} from 'react';
+import {useContracts} from './useContracts'; // Import your useContracts hook
+import {useMetaMask} from '@/contexts/MetaMaskContext';
 import {BigNumber, ethers} from "ethers"; // Import the MetaMask context
 
 
 const usePolicyContract = () => {
-    const { policyMakerContract } = useContracts();
-    const { account } = useMetaMask(); // Get the current account from MetaMask
+    const {policyMakerContract} = useContracts();
+    const {account} = useMetaMask(); // Get the current account from MetaMask
     const [policies, setPolicies] = useState([]);
     const [ownedPolicies, setOwnedPolicies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +48,7 @@ const usePolicyContract = () => {
 
                     allPolicies.push(formattedPolicy); // Update loading state
                 }
-                
+
                 setPolicies(allPolicies);
                 setIsLoading(false);
 
@@ -131,7 +131,7 @@ const usePolicyContract = () => {
             console.error("Contract not initialized or invalid parameters.");
             return;
         }
-        
+
         try {
             // Ensure claimAmount is properly formatted as a BigNumber
             const formattedClaimAmount = ethers.BigNumber.isBigNumber(claimAmount)
@@ -144,7 +144,7 @@ const usePolicyContract = () => {
             const transactionResponse = await policyMakerContract.handlePayout(
                 policyId,
                 formattedClaimAmount,
-                { from: account }
+                {from: account}
             );
             await transactionResponse.wait(); // Wait for the transaction to be mined
             console.log('Payout handled successfully');
@@ -231,6 +231,19 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const fetchTotalClaimed = useCallback(async (policyId: any, account: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.amountClaimed(policyId, account);
+        } catch (err) {
+            console.error('Error retrieving amount claimed: ', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
     const fetchSubscribers = useCallback(async (policyId: any) => {
         const subscribersSet = new Set();
         if (!policyMakerContract || !policyId) {
@@ -273,7 +286,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage};
+    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed};
 };
 
 export default usePolicyContract;
