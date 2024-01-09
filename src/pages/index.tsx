@@ -1,19 +1,19 @@
 // src/pages/index.tsx
 import {Box, Flex, Grid, Heading, Link, useBreakpointValue} from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import MetaMaskConnect from "@/components/MetaMaskConnect";
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import NextLink from 'next/link';
 import styles from '@/pages/page.module.css';
 
-const Home: React.FC = ()=> {
+const Home: React.FC = () => {
     const {isConnected, account} = useMetaMask();
 
     useEffect(() => {
         console.log(isConnected);
         console.log(account);
     }, [isConnected, account]);
-    
+
     if (!isConnected) {
         return (
             <Flex
@@ -25,9 +25,9 @@ const Home: React.FC = ()=> {
                 p={4}
             >
                 <Heading as='h1' size='4xl' noOfLines={1} mb={10}>
-                <Flex>
-                <img src="/unidawg.png" alt="Logo" style={{ width: '96px', height: '96px' }} /> ProteccFi
-                </Flex> 
+                    <Flex>
+                        <img src="/unidawg.png" alt="Logo" style={{width: '96px', height: '96px'}}/> ProteccFi
+                    </Flex>
                 </Heading>
                 <MetaMaskConnect/>
             </Flex>
@@ -46,7 +46,7 @@ const Home: React.FC = ()=> {
                              textAlign="center"
                              w="lg"
                              h="lg"
-                             _hover={{ bg: "blue.100" }}>
+                             _hover={{bg: "blue.100"}}>
                             Policy Owners
                         </Box>
                     </Link>
@@ -60,7 +60,7 @@ const Home: React.FC = ()=> {
                              textAlign="center"
                              w="lg"
                              h="lg"
-                             _hover={{ bg: "blue.100" }}>
+                             _hover={{bg: "blue.100"}}>
                             Policy Creators
                         </Box>
                     </Link>

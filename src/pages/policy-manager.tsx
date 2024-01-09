@@ -1,28 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import React, {useEffect, useState} from 'react';
+import {useRouter} from 'next/router';
 import usePolicyContract from '@/hooks/usePolicyContract';
-import { BigNumber, ethers } from "ethers";
-import { useMetaMask } from "@/contexts/MetaMaskContext";
+import {BigNumber, ethers} from "ethers";
+import {useMetaMask} from "@/contexts/MetaMaskContext";
 import {
-    Flex, Box, Text, Divider, VStack, Heading, Stat, StatLabel, StatNumber, StatGroup, Grid, Icon, Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Input, Button
+    Flex,
+    Box,
+    Text,
+    Divider,
+    VStack,
+    Heading,
+    Stat,
+    StatLabel,
+    StatNumber,
+    StatGroup,
+    Grid,
+    Icon,
+    Modal,
+    ModalContent,
+    ModalOverlay,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    ModalCloseButton,
+    Input,
+    Button
 } from '@chakra-ui/react';
-import { FaEthereum } from "react-icons/fa";
+import {FaEthereum} from "react-icons/fa";
 import PayPremiumCTA from "@/components/PayPremiumCTA";
-import { convertEpochToReadableDate } from '@/utils/helpers'; // Import the helper function
+import {convertEpochToReadableDate} from '@/utils/helpers'; // Import the helper function
 import usePayoutContract from '@/hooks/usePayoutContract';
 
 const PolicyManager = () => {
     const router = useRouter();
-    const { policyId } = router.query;
-    const { fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage } = usePolicyContract();
-    const { processClaim } = usePayoutContract();
-    const { account } = useMetaMask();
+    const {policyId} = router.query;
+    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage} = usePolicyContract();
+    const {account} = useMetaMask();
     const [policy, setPolicy] = useState(null);
-    const [calculatedPremium, setCalculatedPremium] = useState(null);
-    const [premiumsPaid, setPremiumsPaid] = useState(null);
-    const [lastPaidTime, setLastPaidTime] = useState(null);
-    const [totalCoverage, setTotalCoverage] = useState(null);
-    const [premiumAmountToSend, setPremiumAmountToSend] = useState(null);
+    const [calculatedPremium, setCalculatedPremium] = useState<BigNumber>(BigNumber.from(0));
+    const [premiumsPaid, setPremiumsPaid] = useState<BigNumber>(BigNumber.from(0));
+    const [lastPaidTime, setLastPaidTime] = useState<BigNumber>(BigNumber.from(0));
+    const [totalCoverage, setTotalCoverage] = useState<BigNumber>(BigNumber.from(0));
+    const [premiumAmountToSend, setPremiumAmountToSend] = useState<BigNumber>(BigNumber.from(0));
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -35,17 +54,17 @@ const PolicyManager = () => {
                 setPolicy(policyDetails);
 
                 // load premium data
-                const calcPremium: any = await calculatePremium(policyId);
+                const calcPremium: BigNumber = await calculatePremium(policyId);
                 setCalculatedPremium(calcPremium);
                 setPremiumAmountToSend(calcPremium);
 
-                const premiumsPaid: any = await fetchPremiumsPaid(policyId, account);
+                const premiumsPaid: BigNumber = await fetchPremiumsPaid(policyId, account);
                 setPremiumsPaid(premiumsPaid);
 
-                const lastPaidTime: any = await fetchLastPaidTime(policyId, account);
+                const lastPaidTime: BigNumber = await fetchLastPaidTime(policyId, account);
                 setLastPaidTime(lastPaidTime);
 
-                const coverage: any = await fetchTotalCoverage(policyId, account);
+                const coverage: BigNumber = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
             }
         };
@@ -53,14 +72,13 @@ const PolicyManager = () => {
         loadData();
     }, [policyId, account, fetchPolicy, calculatePremium, fetchPremiumsPaid, fetchTotalCoverage, fetchLastPaidTime]);
 
-    const handlePayPremium = async (id, amount) => {
+    const handlePayPremium = async (id: any, amount: BigNumber) => {
         console.log(amount);
         await payPremium(id, amount);
     };
 
-    const handleClaim = async (id) => {
-        console.log(totalCoverage);
-        await processClaim(id, totalCoverage);
+    const handleClaim = async (id: any) => {
+        await handlePayout(id, totalCoverage);
     };
 
     const handlePremiumInput = (e) => {
@@ -104,15 +122,17 @@ const PolicyManager = () => {
                             </Stat>
                         </StatGroup>
                     </Flex>
-                    <Divider my={4} />
-                    <Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)' }} gap={6}>
+                    <Divider my={4}/>
+                    <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
                         <Stat>
                             <StatLabel>Coverage Amount</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum}
+                                                                                                color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Initial Premium Fee</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.initialPremiumFee)} <Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.initialPremiumFee)} <Icon as={FaEthereum}
+                                                                                                   color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Initial Coverage Percentage</StatLabel>
@@ -120,7 +140,8 @@ const PolicyManager = () => {
                         </Stat>
                         <Stat>
                             <StatLabel>Premium Rate</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.premiumRate)} <Icon as={FaEthereum} ml={1} color="currentcolor" /></StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.premiumRate)} <Icon as={FaEthereum} ml={1}
+                                                                                             color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Duration</StatLabel>
@@ -136,11 +157,13 @@ const PolicyManager = () => {
                         </Stat>
                         <Stat>
                             <StatLabel>Calculated Premium</StatLabel>
-                            <StatNumber>{calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                            <StatNumber>{calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : '0.0'}<Icon
+                                as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel> Premiums Paid </StatLabel>
-                            <StatNumber>{premiumsPaid ? ethers.utils.formatEther(premiumsPaid) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                            <StatNumber>{premiumsPaid ? ethers.utils.formatEther(premiumsPaid) : '0.0'}<Icon
+                                as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel> Last Paid time </StatLabel>
@@ -148,19 +171,20 @@ const PolicyManager = () => {
                         </Stat>
                         <Stat>
                             <StatLabel> Total Coverage </StatLabel>
-                            <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0.0'}<Icon as={FaEthereum} color="currentcolor" /></StatNumber>
+                            <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0.0'}<Icon
+                                as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
                     </Grid>
-                    <Divider my={4} />
+                    <Divider my={4}/>
                     <Flex justifyContent="space-between">
                         <Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>
-                        <Button colorScheme="teal" onClick={handleClaim}>Claim</Button>
+                        <Button colorScheme="teal" onClick={() => handleClaim(policyId)}>Claim</Button>
                     </Flex>
                     <Modal isOpen={isModalOpen} onClose={closeModal}>
-                        <ModalOverlay />
+                        <ModalOverlay/>
                         <ModalContent>
                             <ModalHeader>Pay Premium</ModalHeader>
-                            <ModalCloseButton />
+                            <ModalCloseButton/>
                             <ModalBody>
                                 <form>
                                     {premiumAmountToSend != null && (

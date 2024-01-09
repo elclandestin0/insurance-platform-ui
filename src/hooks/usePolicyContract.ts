@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useContracts } from './useContracts'; // Import your useContracts hook
 import { useMetaMask } from '@/contexts/MetaMaskContext';
-import { ethers } from "ethers"; // Import the MetaMask context
+import {BigNumber, ethers} from "ethers"; // Import the MetaMask context
 
 
 const usePolicyContract = () => {
@@ -126,6 +126,34 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const handlePayout = useCallback(async (policyId, claimAmount) => {
+        if (!policyMakerContract || !policyId || !claimAmount) {
+            console.error("Contract not initialized or invalid parameters.");
+            return;
+        }
+        
+        try {
+            // Ensure claimAmount is properly formatted as a BigNumber
+            const formattedClaimAmount = ethers.BigNumber.isBigNumber(claimAmount)
+                ? claimAmount
+                : ethers.utils.parseUnits(claimAmount.toString(), 'ether');
+
+            console.log(policyId);
+            console.log(account);
+            console.log(claimAmount.toString());
+            const transactionResponse = await policyMakerContract.handlePayout(
+                policyId,
+                formattedClaimAmount,
+                { from: account }
+            );
+            await transactionResponse.wait(); // Wait for the transaction to be mined
+            console.log('Payout handled successfully');
+        } catch (err) {
+            console.error('Error handling payout:', err);
+        }
+    }, [policyMakerContract, account]);
+
+
     const calculatePremium = useCallback(async (policyId: any) => {
         if (!policyMakerContract || !policyId || !account) {
             console.error("Contract not initialized or missing parameters.");
@@ -245,7 +273,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage};
+    return { policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage};
 };
 
 export default usePolicyContract;
