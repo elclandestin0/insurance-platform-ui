@@ -34,9 +34,10 @@ import usePayoutContract from '@/hooks/usePayoutContract';
 const PolicyManager = () => {
     const router = useRouter();
     const {policyId} = router.query;
-    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage} = usePolicyContract();
+    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage} = usePolicyContract();
     const {account} = useMetaMask();
     const [policy, setPolicy] = useState(null);
+    const [potentialCoverage, setPotentialCoverage] = useState<string>("0.0");
     const [calculatedPremium, setCalculatedPremium] = useState<BigNumber>(BigNumber.from(0));
     const [premiumsPaid, setPremiumsPaid] = useState<BigNumber>(BigNumber.from(0));
     const [lastPaidTime, setLastPaidTime] = useState<BigNumber>(BigNumber.from(0));
@@ -81,13 +82,17 @@ const PolicyManager = () => {
         await handlePayout(id, totalCoverage);
     };
 
-    const handlePremiumInput = (e) => {
+    const checkPotentialCoverage = async (id: any, amount: BigNumber) => {
+        const _potentialCoverage = await fetchPotentialCoverage(id, account, amount);
+        setPotentialCoverage(ethers.utils.formatEther(_potentialCoverage));
+    }
+
+    const handlePremiumInput = async (e: any) => {
         const inputAmount = ethers.utils.parseEther(e.target.value || '0');
-        // Compare input amount with calculated premium (both in WEI for accuracy)
         if (inputAmount.gte(calculatedPremium)) {
             setPremiumAmountToSend(inputAmount);
+            await checkPotentialCoverage(policyId, inputAmount);
         } else {
-            console.log("Input amount is less than the calculated premium.");
             setPremiumAmountToSend(calculatedPremium)
         }
     };
@@ -196,6 +201,13 @@ const PolicyManager = () => {
                                                 type="number" // Ensure input is treated as a numerical value
                                                 min={ethers.utils.formatEther(calculatedPremium)} // Set the minimum value to the calculated premium
                                             />
+                                            <Stat>
+                                                <StatLabel> Potential Coverage </StatLabel>
+                                                <StatNumber>{potentialCoverage ? potentialCoverage : '0.0'}
+                                                    <Icon
+                                                        as={FaEthereum} color="currentcolor"/>
+                                                </StatNumber>
+                                            </Stat>
                                             <PayPremiumCTA
                                                 premiumAmountToSend={ethers.utils.formatEther(premiumAmountToSend)}
                                                 onPayPremium={handlePayPremium}
