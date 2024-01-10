@@ -18,7 +18,7 @@ const Home: React.FC = () => {
         return (
             <Flex
                 className={styles.main}
-                height="100vh"
+                height="100vh"  
                 alignItems="center"
                 justifyContent="center"
                 direction="column"

@@ -176,7 +176,7 @@ const PolicyManager = () => {
                         </Stat>
                         <Stat>
                             <StatLabel> Total Coverage </StatLabel>
-                            <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0.0'}<Icon
+                            <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
                     </Grid>
