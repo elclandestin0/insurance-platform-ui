@@ -34,7 +34,7 @@ import usePayoutContract from '@/hooks/usePayoutContract';
 const PolicyManager = () => {
     const router = useRouter();
     const {policyId} = router.query;
-    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage} = usePolicyContract();
+    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded} = usePolicyContract();
     const {account} = useMetaMask();
     const [policy, setPolicy] = useState(null);
     const [potentialCoverage, setPotentialCoverage] = useState<string>("0.0");
@@ -43,6 +43,8 @@ const PolicyManager = () => {
     const [lastPaidTime, setLastPaidTime] = useState<BigNumber>(BigNumber.from(0));
     const [totalCoverage, setTotalCoverage] = useState<BigNumber>(BigNumber.from(0));
     const [premiumAmountToSend, setPremiumAmountToSend] = useState<BigNumber>(BigNumber.from(0));
+    const [amountInvestment, setAmountInvestment] = useState<BigNumber>(BigNumber.from(0));
+    const [amountCoverage, setAmountCoverage] = useState<BigNumber>(BigNumber.from(0));
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -67,6 +69,12 @@ const PolicyManager = () => {
 
                 const coverage: BigNumber = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
+                
+                const amountCovered: BigNumber = await fetchAmountCoverageFunded(policyId, account);
+                setAmountCoverage(amountCovered);
+                
+                const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
+                setAmountInvestment(amountInvested);
             }
         };
 
@@ -177,6 +185,16 @@ const PolicyManager = () => {
                         <Stat>
                             <StatLabel> Total Coverage </StatLabel>
                             <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0'}<Icon
+                                as={FaEthereum} color="currentcolor"/></StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel> Amount in Coverage Fund </StatLabel>
+                            <StatNumber>{amountCoverage ? ethers.utils.formatEther(amountCoverage) : '0'}<Icon
+                                as={FaEthereum} color="currentcolor"/></StatNumber>
+                        </Stat>
+                        <Stat>
+                            <StatLabel> Amount in Investment Fund </StatLabel>
+                            <StatNumber>{amountInvestment ? ethers.utils.formatEther(amountInvestment) : '0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
                     </Grid>

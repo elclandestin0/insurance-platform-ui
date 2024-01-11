@@ -10,7 +10,7 @@ import DeFiStakingComponent from "@/components/DeFiStakingComponent"; // Make su
 import {formatToWeiIfMoreThanThreeDecimalPlaces} from '@/utils/helpers';
 
 const PolicySettings: React.FC = () => {
-    const {fetchPremiumsPaid, isLoading, error, fetchSubscribers, fetchLastPaidTime, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed} = usePolicyContract();
+    const {fetchPremiumsPaid, isLoading, error, fetchSubscribers, fetchLastPaidTime, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchAmountCoverageFunded, fetchAmountInvestmentFunded} = usePolicyContract();
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
