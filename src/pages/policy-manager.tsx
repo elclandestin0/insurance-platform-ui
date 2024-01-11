@@ -8,7 +8,6 @@ import {
     Box,
     Text,
     Divider,
-    VStack,
     Heading,
     Stat,
     StatLabel,
@@ -16,25 +15,18 @@ import {
     StatGroup,
     Grid,
     Icon,
-    Modal,
-    ModalContent,
-    ModalOverlay,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalCloseButton,
-    Input,
     Button
 } from '@chakra-ui/react';
 import {FaEthereum} from "react-icons/fa";
 import PayPremiumCTA from "@/components/PayPremiumCTA";
 import {convertEpochToReadableDate} from '@/utils/helpers'; // Import the helper function
 import usePayoutContract from '@/hooks/usePayoutContract';
+import ManagePremiumModal from "@/components/PayPremiumModal";
 
 const PolicyManager = () => {
     const router = useRouter();
     const {policyId} = router.query;
-    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded} = usePolicyContract();
+    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, fetchPremiumCalculation} = usePolicyContract();
     const {account} = useMetaMask();
     const [policy, setPolicy] = useState(null);
     const [potentialCoverage, setPotentialCoverage] = useState<string>("0.0");
@@ -45,6 +37,10 @@ const PolicyManager = () => {
     const [premiumAmountToSend, setPremiumAmountToSend] = useState<BigNumber>(BigNumber.from(0));
     const [amountInvestment, setAmountInvestment] = useState<BigNumber>(BigNumber.from(0));
     const [amountCoverage, setAmountCoverage] = useState<BigNumber>(BigNumber.from(0));
+    const [premiumCoverage, setPremiumCoverage] = useState<BigNumber>(BigNumber.from(0));
+    const [premiumInvestment, setPremiumInvestment] = useState<BigNumber>(BigNumber.from(0));
+    const [covered, setCovered] = useState(false);
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -69,10 +65,10 @@ const PolicyManager = () => {
 
                 const coverage: BigNumber = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
-                
+
                 const amountCovered: BigNumber = await fetchAmountCoverageFunded(policyId, account);
                 setAmountCoverage(amountCovered);
-                
+
                 const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
                 setAmountInvestment(amountInvested);
             }
@@ -100,6 +96,11 @@ const PolicyManager = () => {
         if (inputAmount.gte(calculatedPremium)) {
             setPremiumAmountToSend(inputAmount);
             await checkPotentialCoverage(policyId, inputAmount);
+            const _premiumCalculation = await fetchPremiumCalculation(policyId, inputAmount);
+            setPremiumCoverage(_premiumCalculation.premiumForCoverageFund);
+            setPremiumInvestment(_premiumCalculation.premiumForInvestmentFund);
+            const _covered = await checkIfCovered(policyId, account, inputAmount);
+            setCovered(_covered);
         } else {
             setPremiumAmountToSend(calculatedPremium)
         }
@@ -200,48 +201,14 @@ const PolicyManager = () => {
                     </Grid>
                     <Divider my={4}/>
                     <Flex justifyContent="space-between">
-                        <Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>
+                        <ManagePremiumModal calculatedPremium={calculatedPremium} handlePayPremium={handlePayPremium}
+                                            potentialCoverage={potentialCoverage} covered={covered}
+                                            premiumCoverage={premiumCoverage} premiumInvestment={premiumInvestment}
+                                            premiumAmountToSend={premiumAmountToSend}
+                                            handlePremiumInput={handlePremiumInput} policyId={policyId}/>
+                        {/*<Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>*/}
                         <Button colorScheme="teal" onClick={() => handleClaim(policyId)}>Claim</Button>
                     </Flex>
-                    <Modal isOpen={isModalOpen} onClose={closeModal}>
-                        <ModalOverlay/>
-                        <ModalContent>
-                            <ModalHeader>Pay Premium</ModalHeader>
-                            <ModalCloseButton/>
-                            <ModalBody>
-                                <form>
-                                    {premiumAmountToSend != null && (
-                                        <>
-                                            <Input
-                                                placeholder="Premium amount"
-                                                defaultValue={ethers.utils.formatEther(calculatedPremium)}
-                                                onChange={handlePremiumInput}
-                                                type="number" // Ensure input is treated as a numerical value
-                                                min={ethers.utils.formatEther(calculatedPremium)} // Set the minimum value to the calculated premium
-                                            />
-                                            <Stat>
-                                                <StatLabel> Potential Coverage </StatLabel>
-                                                <StatNumber>{potentialCoverage ? potentialCoverage : '0.0'}
-                                                    <Icon
-                                                        as={FaEthereum} color="currentcolor"/>
-                                                </StatNumber>
-                                            </Stat>
-                                            <PayPremiumCTA
-                                                premiumAmountToSend={ethers.utils.formatEther(premiumAmountToSend)}
-                                                onPayPremium={handlePayPremium}
-                                                policyId={policyId}
-                                            />
-                                        </>
-                                    )}
-                                </form>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button colorScheme="blue" mr={3} onClick={closeModal}>
-                                    Close
-                                </Button>
-                            </ModalFooter>
-                        </ModalContent>
-                    </Modal>
                 </Box>
             ) : (
                 <Text>Loading policy details...</Text>

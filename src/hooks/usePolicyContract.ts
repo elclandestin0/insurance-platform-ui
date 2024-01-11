@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useContracts} from './useContracts'; // Import your useContracts hook
 import {useMetaMask} from '@/contexts/MetaMaskContext';
-import {BigNumber, ethers} from "ethers"; // Import the MetaMask context
+import {BigNumber, ethers} from "ethers";
+import {max} from "@popperjs/core/lib/utils/math"; // Import the MetaMask context
 
 
 const usePolicyContract = () => {
@@ -117,13 +118,29 @@ const usePolicyContract = () => {
             // Assuming you have ethers.js or a similar library
             const transaction = await policyMakerContract.payPremium(policyId, {
                 from: account,
-                value: ethers.utils.parseEther(premiumAmount)
+                value: premiumAmount
             });
             await transaction.wait(); // Wait for the transaction to be mined
             console.log('Premium paid successfully');
         } catch (err) {
             console.error('Error paying initial premium:', err);
         }
+    }, [policyMakerContract, account]);
+
+    const checkIfCovered = useCallback(async (policyId: any, account: any, amount: any): Promise<boolean>  => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or invalid parameters.");
+            return false;
+        }
+        try {
+            // Assuming you have ethers.js or a similar library
+            const potentialCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, amount)
+            const maxPolicyCoverage: BigNumber = (await policyMakerContract.policies(policyId)).coverageAmount;
+            return potentialCoverage.gte(maxPolicyCoverage);
+        } catch (err) {
+            console.error('Error paying initial premium:', err);
+        }
+        return false;
     }, [policyMakerContract, account]);
 
     const handlePayout = useCallback(async (policyId, claimAmount) => {
@@ -138,9 +155,6 @@ const usePolicyContract = () => {
                 ? claimAmount
                 : ethers.utils.parseUnits(claimAmount.toString(), 'ether');
 
-            console.log(policyId);
-            console.log(account);
-            console.log(claimAmount.toString());
             const transactionResponse = await policyMakerContract.handlePayout(
                 policyId,
                 formattedClaimAmount,
@@ -273,6 +287,20 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const fetchPremiumCalculation = useCallback(async (policyId: any,  amount: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.calculatePremiumAllocation(policyId, amount);
+        } catch (err) {
+            console.error('Error retrieving premiums paid:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
+
 
     const fetchTotalClaimed = useCallback(async (policyId: any, account: any) => {
         if (!policyMakerContract || !policyId) {
@@ -329,7 +357,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded};
+    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, fetchPremiumCalculation};
 };
 
 export default usePolicyContract;
