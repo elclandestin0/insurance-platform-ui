@@ -81,7 +81,7 @@ const usePolicyContract = () => {
                 penaltyRate: Number(policy.penaltyRate),
                 monthsGracePeriod: Number(policy.monthsGracePeriod),
                 coverageFundPercentage: Number(policy.coverageFundPercentage),
-                investmentFundPercentage: Number(policy.coverageFundPercentage)
+                investmentFundPercentage: Number(policy.investmentFundPercentage)
             };
 
         } catch (err) {

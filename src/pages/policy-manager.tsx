@@ -54,7 +54,8 @@ const PolicyManager = () => {
                 // Load policy data 
                 const policyDetails: any = await fetchPolicy(policyId, account);
                 setPolicy(policyDetails);
-                
+                console.log(policyDetails);
+
                 // load premium data
                 const calcPremium: BigNumber = await calculatePremium(policyId);
                 setCalculatedPremium(calcPremium);
@@ -75,12 +76,12 @@ const PolicyManager = () => {
                 const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
                 setAmountInvestment(amountInvested)
                 console.log(covered);
-                if (covered)
-                {
+                if (covered) {
                     const _bonusCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, premiumAmountToSend);
                     setBonusCoverage(_bonusCoverage);
                     console.log("bonus coverage ", ethers.utils.formatEther(_bonusCoverage))
-                };
+                }
+                ;
             }
         };
 
@@ -217,7 +218,10 @@ const PolicyManager = () => {
                                             potentialCoverage={potentialCoverage} covered={covered}
                                             premiumCoverage={premiumCoverage} premiumInvestment={premiumInvestment}
                                             premiumAmountToSend={premiumAmountToSend} bonusCoverage={bonusCoverage}
-                                            handlePremiumInput={handlePremiumInput} policyId={policyId} policyCoverageAmount={policy.coverageAmount}/>
+                                            handlePremiumInput={handlePremiumInput} policyId={policyId}
+                                            policyCoverageAmount={policy.coverageAmount}
+                                            investmentPercentage={policy.investmentFundPercentage}
+                                            coveragePercentage={policy.coverageFundPercentage}/>
                         {/*<Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>*/}
                         <Button colorScheme="teal" onClick={() => handleClaim(policyId)}>Claim</Button>
                     </Flex>
