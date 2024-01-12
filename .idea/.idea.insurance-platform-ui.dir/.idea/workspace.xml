@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ae58f35e-deb5-4d75-be05-db70c4e19c85" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/page.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/page.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PayPremiumModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PayPremiumModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/policy-manager.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/policy-manager.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,29 +29,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform-ui/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform-ui/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache",
-      "/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache",
-      "/home/el_clandestin0_/.local/share/Symbols/src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
+      &quot;/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
+      &quot;/home/el_clandestin0_/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactBuddySettings">
     <option name="appTreeLastSelected" value="insurance-platform-ui/README.md" />
   </component>
@@ -77,6 +75,7 @@
       <workItem from="1703252488931" duration="66000" />
       <workItem from="1703252555522" duration="700000" />
       <workItem from="1703253727541" duration="13384000" />
+      <workItem from="1705063712947" duration="731000" />
     </task>
     <servers />
   </component>

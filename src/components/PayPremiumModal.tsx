@@ -17,10 +17,20 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import {FaEthereum} from 'react-icons/fa';
-import {ethers} from 'ethers';
+import {BigNumber, ethers} from 'ethers';
+import {useEffect, useState} from "react";
 
-const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmountToSend, handlePremiumInput, handlePayPremium, policyId, covered, premiumCoverage, premiumInvestment}) => {
+const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmountToSend, handlePremiumInput, handlePayPremium, policyId, covered, premiumCoverage, premiumInvestment, bonusCoverage, policyCoverageAmount}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
+    const [bonusCover, setBonusCoverage] = useState<BigNumber>(BigNumber.from(0));
+
+    useEffect(() => {
+        if (bonusCoverage) {
+            const _bonusCoverage = bonusCoverage.sub(policyCoverageAmount);
+            setBonusCoverage(_bonusCoverage);
+        }
+    }, [bonusCoverage]);
+
     return (
         <>
             <Button onClick={onOpen} colorScheme="pink" size="md">Pay</Button>
@@ -46,12 +56,20 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                             {covered ? (
                                 <FormLabel htmlFor="coverage-amount" color="green">You will be fully covered</FormLabel>
                             ) : (
-                                <FormLabel htmlFor="coverage-amount" color="gray.600">You will receive in
-                                    coverage</FormLabel>
+                                <FormLabel htmlFor="coverage-amount" color="gray.600">You will receive in coverage</FormLabel>
                             )}
                             <Stat>
                                 <StatNumber fontSize="xl" color="gray.600">
-                                    {potentialCoverage ? potentialCoverage : '0.0'}
+                                    {potentialCoverage ? ethers.utils.formatEther(policyCoverageAmount) : ethers.utils.formatEther(potentialCoverage)}
+                                    <Icon as={FaEthereum} color="gray.700"/>
+                                </StatNumber>
+                            </Stat>
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel htmlFor="coverage-amount" color="gray.600">Bonus coverage</FormLabel>
+                            <Stat>
+                                <StatNumber fontSize="xl" color="gray.600">
+                                    {bonusCover && covered ? ethers.utils.formatEther(bonusCover) : '0.0'}
                                     <Icon as={FaEthereum} color="gray.700"/>
                                 </StatNumber>
                             </Stat>
