@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae58f35e-deb5-4d75-be05-db70c4e19c85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PayPremiumModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PayPremiumModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/policy-manager.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/policy-manager.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="ae58f35e-deb5-4d75-be05-db70c4e19c85" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,6 +72,7 @@
       <workItem from="1703252555522" duration="700000" />
       <workItem from="1703253727541" duration="13384000" />
       <workItem from="1705063712947" duration="731000" />
+      <workItem from="1705157135101" duration="713000" />
     </task>
     <servers />
   </component>
