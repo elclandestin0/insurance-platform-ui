@@ -101,8 +101,8 @@ const ManagePremiumModal = ({
                                 <Flex direction="row" align="center">
                                     <Text
                                         fontSize="md"
-                                        fontWeight={'bold'}
-                                        mr={4}
+                                        fontWeight={activeTab === 'pay' ? 'bold' : 'normal'}
+                                        color={activeTab === 'pay' ? 'black' : 'gray.400'}
                                         cursor="pointer"
                                         onClick={() => setActiveTab('pay')}
                                     >
@@ -115,14 +115,14 @@ const ManagePremiumModal = ({
                                         onClick={() => covered ? setActiveTab('custom') : console.log("Can't click.")}
                                         borderRadius="full"
                                         p={1}
-                                        onMouseEnter={() => setIsHovering(true)} // Set hover state to true when mouse enters
-                                        onMouseLeave={() => setIsHovering(false)} // Set hover state to false when mouse leaves
+                                        onMouseEnter={() => setIsHovering(true)}
+                                        onMouseLeave={() => setIsHovering(false)}
                                     >
                                         <Text
                                             ml={3}
                                             fontSize="md"
-                                            fontWeight="bold"
-                                            color={activeTab === 'gold' || isHovering ? 'gold' : 'gray.400'} // Change color when hovering
+                                            fontWeight={activeTab === 'custom' ? 'bold' : 'normal'}
+                                            color={activeTab === 'custom' ? 'gold' : 'gray.400'}
                                         >
                                             Bonus
                                         </Text>
@@ -136,18 +136,21 @@ const ManagePremiumModal = ({
                                                 ml={1}
                                                 onClick={handleLockClick}
                                                 color={isHovering ? "gold" : "gray.400"}
-                                            />)}
+                                            />
+                                        )}
                                     </Flex>
+
                                     <Text
                                         fontSize="md"
-                                        fontWeight="bold"
-                                        ml={4}
+                                        ml={3}
+                                        fontWeight={activeTab === 'claim' ? 'bold' : 'normal'}
+                                        color={activeTab === 'claim' ? 'black' : 'gray.400'}
                                         cursor="pointer"
-                                        color={isHovering ? "black" : "gray.400"}
                                         onClick={() => setActiveTab('claim')}
                                     >
                                         Claim
                                     </Text>
+
                                 </Flex>
                             </Box>
                             <ModalCloseButton position="absolute" right="4" top="4"/>

@@ -42,6 +42,7 @@ const PolicyManager = () => {
     const [bonusCoverage, setBonusCoverage] = useState<BigNumber>(BigNumber.from(0));
     const [refreshData, setRefreshData] = useState<boolean>(false);
     const [potentiallyCovered, setPotentiallyCovered] = useState(false);
+    const [covered, setCovered] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
@@ -60,7 +61,7 @@ const PolicyManager = () => {
                 if (!premiumAmountToSend) {
                     setPremiumAmountToSend(calcPremium);
                 }
-                
+
                 const premiumsPaid: BigNumber = await fetchPremiumsPaid(policyId, account);
                 setPremiumsPaid(premiumsPaid);
 
@@ -73,8 +74,8 @@ const PolicyManager = () => {
                 const amountCovered: BigNumber = await fetchAmountCoverageFunded(policyId, account);
                 setAmountCoverage(amountCovered);
 
-                const potentiallyCovered: boolean = await checkIfPotentiallyCovered(policyId, account, premiumAmountToSend);
-                setPotentiallyCovered(potentiallyCovered);
+                const covered: boolean = await checkIfCovered(policyId, account);
+                setCovered(covered);
 
                 const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
                 setAmountInvestment(amountInvested);
@@ -216,7 +217,7 @@ const PolicyManager = () => {
                     <Divider my={4}/>
                     <Flex justifyContent="space-between">
                         <ManagePremiumModal calculatedPremium={calculatedPremium} handlePayPremium={handlePayPremium}
-                                            potentialCoverage={potentialCoverage}
+                                            potentialCoverage={potentialCoverage} covered={covered}
                                             potentiallyCovered={potentiallyCovered}
                                             premiumCoverage={premiumCoverage} premiumInvestment={premiumInvestment}
                                             premiumAmountToSend={premiumAmountToSend} bonusCoverage={bonusCoverage}
