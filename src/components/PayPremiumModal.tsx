@@ -32,6 +32,7 @@ import {BigNumber, ethers} from 'ethers';
 import {useEffect, useState} from "react";
 import {InfoOutlineIcon} from '@chakra-ui/icons';
 import {FaLock} from "react-icons/fa";
+import usePolicyContract from "@/hooks/usePolicyContract";
 
 const ManagePremiumModal = ({
                                 calculatedPremium,
@@ -49,6 +50,7 @@ const ManagePremiumModal = ({
                                 investmentPercentage,
                                 coveragePercentage
                             }) => {
+    const {payCustomPremium} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [bonusCover, setBonusCoverage] = useState<BigNumber>(BigNumber.from(0));
     const [activeTab, setActiveTab] = useState('pay');
@@ -72,10 +74,15 @@ const ManagePremiumModal = ({
             setBonusCoverage(_bonusCoverage);
         }
 
-        premiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
-        premiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
+        customPremiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
+        customPremiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
 
     }, [bonusCoverage, investmentPercentagePremium, customPremiumAmountToSend]);
+
+
+    const handlePayCustomPremium = async () => {
+        await payCustomPremium(policyId, Number(investmentPercentagePremium), customPremiumAmountToSend);
+    };
 
     const handleLockClick = () => {
         if (!covered) {
@@ -320,21 +327,42 @@ const ManagePremiumModal = ({
                         )}
                     </ModalBody>
                     <ModalFooter>
-                        <Button variant="ghost" colorScheme="blue" mr={3} onClick={onClose}>
-                            Close
-                        </Button>
-                        <Button
-                            colorScheme="pink"
-                            onClick={() => handlePayPremium(policyId, premiumAmountToSend)}
-                        >
-                            Pay Premium
-                        </Button>
+                        {
+                            activeTab == "pay" && (
+                                <>
+                                    <Button variant="ghost" colorScheme="blue" mr={3} onClick={onClose}>
+                                        Close
+                                    </Button>
+                                    <Button
+                                        colorScheme="pink"
+                                        onClick={() => handlePayPremium(policyId, premiumAmountToSend)}
+                                    >
+                                        Pay Premium
+                                    </Button>
+                                </>
+                            )
+                        }
+                        {
+                            activeTab == "custom" && (
+                                <>
+                                    <Button variant="ghost" colorScheme="blue" mr={3} onClick={onClose}>
+                                        Close
+                                    </Button>
+                                    <Button
+                                        colorScheme="pink"
+                                        onClick={() => handlePayCustomPremium()}
+                                    >
+                                        Pay Bonus
+                                    </Button>
+                                </>
+                            )
+                        }
+
                     </ModalFooter>
                 </ModalContent>
             </Modal>
         </>
     )
-        ;
 };
 
 export default ManagePremiumModal;

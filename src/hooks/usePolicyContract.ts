@@ -129,7 +129,28 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
-    const checkIfPotentiallyCovered = useCallback(async (policyId: any, account: any, amount: any): Promise<boolean>  => {
+    const payCustomPremium = useCallback(async (policyId: any, investmentPerecentage: any, premiumAmount: any) => {
+        if (!policyMakerContract || !policyId || !premiumAmount) {
+            console.error("Contract not initialized or invalid parameters.");
+            return;
+        }
+
+        try {
+            console.log(ethers.utils.formatEther(premiumAmount));
+            console.log(investmentPerecentage);
+            // Assuming you have ethers.js or a similar library
+            const transaction = await policyMakerContract.payCustomPremium(policyId, investmentPerecentage, {
+                from: account,
+                value: premiumAmount
+            });
+            await transaction.wait(); // Wait for the transaction to be mined
+            console.log('Premium paid successfully');
+        } catch (err) {
+            console.error('Error paying custom premium:', err);
+        }
+    }, [policyMakerContract, account]);
+
+    const checkIfPotentiallyCovered = useCallback(async (policyId: any, account: any, amount: any): Promise<boolean> => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or invalid parameters.");
             return false;
@@ -145,7 +166,7 @@ const usePolicyContract = () => {
         return false;
     }, [policyMakerContract, account]);
 
-    const checkIfCovered = useCallback(async (policyId: any, account: any): Promise<boolean>  => {
+    const checkIfCovered = useCallback(async (policyId: any, account: any): Promise<boolean> => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or invalid parameters.");
             return false;
@@ -304,7 +325,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
-    const fetchPremiumCalculation = useCallback(async (policyId: any,  amount: any) => {
+    const fetchPremiumCalculation = useCallback(async (policyId: any, amount: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
             return ethers.BigNumber.from(0);
@@ -316,7 +337,6 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
-
 
 
     const fetchTotalClaimed = useCallback(async (policyId: any, account: any) => {
@@ -374,7 +394,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, checkIfPotentiallyCovered, fetchPremiumCalculation};
+    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, checkIfPotentiallyCovered, fetchPremiumCalculation, payCustomPremium};
 };
 
 export default usePolicyContract;

@@ -93,7 +93,7 @@ const PolicyManager = () => {
         console.log(amount);
         await payPremium(id, amount);
     };
-
+    
     const handleClaim = async (id: any) => {
         await handlePayout(id, totalCoverage);
     };
