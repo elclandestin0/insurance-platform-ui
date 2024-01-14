@@ -33,22 +33,36 @@ import {useEffect, useState} from "react";
 import {InfoOutlineIcon} from '@chakra-ui/icons';
 import {FaLock} from "react-icons/fa";
 
-const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmountToSend, handlePremiumInput, handlePayPremium, policyId, covered, premiumCoverage, premiumInvestment, bonusCoverage, policyCoverageAmount, investmentPercentage, coveragePercentage}) => {
+const ManagePremiumModal = ({
+                                calculatedPremium,
+                                potentialCoverage,
+                                premiumAmountToSend,
+                                handlePremiumInput,
+                                handlePayPremium,
+                                policyId,
+                                covered,
+                                premiumCoverage,
+                                premiumInvestment,
+                                bonusCoverage,
+                                policyCoverageAmount,
+                                investmentPercentage,
+                                coveragePercentage
+                            }) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [bonusCover, setBonusCoverage] = useState<BigNumber>(BigNumber.from(0));
     const [activeTab, setActiveTab] = useState('pay');
     const [isHovering, setIsHovering] = useState(false);
     const [investmentPercentagePremium, setInvestmentPercentagePremium] = useState(50); // Default to 50%
-    const [coveragePercentagePremium, setCoveragePercentagePremium] = useState(50); // Default to 50%
+    const [coveragePercentagePremium, setCoveragePercentagePremium] = useState(50);// Default to 50%
     const [readableCoverageAmount, setReadableCoverageAmount] = useState<BigNumber>(BigNumber.from(0));
     const [readableInvestmentAmount, setReadableInvestmentAmount] = useState<BigNumber>(BigNumber.from(0));
     const [customPremiumAmountToSend, setCustomPremiumAmountToSend] = useState<BigNumber>(BigNumber.from(0));
     const toast = useToast();
-    const handleInvestmentPercentageChange = (value: any) => {
+    const handleInvestmentPercentageChange = (valueString: any) => {
+        const value = valueString === "" ? 0 : parseFloat(valueString);
         setInvestmentPercentagePremium(value);
         setCoveragePercentagePremium(100 - value);
     };
-    const handleCoveragePercentageChange = (value: any) => setCoveragePercentagePremium(100 - value);
 
 
     useEffect(() => {
@@ -56,14 +70,10 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
             const _bonusCoverage = bonusCoverage.sub(policyCoverageAmount);
             setBonusCoverage(_bonusCoverage);
         }
-        if (premiumAmountToSend) {
-            const _coverageBigNumber = (customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100));
-            console.log(_coverageBigNumber);
-            setReadableCoverageAmount(_coverageBigNumber);
 
-            const _investmentBigNumber = (customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100));
-            setReadableInvestmentAmount(_investmentBigNumber)
-        }
+        premiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
+        premiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
+
     }, [bonusCoverage, investmentPercentagePremium, customPremiumAmountToSend]);
 
     const handleLockClick = () => {
@@ -92,12 +102,12 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                 <Flex direction="row" align="center">
                                     <Text
                                         fontSize="md"
-                                        fontWeight={activeTab === 'pay' ? 'bold' : 'normal'}
+                                        fontWeight={'bold'}
                                         mr={4}
                                         cursor="pointer"
                                         onClick={() => setActiveTab('pay')}
                                     >
-                                        Pay Premium
+                                        Pay
                                     </Text>
 
                                     <Flex
@@ -115,7 +125,7 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                             fontWeight="bold"
                                             color={activeTab === 'gold' || isHovering ? 'gold' : 'gray.400'} // Change color when hovering
                                         >
-                                            Custom Pay Premium
+                                            Bonus
                                         </Text>
                                         <IconButton
                                             aria-label="Locked feature"
@@ -128,6 +138,16 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                             color={isHovering ? "gold" : "gray.400"}
                                         />
                                     </Flex>
+                                    <Text
+                                        fontSize="md"
+                                        fontWeight="bold"
+                                        ml={4}
+                                        cursor="pointer"
+                                        color={isHovering ? "black" : "gray.400"}
+                                        onClick={() => setActiveTab('claim')}
+                                    >
+                                        Claim
+                                    </Text>
                                 </Flex>
                             </Box>
                             <ModalCloseButton position="absolute" right="4" top="4"/>
@@ -215,7 +235,20 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                         id="premium-amount"
                                         placeholder="Premium amount"
                                         defaultValue={premiumAmountToSend ? ethers.utils.formatEther(customPremiumAmountToSend) : "0.0"}
-                                        onChange={(e) => setCustomPremiumAmountToSend(ethers.utils.parseEther(e.target.value))}
+                                        onChange={(e) => {
+                                            const value = e.target.value.trim(); // Trim whitespace
+                                            if (value === '' || parseFloat(value) <= 0) {
+                                                setCustomPremiumAmountToSend(BigNumber.from(0));
+                                            } else {
+                                                try {
+                                                    const parsedValue = ethers.utils.parseEther(value);
+                                                    setCustomPremiumAmountToSend(parsedValue);
+                                                } catch (error) {
+                                                    // Handle the error for invalid input values that cannot be parsed to BigNumber
+                                                    console.error('Invalid input for premium amount');
+                                                }
+                                            }
+                                        }}
                                         type="number"
                                         min={calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : "0.0"}
                                         focusBorderColor="pink.400"
@@ -226,7 +259,7 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                     <FormLabel htmlFor="investment-percentage">Investment Fund Percentage</FormLabel>
                                     <NumberInput
                                         id="investment-percentage"
-                                        defaultValue={investmentPercentagePremium ? investmentPercentagePremium : '0.0'}
+                                        defaultValue={investmentPercentagePremium}
                                         min={0}
                                         max={100}
                                         onChange={handleInvestmentPercentageChange}
@@ -242,16 +275,15 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                     <FormLabel htmlFor="coverage-percentage">Coverage Fund Percentage</FormLabel>
                                     <NumberInput
                                         id="coverage-percentage"
-                                        isDisabled={true}
-                                        value={100 - investmentPercentagePremium}
+                                        value={coveragePercentagePremium}
                                         min={0}
                                         max={100}
-                                        onChange={handleCoveragePercentageChange}
                                     >
-                                        <NumberInputField/>
+                                        <NumberInputField
+                                            isReadOnly/>
                                         <NumberInputStepper>
-                                            <NumberIncrementStepper/>
-                                            <NumberDecrementStepper/>
+                                            <NumberIncrementStepper isDisabled/>
+                                            <NumberDecrementStepper isDisabled/>
                                         </NumberInputStepper>
                                     </NumberInput>
                                 </FormControl>
