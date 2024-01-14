@@ -279,7 +279,6 @@ const usePolicyContract = () => {
         }
         try {
             const potentialCoverage = await policyMakerContract.calculatePotentialCoverage(policyId, account, amount);
-            console.log(potentialCoverage);
             return potentialCoverage;
         } catch (err) {
             console.error('Error retrieving premiums paid:', err);

@@ -50,11 +50,9 @@ const PolicyManager = () => {
     useEffect(() => {
         const loadData = async () => {
             if (policyId && account) {
-                console.log("refresh");
                 // Load policy data 
                 const policyDetails: any = await fetchPolicy(policyId, account);
                 setPolicy(policyDetails);
-                console.log(policyDetails);
 
                 // load premium data
                 const calcPremium: BigNumber = await calculatePremium(policyId);
@@ -79,9 +77,7 @@ const PolicyManager = () => {
                 if (covered) {
                     const _bonusCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, premiumAmountToSend);
                     setBonusCoverage(_bonusCoverage);
-                    console.log("bonus coverage ", ethers.utils.formatEther(_bonusCoverage))
                 }
-                ;
             }
         };
 
