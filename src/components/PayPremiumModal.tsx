@@ -44,8 +44,11 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
     const [readableInvestmentAmount, setReadableInvestmentAmount] = useState<BigNumber>(BigNumber.from(0));
     const [customPremiumAmountToSend, setCustomPremiumAmountToSend] = useState<BigNumber>(BigNumber.from(0));
     const toast = useToast();
-    const handleInvestmentPercentageChange = (value) => setInvestmentPercentagePremium(value);
-    const handleCoveragePercentageChange = (value) => setCoveragePercentagePremium(value);
+    const handleInvestmentPercentageChange = (value: any) => {
+        setInvestmentPercentagePremium(value);
+        setCoveragePercentagePremium(100 - value);
+    };
+    const handleCoveragePercentageChange = (value: any) => setCoveragePercentagePremium(100 - value);
 
 
     useEffect(() => {
@@ -55,6 +58,7 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
         }
         if (premiumAmountToSend) {
             const _coverageBigNumber = (customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100));
+            console.log(_coverageBigNumber);
             setReadableCoverageAmount(_coverageBigNumber);
 
             const _investmentBigNumber = (customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100));
@@ -222,7 +226,7 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                     <FormLabel htmlFor="investment-percentage">Investment Fund Percentage</FormLabel>
                                     <NumberInput
                                         id="investment-percentage"
-                                        defaultValue={investmentPercentagePremium}
+                                        defaultValue={investmentPercentagePremium ? investmentPercentagePremium : '0.0'}
                                         min={0}
                                         max={100}
                                         onChange={handleInvestmentPercentageChange}
@@ -239,7 +243,6 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                     <NumberInput
                                         id="coverage-percentage"
                                         isDisabled={true}
-                                        defaultValue={100 - investmentPercentagePremium}
                                         value={100 - investmentPercentagePremium}
                                         min={0}
                                         max={100}
@@ -261,6 +264,19 @@ const ManagePremiumModal = ({calculatedPremium, potentialCoverage, premiumAmount
                                     <Stat>
                                         <StatNumber fontSize="xl" color="gray.600">
                                             {ethers.utils.formatEther(readableInvestmentAmount) ? ethers.utils.formatEther(readableInvestmentAmount) : '0.0'}
+                                            <Icon as={FaEthereum} color="gray.700"/>
+                                        </StatNumber>
+                                    </Stat>
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel htmlFor="premium-coverage" color="gray.600">Amount to coverage fund
+                                        <Text fontSize="sm" color="gray.500">
+                                            {ethers.utils.formatUnits(coveragePercentagePremium, 0)}% of your premium
+                                        </Text>
+                                    </FormLabel>
+                                    <Stat>
+                                        <StatNumber fontSize="xl" color="gray.600">
+                                            {ethers.utils.formatEther(readableCoverageAmount) ? ethers.utils.formatEther(readableCoverageAmount) : '0.0'}
                                             <Icon as={FaEthereum} color="gray.700"/>
                                         </StatNumber>
                                     </Stat>
