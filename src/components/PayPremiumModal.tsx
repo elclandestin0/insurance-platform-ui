@@ -40,6 +40,7 @@ const ManagePremiumModal = ({
                                 handlePremiumInput,
                                 handlePayPremium,
                                 policyId,
+                                potentiallyCovered,
                                 covered,
                                 premiumCoverage,
                                 premiumInvestment,
@@ -77,8 +78,6 @@ const ManagePremiumModal = ({
     }, [bonusCoverage, investmentPercentagePremium, customPremiumAmountToSend]);
 
     const handleLockClick = () => {
-        // Assuming you have a state or prop that tells you if the user is fully covered
-        // Let's say `isFullyCovered` is a boolean that is `true` when the user is fully covered
         if (!covered) {
             toast({
                 title: "Action needed",
@@ -127,16 +126,17 @@ const ManagePremiumModal = ({
                                         >
                                             Bonus
                                         </Text>
-                                        <IconButton
-                                            aria-label="Locked feature"
-                                            icon={<FaLock/>}
-                                            variant="ghost"
-                                            isRound
-                                            size="sm"
-                                            ml={1}
-                                            onClick={handleLockClick}
-                                            color={isHovering ? "gold" : "gray.400"}
-                                        />
+                                        {!covered && (
+                                            <IconButton
+                                                aria-label="Locked feature"
+                                                icon={<FaLock/>}
+                                                variant="ghost"
+                                                isRound
+                                                size="sm"
+                                                ml={1}
+                                                onClick={handleLockClick}
+                                                color={isHovering ? "gold" : "gray.400"}
+                                            />)}
                                     </Flex>
                                     <Text
                                         fontSize="md"
@@ -196,7 +196,7 @@ const ManagePremiumModal = ({
                                     </Stat>
                                 </FormControl>
                                 <FormControl mt={4}>
-                                    {covered ? (
+                                    {potentiallyCovered ? (
                                         <FormLabel htmlFor="coverage-amount" color="green">You will be fully
                                             covered</FormLabel>
                                     ) : (

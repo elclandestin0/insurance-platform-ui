@@ -114,6 +114,8 @@ const usePolicyContract = () => {
             console.error("Contract not initialized or invalid parameters.");
             return;
         }
+
+        console.log(ethers.utils.formatEther(premiumAmount));
         try {
             // Assuming you have ethers.js or a similar library
             const transaction = await policyMakerContract.payPremium(policyId, {
@@ -127,7 +129,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
-    const checkIfCovered = useCallback(async (policyId: any, account: any, amount: any): Promise<boolean>  => {
+    const checkIfPotentiallyCovered = useCallback(async (policyId: any, account: any, amount: any): Promise<boolean>  => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or invalid parameters.");
             return false;
@@ -135,6 +137,22 @@ const usePolicyContract = () => {
         try {
             // Assuming you have ethers.js or a similar library
             const potentialCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, amount)
+            const maxPolicyCoverage: BigNumber = (await policyMakerContract.policies(policyId)).coverageAmount;
+            return potentialCoverage.gte(maxPolicyCoverage);
+        } catch (err) {
+            console.error('Error paying initial premium:', err);
+        }
+        return false;
+    }, [policyMakerContract, account]);
+
+    const checkIfCovered = useCallback(async (policyId: any, account: any): Promise<boolean>  => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or invalid parameters.");
+            return false;
+        }
+        try {
+            // Assuming you have ethers.js or a similar library
+            const potentialCoverage: BigNumber = await fetchTotalCoverage(policyId, account)
             const maxPolicyCoverage: BigNumber = (await policyMakerContract.policies(policyId)).coverageAmount;
             return potentialCoverage.gte(maxPolicyCoverage);
         } catch (err) {
@@ -356,7 +374,7 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, fetchPremiumCalculation};
+    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, checkIfPotentiallyCovered, fetchPremiumCalculation};
 };
 
 export default usePolicyContract;

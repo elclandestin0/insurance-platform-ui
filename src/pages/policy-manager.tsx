@@ -26,7 +26,7 @@ import ManagePremiumModal from "@/components/PayPremiumModal";
 const PolicyManager = () => {
     const router = useRouter();
     const {policyId} = router.query;
-    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, fetchPremiumCalculation} = usePolicyContract();
+    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, checkIfPotentiallyCovered, fetchPremiumCalculation} = usePolicyContract();
     const {account} = useMetaMask();
     const [policy, setPolicy] = useState(null);
     const [potentialCoverage, setPotentialCoverage] = useState<string>("0.0");
@@ -41,7 +41,7 @@ const PolicyManager = () => {
     const [premiumInvestment, setPremiumInvestment] = useState<BigNumber>(BigNumber.from(0));
     const [bonusCoverage, setBonusCoverage] = useState<BigNumber>(BigNumber.from(0));
     const [refreshData, setRefreshData] = useState<boolean>(false);
-    const [covered, setCovered] = useState(false);
+    const [potentiallyCovered, setPotentiallyCovered] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
@@ -57,8 +57,10 @@ const PolicyManager = () => {
                 // load premium data
                 const calcPremium: BigNumber = await calculatePremium(policyId);
                 setCalculatedPremium(calcPremium);
-                setPremiumAmountToSend(calcPremium);
-
+                if (!premiumAmountToSend) {
+                    setPremiumAmountToSend(calcPremium);
+                }
+                
                 const premiumsPaid: BigNumber = await fetchPremiumsPaid(policyId, account);
                 setPremiumsPaid(premiumsPaid);
 
@@ -71,10 +73,12 @@ const PolicyManager = () => {
                 const amountCovered: BigNumber = await fetchAmountCoverageFunded(policyId, account);
                 setAmountCoverage(amountCovered);
 
+                const potentiallyCovered: boolean = await checkIfPotentiallyCovered(policyId, account, premiumAmountToSend);
+                setPotentiallyCovered(potentiallyCovered);
+
                 const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
-                setAmountInvestment(amountInvested)
-                console.log(covered);
-                if (covered) {
+                setAmountInvestment(amountInvested);
+                if (potentiallyCovered) {
                     const _bonusCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, premiumAmountToSend);
                     setBonusCoverage(_bonusCoverage);
                 }
@@ -95,20 +99,21 @@ const PolicyManager = () => {
 
     const checkPotentialCoverage = async (id: any, amount: BigNumber) => {
         const _potentialCoverage = await fetchPotentialCoverage(id, account, amount);
-        console.log("potential coverage ", ethers.utils.formatEther(_potentialCoverage));
         setPotentialCoverage(ethers.utils.formatEther(_potentialCoverage));
     }
 
     const handlePremiumInput = async (e: any) => {
         const inputAmount = ethers.utils.parseEther(e.target.value || '0');
         if (inputAmount.gte(calculatedPremium)) {
+            console.log(ethers.utils.formatEther(inputAmount));
             setPremiumAmountToSend(inputAmount);
             await checkPotentialCoverage(policyId, inputAmount);
             const _premiumCalculation = await fetchPremiumCalculation(policyId, inputAmount);
             setPremiumCoverage(_premiumCalculation.premiumForCoverageFund);
             setPremiumInvestment(_premiumCalculation.premiumForInvestmentFund);
-            const _covered = await checkIfCovered(policyId, account, inputAmount);
-            setCovered(_covered);
+
+            const _covered = await checkIfPotentiallyCovered(policyId, account, inputAmount);
+            setPotentiallyCovered(_covered);
             setRefreshData(prev => !prev);
         } else {
             setPremiumAmountToSend(calculatedPremium)
@@ -211,7 +216,8 @@ const PolicyManager = () => {
                     <Divider my={4}/>
                     <Flex justifyContent="space-between">
                         <ManagePremiumModal calculatedPremium={calculatedPremium} handlePayPremium={handlePayPremium}
-                                            potentialCoverage={potentialCoverage} covered={covered}
+                                            potentialCoverage={potentialCoverage}
+                                            potentiallyCovered={potentiallyCovered}
                                             premiumCoverage={premiumCoverage} premiumInvestment={premiumInvestment}
                                             premiumAmountToSend={premiumAmountToSend} bonusCoverage={bonusCoverage}
                                             handlePremiumInput={handlePremiumInput} policyId={policyId}
