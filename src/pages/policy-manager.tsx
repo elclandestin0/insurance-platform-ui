@@ -90,36 +90,46 @@ const PolicyManager = () => {
     }, [policyId, account, fetchPolicy, calculatePremium, fetchPremiumsPaid, fetchTotalCoverage, fetchLastPaidTime, refreshData]);
 
     const handlePayPremium = async (id: any, amount: BigNumber) => {
-        console.log(amount);
         await payPremium(id, amount);
     };
-    
+
     const handleClaim = async (id: any) => {
         await handlePayout(id, totalCoverage);
     };
 
     const checkPotentialCoverage = async (id: any, amount: BigNumber) => {
         const _potentialCoverage = await fetchPotentialCoverage(id, account, amount);
+        console.log(_potentialCoverage);
         setPotentialCoverage(ethers.utils.formatEther(_potentialCoverage));
     }
 
     const handlePremiumInput = async (e: any) => {
-        const inputAmount = ethers.utils.parseEther(e.target.value || '0');
-        if (inputAmount.gte(calculatedPremium)) {
-            console.log(ethers.utils.formatEther(inputAmount));
-            setPremiumAmountToSend(inputAmount);
-            await checkPotentialCoverage(policyId, inputAmount);
-            const _premiumCalculation = await fetchPremiumCalculation(policyId, inputAmount);
-            setPremiumCoverage(_premiumCalculation.premiumForCoverageFund);
-            setPremiumInvestment(_premiumCalculation.premiumForInvestmentFund);
+        // Ensure input is a valid number or default to "0.0"
+        const inputValue = e.target.value.trim();
+        const numericValue = inputValue === '' || isNaN(inputValue) ? "0.0" : inputValue;
 
-            const _covered = await checkIfPotentiallyCovered(policyId, account, inputAmount);
-            setPotentiallyCovered(_covered);
-            setRefreshData(prev => !prev);
-        } else {
-            setPremiumAmountToSend(calculatedPremium)
+        try {
+            const inputAmount = ethers.utils.parseEther(numericValue);
+
+            if (inputAmount.gte(calculatedPremium)) {
+                setPremiumAmountToSend(inputAmount);
+                await checkPotentialCoverage(policyId, inputAmount);
+                const _premiumCalculation = await fetchPremiumCalculation(policyId, inputAmount);
+                _premiumCalculation ? setPremiumCoverage(_premiumCalculation[0]) : setPremiumCoverage(BigNumber.from("0.0"));
+                _premiumCalculation ? setPremiumInvestment(_premiumCalculation[1]) : setPremiumInvestment(BigNumber.from("0.0"));
+
+                const _covered = await checkIfPotentiallyCovered(policyId, account, inputAmount);
+                setPotentiallyCovered(_covered);
+                setRefreshData(prev => !prev);
+            } else {
+                setPremiumAmountToSend(calculatedPremium)
+            }
+        } catch (error) {
+            console.error('Error parsing premium amount:', error);
+            // Handle error or set default values
         }
     };
+
 
     return (
         <Flex

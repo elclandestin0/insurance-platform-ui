@@ -34,7 +34,7 @@ import {InfoOutlineIcon} from '@chakra-ui/icons';
 import {FaLock} from "react-icons/fa";
 import usePolicyContract from "@/hooks/usePolicyContract";
 
-const ManagePremiumModal = ({
+const PayPremiumModal = ({
                                 calculatedPremium,
                                 potentialCoverage,
                                 premiumAmountToSend,
@@ -208,7 +208,7 @@ const ManagePremiumModal = ({
                                         </Text></FormLabel>
                                     <Stat>
                                         <StatNumber fontSize="xl" color="gray.600">
-                                            {ethers.utils.formatEther(premiumCoverage) ? ethers.utils.formatEther(premiumCoverage) : '0.0'}
+                                            {premiumCoverage ? ethers.utils.formatEther(premiumCoverage) : '0.0'}
                                             <Icon as={FaEthereum} color="gray.700"/>
                                         </StatNumber>
                                     </Stat>
@@ -252,7 +252,7 @@ const ManagePremiumModal = ({
                                     <Input
                                         id="premium-amount"
                                         placeholder="Premium amount"
-                                        defaultValue={premiumAmountToSend ? ethers.utils.formatEther(customPremiumAmountToSend) : "0.0"}
+                                        defaultValue={customPremiumAmountToSend ? ethers.utils.formatEther(customPremiumAmountToSend) : "0.0"}
                                         onChange={(e) => {
                                             const value = e.target.value.trim(); // Trim whitespace
                                             if (value === '' || parseFloat(value) <= 0) {
@@ -373,4 +373,4 @@ const ManagePremiumModal = ({
     )
 };
 
-export default ManagePremiumModal;
+export default PayPremiumModal;

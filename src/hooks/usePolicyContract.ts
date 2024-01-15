@@ -2,7 +2,6 @@ import {useCallback, useEffect, useState} from 'react';
 import {useContracts} from './useContracts'; // Import your useContracts hook
 import {useMetaMask} from '@/contexts/MetaMaskContext';
 import {BigNumber, ethers} from "ethers";
-import {max} from "@popperjs/core/lib/utils/math"; // Import the MetaMask context
 
 
 const usePolicyContract = () => {
@@ -97,7 +96,6 @@ const usePolicyContract = () => {
         }
         try {
             // Assuming you have ethers.js or a similar library
-            console.log(premiumAmount);
             const transaction = await policyMakerContract.payInitialPremium(policyId, {
                 from: account,
                 value: ethers.utils.parseEther(premiumAmount)
@@ -114,8 +112,7 @@ const usePolicyContract = () => {
             console.error("Contract not initialized or invalid parameters.");
             return;
         }
-
-        console.log(ethers.utils.formatEther(premiumAmount));
+        
         try {
             // Assuming you have ethers.js or a similar library
             const transaction = await policyMakerContract.payPremium(policyId, {
@@ -238,7 +235,6 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
         try {
-            console.log(ethers.utils.formatEther(await policyMakerContract.coverageFundBalance(policyId)));
             return await policyMakerContract.coverageFundBalance(policyId);
         } catch (err) {
             console.error('Error retrieving premiums paid:', err);
@@ -291,6 +287,7 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
         try {
+            console.log(ethers.utils.formatEther(await policyMakerContract.coverageFunded(policyId, account)));
             return await policyMakerContract.coverageFunded(policyId, account);
         } catch (err) {
             console.error('Error retrieving premiums paid:', err);
