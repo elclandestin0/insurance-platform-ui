@@ -73,11 +73,13 @@ const ManagePremiumModal = ({
             const _bonusCoverage = bonusCoverage.sub(policyCoverageAmount);
             setBonusCoverage(_bonusCoverage);
         }
-
+        if (covered) {
+            setActiveTab('custom');
+        }
         customPremiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
         customPremiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
 
-    }, [bonusCoverage, investmentPercentagePremium, customPremiumAmountToSend]);
+    }, [bonusCoverage, investmentPercentagePremium, customPremiumAmountToSend, covered]);
 
 
     const handlePayCustomPremium = async () => {
@@ -111,7 +113,13 @@ const ManagePremiumModal = ({
                                         fontWeight={activeTab === 'pay' ? 'bold' : 'normal'}
                                         color={activeTab === 'pay' ? 'black' : 'gray.400'}
                                         cursor="pointer"
-                                        onClick={() => setActiveTab('pay')}
+                                        onClick={() => !covered ? setActiveTab('pay') : toast({
+                                            title: "You are fully covered",
+                                            description: "Use the Bonus tab to pay.",
+                                            status: "info",
+                                            duration: 5000,
+                                            isClosable: true,
+                                        })}
                                     >
                                         Pay
                                     </Text>
