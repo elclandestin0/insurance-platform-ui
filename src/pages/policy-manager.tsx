@@ -79,6 +79,7 @@ const PolicyManager = () => {
 
                 const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
                 setAmountInvestment(amountInvested);
+                console.log(potentialCoverage);
                 if (potentiallyCovered) {
                     const _bonusCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, premiumAmountToSend);
                     setBonusCoverage(_bonusCoverage);
@@ -99,7 +100,7 @@ const PolicyManager = () => {
 
     const checkPotentialCoverage = async (id: any, amount: BigNumber) => {
         const _potentialCoverage = await fetchPotentialCoverage(id, account, amount);
-        console.log(_potentialCoverage);
+        console.log(ethers.utils.formatEther(_potentialCoverage));
         setPotentialCoverage(ethers.utils.formatEther(_potentialCoverage));
     }
 
@@ -107,10 +108,8 @@ const PolicyManager = () => {
         // Ensure input is a valid number or default to "0.0"
         const inputValue = e.target.value.trim();
         const numericValue = inputValue === '' || isNaN(inputValue) ? "0.0" : inputValue;
-
         try {
             const inputAmount = ethers.utils.parseEther(numericValue);
-
             if (inputAmount.gte(calculatedPremium)) {
                 setPremiumAmountToSend(inputAmount);
                 await checkPotentialCoverage(policyId, inputAmount);
@@ -165,8 +164,7 @@ const PolicyManager = () => {
                     <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
                         <Stat>
                             <StatLabel>Coverage Amount</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum}
-                                                                                                color="currentcolor"/></StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Initial Premium Fee</StatLabel>
@@ -232,11 +230,11 @@ const PolicyManager = () => {
                                             premiumCoverage={premiumCoverage} premiumInvestment={premiumInvestment}
                                             premiumAmountToSend={premiumAmountToSend} bonusCoverage={bonusCoverage}
                                             handlePremiumInput={handlePremiumInput} policyId={policyId}
+                                            totalCoverage={totalCoverage} handleClaim={handleClaim}
                                             policyCoverageAmount={policy.coverageAmount}
                                             investmentPercentage={policy.investmentFundPercentage}
                                             coveragePercentage={policy.coverageFundPercentage}/>
                         {/*<Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>*/}
-                        <Button colorScheme="teal" onClick={() => handleClaim(policyId)}>Claim</Button>
                     </Flex>
                 </Box>
             ) : (

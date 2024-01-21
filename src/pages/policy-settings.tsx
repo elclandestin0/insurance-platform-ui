@@ -6,7 +6,7 @@ import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom 
 import {useRouter} from 'next/router';
 import SubscribersTable from '@/components/SubsribersTable';
 import styles from "@/pages/page.module.css";
-import DeFiStakingComponent from "@/components/DeFiStakingComponent"; // Make sure the path is correct
+import DeFiStakingModal from "@/components/DeFiStakingModal"; // Make sure the path is correct
 import {formatToWeiIfMoreThanThreeDecimalPlaces} from '@/utils/helpers';
 
 const PolicySettings: React.FC = () => {
@@ -110,7 +110,7 @@ const PolicySettings: React.FC = () => {
                                   claimedPerSubscriber={claimedPerSubscriber}/>
             )}
             <Box flex="1" w="full" p={5} mt={4}> {/* This Box will take up the remaining space */}
-                <DeFiStakingComponent investmentBalance={investmentBalance}/>
+                <DeFiStakingModal investmentBalance={investmentBalance} policyId={policyId}/>
             </Box>
         </Flex>
     );

@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae58f35e-deb5-4d75-be05-db70c4e19c85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DeFiStakingComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DeFiStakingComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/PayPremiumModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PayPremiumModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contracts/abis/PolicyMaker.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/contracts/abis/PolicyMaker.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contracts/addresses.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/contracts/addresses.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/policy-manager.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/policy-manager.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,29 +31,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform-ui&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform-ui/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/home/el_clandestin0_/Desktop/solidity-projects/insurance-platform-ui/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
-      &quot;/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
-      &quot;/home/el_clandestin0_/.local/share/Symbols/src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache",
+      "/home/el_clandestin0_/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache",
+      "/home/el_clandestin0_/.local/share/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactBuddySettings">
     <option name="appTreeLastSelected" value="insurance-platform-ui/README.md" />
   </component>
@@ -77,7 +80,7 @@
       <workItem from="1705063712947" duration="731000" />
       <workItem from="1705157135101" duration="713000" />
       <workItem from="1705238098388" duration="7931000" />
-      <workItem from="1705328898852" duration="1171000" />
+      <workItem from="1705328898852" duration="23355000" />
     </task>
     <servers />
   </component>
@@ -87,5 +90,35 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/PayPremiumModal.tsx</url>
+          <line>103</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/PayPremiumModal.tsx</url>
+          <line>249</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/PayPremiumModal.tsx</url>
+          <line>175</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/PayPremiumModal.tsx</url>
+          <line>250</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
