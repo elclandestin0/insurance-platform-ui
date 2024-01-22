@@ -2,18 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {
     Box, Flex, Text, SimpleGrid, Divider, Button,
     Modal, ModalOverlay, ModalContent, ModalHeader,
-    ModalCloseButton, ModalBody, ModalFooter, Input
+    ModalCloseButton, ModalBody, ModalFooter, Input, Stat, StatLabel, StatNumber, Icon
 } from '@chakra-ui/react';
 import styles from "@/pages/page.module.css";
-import { useContracts } from '@/hooks/useContracts';
+import {useContracts} from '@/hooks/useContracts';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import {ethers, BigNumber} from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
+import {FaEthereum} from "react-icons/fa";
 
 const PolicyCreators: React.FC = () => {
-    const { policyMakerContract } = useContracts();
-    const { policies, error } = usePolicyContract();
+    const {policyMakerContract} = useContracts();
+    const {policies, error} = usePolicyContract();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [coverageAmount, setCoverageAmount] = useState('');
     const [initialPremiumFee, setInitialPremiumFee] = useState('');
@@ -28,11 +29,11 @@ const PolicyCreators: React.FC = () => {
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-    
+
     const handleButtonClick = (policyId: any) => {
         router.push(`/policy-settings?policyId=${policyId}`);
     };
-    
+
 
     if (error) {
         return <Box>Error: {error}</Box>;
@@ -40,39 +41,39 @@ const PolicyCreators: React.FC = () => {
 
     const handleSubmit = async (event: Event) => {
         event.preventDefault();
-        
-            try {
-                // Parse values to appropriate format
-                const parsedCoverageAmount = ethers.utils.parseEther(coverageAmount);
-                const parsedInitialPremiumFee = ethers.utils.parseEther(initialPremiumFee);
-                const parsedInitialCoveragePercentage = ethers.BigNumber.from(initialCoveragePercentage);
-                const parsedPremiumRate = ethers.utils.parseEther(premiumRate);
-                const parsedDuration = Number(duration);
-                const parsedPenaltyRate = Number(penaltyRate);
-                const parsedMonthsGracePeriod = Number(monthsGracePeriod);
-                const parsedInvestmentPerentage = Number(investmentPercentage);
-                const parsedCoveragePercentage = Number(coveragePerentage);
-                
-                // Call the createPolicy function of the smart contract 
-                const tx = await policyMakerContract.createPolicy(
-                    parsedCoverageAmount,
-                    parsedInitialPremiumFee,
-                    parsedInitialCoveragePercentage,
-                    parsedPremiumRate,
-                    parsedDuration,
-                    parsedPenaltyRate,
-                    parsedMonthsGracePeriod,
-                    parsedCoveragePercentage,
-                    parsedInvestmentPerentage,
-                );
-                await tx.wait();
 
-            } catch (error) {
-                console.error('Error creating policy:', error);
-            }
-        };
+        try {
+            // Parse values to appropriate format
+            const parsedCoverageAmount = ethers.utils.parseEther(coverageAmount);
+            const parsedInitialPremiumFee = ethers.utils.parseEther(initialPremiumFee);
+            const parsedInitialCoveragePercentage = ethers.BigNumber.from(initialCoveragePercentage);
+            const parsedPremiumRate = ethers.utils.parseEther(premiumRate);
+            const parsedDuration = Number(duration);
+            const parsedPenaltyRate = Number(penaltyRate);
+            const parsedMonthsGracePeriod = Number(monthsGracePeriod);
+            const parsedInvestmentPerentage = Number(investmentPercentage);
+            const parsedCoveragePercentage = Number(coveragePerentage);
 
-    
+            // Call the createPolicy function of the smart contract 
+            const tx = await policyMakerContract.createPolicy(
+                parsedCoverageAmount,
+                parsedInitialPremiumFee,
+                parsedInitialCoveragePercentage,
+                parsedPremiumRate,
+                parsedDuration,
+                parsedPenaltyRate,
+                parsedMonthsGracePeriod,
+                parsedCoveragePercentage,
+                parsedInvestmentPerentage,
+            );
+            await tx.wait();
+
+        } catch (error) {
+            console.error('Error creating policy:', error);
+        }
+    };
+
+
     return (
         <Flex className={styles.main}
               height="100vh"
@@ -85,8 +86,9 @@ const PolicyCreators: React.FC = () => {
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
                         {policies.map((policy, index) => (
                             <Box key={index} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}
-                                onClick={() => handleButtonClick(policy.id)} cursor="pointer">
-                                <Text fontWeight="bold">Policy ID: {policy.id.toString()}</Text> {/* Assuming policy.id is a BigNumber */}
+                                 onClick={() => handleButtonClick(policy.id)} cursor="pointer">
+                                <Text fontWeight="bold">Policy
+                                    ID: {policy.id.toString()}</Text> {/* Assuming policy.id is a BigNumber */}
                                 <Divider my={3}/>
                                 <Text>Coverage Amount: {ethers.utils.formatEther(policy.coverageAmount)} ETH </Text>
                                 <Text>Duration: {policy.duration} days</Text> {/* Assuming policy.duration is a BigNumber */}
@@ -95,27 +97,38 @@ const PolicyCreators: React.FC = () => {
                         ))}
                     </SimpleGrid>
                 ) : (
-                    <Text>No policies found.</Text>
+                    <Stat mt={4}>
+                        <StatNumber> 0 policies found </StatNumber>
+                    </Stat>
                 )}
-                <Button colorScheme="blue" onClick={openModal}>Create new Policy</Button>
+                <Button mt={4} onClick={openModal} colorScheme="pink" size="md">Create new policy</Button>
             </Box>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <ModalOverlay />
+                <ModalOverlay/>
                 <ModalContent>
                     <ModalHeader>Create New Policy</ModalHeader>
-                    <ModalCloseButton />
+                    <ModalCloseButton/>
                     <ModalBody>
                         <form onSubmit={handleSubmit}>
-                            <Input placeholder="Coverage Amount" value={coverageAmount} onChange={(e) => setCoverageAmount(e.target.value)} />
-                            <Input placeholder="Initial Premium Fee" value={initialPremiumFee} onChange={(e) => setInitialPremiumFee(e.target.value)} />
-                            <Input placeholder="Initial Coverage Percentage" value={initialCoveragePercentage} onChange={(e) => setInitialCoveragePercentage(e.target.value)} />
-                            <Input placeholder="Premium Rate" value={premiumRate} onChange={(e) => setPremiumRate(e.target.value)} />
-                            <Input placeholder="Duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
-                            <Input placeholder="Penalty Rate" value={penaltyRate} onChange={(e) => setPenaltyRate(e.target.value)} />
-                            <Input placeholder="Months Grace Period" value={monthsGracePeriod} onChange={(e) => setMonthsGracePeriod(e.target.value)} />
-                            <Input placeholder="Investment Percentage" value={investmentPercentage} onChange={(e) => setInvestmentPercentage(e.target.value)} />
-                            <Input placeholder="Coverage Percentage" value={coveragePerentage} onChange={(e) => setCoveragePercentage(e.target.value)} />
-                            <Button type="submit">
+                            <Input mt={4} placeholder="Coverage Amount" value={coverageAmount}
+                                   onChange={(e) => setCoverageAmount(e.target.value)}/>
+                            <Input mt={4} placeholder="Initial Premium Fee" value={initialPremiumFee}
+                                   onChange={(e) => setInitialPremiumFee(e.target.value)}/>
+                            <Input mt={4} placeholder="Initial Coverage Percentage" value={initialCoveragePercentage}
+                                   onChange={(e) => setInitialCoveragePercentage(e.target.value)}/>
+                            <Input mt={4} placeholder="Premium Rate" value={premiumRate}
+                                   onChange={(e) => setPremiumRate(e.target.value)}/>
+                            <Input mt={4} placeholder="Duration" value={duration}
+                                   onChange={(e) => setDuration(e.target.value)}/>
+                            <Input mt={4} placeholder="Penalty Rate" value={penaltyRate}
+                                   onChange={(e) => setPenaltyRate(e.target.value)}/>
+                            <Input mt={4} placeholder="Months Grace Period" value={monthsGracePeriod}
+                                   onChange={(e) => setMonthsGracePeriod(e.target.value)}/>
+                            <Input mt={4} placeholder="Investment Percentage" value={investmentPercentage}
+                                   onChange={(e) => setInvestmentPercentage(e.target.value)}/>
+                            <Input mt={4} placeholder="Coverage Percentage" value={coveragePerentage}
+                                   onChange={(e) => setCoveragePercentage(e.target.value)}/>
+                            <Button mt={4} type="submit">
                                 Create Policy
                             </Button>
                         </form>

@@ -12,14 +12,14 @@ const NavBar = () => {
             <Flex>
                 {/* Use Next.js Link for client-side navigation */}
                 <NextLink href="/policy-owners" passHref>
-                    <Link p="4" fontSize="16px" _hover={{ textDecoration: 'none', bg: 'blue.700' }}>
+                    <Text p="4" fontSize="16px" _hover={{ textDecoration: 'none', bg: 'blue.700' }}>
                         Policy Owners
-                    </Link>
+                    </Text>
                 </NextLink>
                 <NextLink href="/policy-creators" passHref>
-                    <Link p="4"  fontSize="16px" _hover={{ textDecoration: 'none', bg: 'blue.700' }}>
+                    <Text p="4"  fontSize="16px" _hover={{ textDecoration: 'none', bg: 'blue.700' }}>
                         Policy Creators
-                    </Link>
+                    </Text>
                 </NextLink>
             </Flex>
         </Flex>
