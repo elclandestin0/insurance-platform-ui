@@ -11,7 +11,7 @@ import {
     ModalCloseButton,
     ModalBody,
     Flex,
-    useDisclosure,
+    useDisclosure, Card, CardHeader, CardBody, Heading, CardFooter, Button,
 } from '@chakra-ui/react';
 import styles from "@/pages/page.module.css";
 import usePolicyContract from '@/hooks/usePolicyContract';
@@ -23,7 +23,7 @@ const PolicyOwners: React.FC = ({policy}) => {
     const {policies, error} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [selectedPolicy, setSelectedPolicy] = useState(null);
-    const { checkPolicyOwnership } = usePolicyContract();
+    const {checkPolicyOwnership} = usePolicyContract();
 
 
     if (error) {
@@ -47,14 +47,19 @@ const PolicyOwners: React.FC = ({policy}) => {
                 {policies.length > 0 ? (
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
                         {policies.map((policy) => (
-                            <Box key={policy.id} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}
-                                 onClick={() => handlePolicyClick(policy)} cursor="pointer">
-                                <Text fontWeight="bold">Policy ID: {policy.id.toString()}</Text>
-                                <Divider my={3}/>
-                                <Text>Coverage Amount: {ethers.utils.formatEther(policy.coverageAmount)} ETH</Text>
-                                <Text>Duration: {policy.duration} days</Text>
-                                <Text>Premium Rate: {ethers.utils.formatEther(policy.premiumRate)} ETH</Text>
-                            </Box>
+                            <>
+                                <Card key={policy.id}>
+                                    <CardHeader>
+                                        <Heading size='md'>Policy ID: {policy.id.toString()}</Heading>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Text>View policy details.</Text>
+                                    </CardBody>
+                                    <CardFooter>
+                                        <Button onClick={() => handlePolicyClick(policy)}>View details</Button>
+                                    </CardFooter>
+                                </Card>
+                            </>
                         ))}
                     </SimpleGrid>
                 ) : (

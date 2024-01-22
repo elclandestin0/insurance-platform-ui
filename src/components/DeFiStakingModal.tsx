@@ -82,7 +82,6 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
                                     >
                                         Invest
                                     </Text>
-
                                 </Flex>
                             </Box>
                             <ModalCloseButton position="absolute" right="4" top="4"/>
@@ -92,7 +91,12 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
                         {
                             activeTab == "pay" && (
                                 <>
-                                    <FormControl>
+                                    <Stat>
+                                        <StatLabel>Investment fund</StatLabel>
+                                        <StatNumber> {investmentBalance.gt(BigNumber.from(0)) ? ethers.utils.formatUnits(investmentBalance) : "0.0"}
+                                            <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
+                                    </Stat>
+                                    <FormControl mt={4}>
                                         <FormLabel htmlFor="premium-amount" color="gray.600">You pay</FormLabel>
                                         <Input
                                             id="premium-amount"
@@ -106,11 +110,6 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
                                             fontSize="xl" // Set the font size to extra large
                                         />
                                     </FormControl>
-                                    <Stat mt={4}>
-                                        <StatLabel>Investment fund</StatLabel>
-                                        <StatNumber> {investmentBalance.gt(BigNumber.from(0)) ? ethers.utils.formatUnits(investmentBalance) : "0.0"}
-                                            <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
-                                    </Stat>
                                 </>
                             )}
                     </ModalBody>

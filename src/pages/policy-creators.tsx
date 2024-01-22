@@ -1,8 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Box, Flex, Text, SimpleGrid, Divider, Button,
-    Modal, ModalOverlay, ModalContent, ModalHeader,
-    ModalCloseButton, ModalBody, ModalFooter, Input, Stat, StatLabel, StatNumber, Icon
+    Box,
+    Flex,
+    Text,
+    SimpleGrid,
+    Divider,
+    Button,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    Input,
+    Stat,
+    StatLabel,
+    StatNumber,
+    Icon,
+    Card,
+    CardHeader,
+    Heading,
+    CardBody, CardFooter
 } from '@chakra-ui/react';
 import styles from "@/pages/page.module.css";
 import {useContracts} from '@/hooks/useContracts';
@@ -84,16 +103,20 @@ const PolicyCreators: React.FC = () => {
             <Box p={5}>
                 {policies.length > 0 ? (
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
-                        {policies.map((policy, index) => (
-                            <Box key={index} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}
-                                 onClick={() => handleButtonClick(policy.id)} cursor="pointer">
-                                <Text fontWeight="bold">Policy
-                                    ID: {policy.id.toString()}</Text> {/* Assuming policy.id is a BigNumber */}
-                                <Divider my={3}/>
-                                <Text>Coverage Amount: {ethers.utils.formatEther(policy.coverageAmount)} ETH </Text>
-                                <Text>Duration: {policy.duration} days</Text> {/* Assuming policy.duration is a BigNumber */}
-                                <Text>Premium Rate: {ethers.utils.formatEther(policy.premiumRate)} ETH</Text>
-                            </Box>
+                        {policies.map((policy) => (
+                            <>
+                                <Card key={policy.id}>
+                                    <CardHeader>
+                                        <Heading size='md'>Policy ID: {policy.id.toString()}</Heading>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Text>View policy details.</Text>
+                                    </CardBody>
+                                    <CardFooter>
+                                        <Button onClick={() => handleButtonClick(policy.id)}>View details</Button>
+                                    </CardFooter>
+                                </Card>
+                            </>
                         ))}
                     </SimpleGrid>
                 ) : (

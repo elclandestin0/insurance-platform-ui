@@ -1,12 +1,27 @@
 // src/pages/index.tsx
-import {Box, Flex, Grid, Heading, Link, useBreakpointValue} from '@chakra-ui/react';
+import {
+    Box, Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader, Divider,
+    Flex,
+    Grid,
+    Heading, Icon, Image,
+    Link,
+    Text,
+    useBreakpointValue
+} from '@chakra-ui/react';
 import React, {useEffect} from 'react';
 import MetaMaskConnect from "@/components/MetaMaskConnect";
 import {useMetaMask} from "@/contexts/MetaMaskContext";
 import NextLink from 'next/link';
 import styles from '@/pages/page.module.css';
+import {FaEthereum} from "react-icons/fa";
+import {useRouter} from "next/router";
 
 const Home: React.FC = () => {
+    const router = useRouter();
     const {isConnected, account} = useMetaMask();
 
     useEffect(() => {
@@ -18,16 +33,16 @@ const Home: React.FC = () => {
         return (
             <Flex
                 className={styles.main}
-                height="100vh"  
+                height="100vh"
                 alignItems="center"
                 justifyContent="center"
                 direction="column"
                 p={4}
             >
                 <Heading as='h1' size='4xl' noOfLines={1} mb={10}>
-                <Flex>
-                <img src="/unidawg.png" alt="Logo" style={{ width: '200px'}} />
-                </Flex> 
+                    <Flex>
+                        <img src="/unidawg.png" alt="Logo" style={{width: '200px'}}/>
+                    </Flex>
                 </Heading>
                 <MetaMaskConnect/>
             </Flex>
@@ -35,36 +50,27 @@ const Home: React.FC = () => {
     }
 
     return (
-        <Flex className={styles.main} height="100vh" alignItems="center" justifyContent="center">
-            <Grid templateColumns="repeat(2, 1fr)" gap={10}>
-                <NextLink href="/policy-owners" passHref>
-                    <Link>
-                        <Box borderWidth="1px"
-                             borderRadius="xl"
-                             overflow="hidden"
-                             p={10}
-                             textAlign="center"
-                             w="lg"
-                             h="lg"
-                             _hover={{bg: "blue.100"}}>
-                            Policy Owners
-                        </Box>
-                    </Link>
-                </NextLink>
-                <NextLink href="/policy-creators" passHref>
-                    <Link>
-                        <Box borderWidth="1px"
-                             borderRadius="xl"
-                             overflow="hidden"
-                             p={10}
-                             textAlign="center"
-                             w="lg"
-                             h="lg"
-                             _hover={{bg: "blue.100"}}>
-                            Policy Creators
-                        </Box>
-                    </Link>
-                </NextLink>
+        <Flex className={styles.main} height="100vh" alignItems="center" justifyContent="center" p={10}>
+            <Grid templateColumns="repeat(1, 1fr)" gap={10}>
+                <Button
+                    colorScheme={'purple'}
+                    p={4}
+                    onClick={() => {
+                        router.push(`/policy-owners`);
+                    }}
+                >
+                    <Text>Browse Policies</Text>
+                </Button>
+                <Button
+                    variant="outline"
+                    colorScheme={'purple'}
+                    p={4}
+                    onClick={() => {
+                        router.push(`/policy-creators`);
+                    }}
+                >
+                    <Text>View Portal</Text>
+                </Button>
             </Grid>
         </Flex>
     );
