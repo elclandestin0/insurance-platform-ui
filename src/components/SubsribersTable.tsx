@@ -44,8 +44,7 @@ const SubscribersTable = ({subscribers, premiumsPerSubscriber, timePerSubscriber
                 <Tbody>
                     {subscribers.map((address, index) => (
                         <React.Fragment key={index}>
-                            <Tr key={address} onClick={() => handleRowClick(index)} cursor="pointer" border="1px"
-                                borderColor="gray.200">
+                            <Tr key={address} onClick={() => handleRowClick(index)} cursor="pointer" border="1px" borderColor="pink">
                                 <Td>Subscriber {index + 1}</Td>
                                 <Td>{address}</Td>
                                 <Td>{ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)} <Icon
