@@ -55,7 +55,6 @@ const PayPremiumModal = ({
     
     const {payCustomPremium} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
-    const [bonusCover, setBonusCoverage] = useState<BigNumber>(BigNumber.from(0));
     const [activeTab, setActiveTab] = useState('pay');
     const [isHovering, setIsHovering] = useState(false);
     const [investmentPercentagePremium, setInvestmentPercentagePremium] = useState(50); // Default to 50%
@@ -73,13 +72,10 @@ const PayPremiumModal = ({
 
 
     useEffect(() => {
-        if (bonusCoverage) {
-            const _bonusCoverage = bonusCoverage.sub(policyCoverageAmount);
-            setBonusCoverage(_bonusCoverage);
-        }
         if (covered) {
             setActiveTab('custom');
         }
+        
         customPremiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
         customPremiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
 
@@ -240,7 +236,7 @@ const PayPremiumModal = ({
                                         </FormLabel>
                                         <Stat>
                                             <StatNumber fontSize="xl" color="gray.600">
-                                                {potentialCoverage ? ethers.utils.formatEther(bonusCover) : ethers.utils.formatEther(bonusCover)}
+                                                {bonusCoverage ? ethers.utils.formatEther(bonusCoverage) : '0.0'}
                                                 <Icon as={FaEthereum} color="gray.700"/>
                                             </StatNumber>
                                         </Stat>

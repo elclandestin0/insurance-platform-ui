@@ -84,6 +84,9 @@ const PolicyManager = () => {
                     const _bonusCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, premiumAmountToSend);
                     setBonusCoverage(_bonusCoverage);
                 }
+                else {
+                    setBonusCoverage(BigNumber.from(0));
+                }
             }
         };
 
@@ -110,6 +113,7 @@ const PolicyManager = () => {
         const numericValue = inputValue === '' || isNaN(inputValue) ? "0.0" : inputValue;
         try {
             const inputAmount = ethers.utils.parseEther(numericValue);
+            console.log(inputAmount);
             if (inputAmount.gte(calculatedPremium)) {
                 setPremiumAmountToSend(inputAmount);
                 await checkPotentialCoverage(policyId, inputAmount);

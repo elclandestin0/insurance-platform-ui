@@ -96,9 +96,8 @@ const usePolicyContract = () => {
         }
         try {
             // Assuming you have ethers.js or a similar library
-            const transaction = await policyMakerContract.payInitialPremium(policyId, {
-                from: account,
-                value: ethers.utils.parseEther(premiumAmount)
+            const transaction = await policyMakerContract.payInitialPremium(policyId, ethers.utils.parseEther(premiumAmount), {
+                from: account
             });
             await transaction.wait(); // Wait for the transaction to be mined
             console.log('Premium paid successfully');
@@ -115,9 +114,8 @@ const usePolicyContract = () => {
 
         try {
             // Assuming you have ethers.js or a similar library
-            const transaction = await policyMakerContract.payPremium(policyId, {
-                from: account,
-                value: premiumAmount
+            const transaction = await policyMakerContract.payPremium(policyId, premiumAmount, {
+                from: account
             });
             await transaction.wait(); // Wait for the transaction to be mined
             console.log('Premium paid successfully');
@@ -334,10 +332,11 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
         try {
+            console.log(policyId, account, amount);
             const potentialCoverage = await policyMakerContract.calculatePotentialCoverage(policyId, account, amount);
             return potentialCoverage;
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error retrieving potential coverage:', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
@@ -411,7 +410,32 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    return {policies, isLoading, error, checkPolicyOwnership, payInitialPremium, fetchPolicy, payPremium, handlePayout, calculatePremium, fetchPremiumsPaid, fetchLastPaidTime, fetchSubscribers, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, checkIfPotentiallyCovered, fetchPremiumCalculation, payCustomPremium, investInAavePool};
+    return {
+        policies,
+        isLoading,
+        error,
+        checkPolicyOwnership,
+        payInitialPremium,
+        fetchPolicy,
+        payPremium,
+        handlePayout,
+        calculatePremium,
+        fetchPremiumsPaid,
+        fetchLastPaidTime,
+        fetchSubscribers,
+        fetchCoverageFundBalance,
+        fetchInvestmentFundBalance,
+        fetchTotalCoverage,
+        fetchTotalClaimed,
+        fetchPotentialCoverage,
+        fetchAmountCoverageFunded,
+        fetchAmountInvestmentFunded,
+        checkIfCovered,
+        checkIfPotentiallyCovered,
+        fetchPremiumCalculation,
+        payCustomPremium,
+        investInAavePool
+    };
 };
 
 export default usePolicyContract;
