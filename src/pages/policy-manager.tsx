@@ -73,11 +73,11 @@ const PolicyManager = () => {
 
                 const coverage: BigNumber = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
-                
+
                 // Check if bonus covered. For now, this is a hard-coded value. In the future, however, as we update
                 // const coverageAmount: BigNumber = policyDetails.coverageAmount;
                 // coverage > coverageAmount.mul(2) ? setBonusCovered(true) : setBonusCovered(false);
-                
+
                 const amountCovered: BigNumber = await fetchAmountCoverageFunded(policyId, account);
                 setAmountCoverage(amountCovered);
 
@@ -86,8 +86,9 @@ const PolicyManager = () => {
 
                 const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
                 setAmountInvestment(amountInvested);
+
                 if (potentiallyCovered) {
-                    const _bonusCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, premiumAmountToSend);
+                    const _bonusCoverage: BigNumber = ethers.utils.parseEther(potentialCoverage).sub(policy.coverageAmount);
                     setBonusCoverage(_bonusCoverage);
                 } else {
                     setBonusCoverage(BigNumber.from(0));
@@ -127,6 +128,7 @@ const PolicyManager = () => {
 
                 const _covered = await checkIfPotentiallyCovered(policyId, account, inputAmount);
                 setPotentiallyCovered(_covered);
+
                 setRefreshData(prev => !prev);
             } else {
                 setPremiumAmountToSend(calculatedPremium)
@@ -235,9 +237,9 @@ const PolicyManager = () => {
                     <Flex justifyContent="space-between">
                         <ManagePremiumModal calculatedPremium={calculatedPremium} handlePayPremium={handlePayPremium}
                                             potentialCoverage={potentialCoverage} covered={covered}
-                                            potentiallyCovered={potentiallyCovered}
+                                            potentiallyCovered={potentiallyCovered} bonusCoverage={bonusCoverage}
                                             premiumCoverage={premiumCoverage} premiumInvestment={premiumInvestment}
-                                            premiumAmountToSend={premiumAmountToSend} bonusCoverage={bonusCoverage}
+                                            premiumAmountToSend={premiumAmountToSend}
                                             handlePremiumInput={handlePremiumInput} policyId={policyId}
                                             totalCoverage={totalCoverage} handleClaim={handleClaim}
                                             policyCoverageAmount={policy.coverageAmount}

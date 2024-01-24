@@ -41,11 +41,11 @@ const PayPremiumModal = ({
                              handlePremiumInput,
                              handlePayPremium,
                              policyId,
+                             bonusCoverage,
                              potentiallyCovered,
                              covered,
                              premiumCoverage,
                              premiumInvestment,
-                             bonusCoverage,
                              policyCoverageAmount,
                              investmentPercentage,
                              coveragePercentage,
@@ -75,10 +75,11 @@ const PayPremiumModal = ({
         if (covered) {
             setActiveTab('custom');
         }
-
+        console.log(potentialCoverage);
+        console.log(ethers.utils.formatEther(policyCoverageAmount));
         customPremiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
         customPremiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
-    }, [bonusCoverage, investmentPercentagePremium, customPremiumAmountToSend, covered]);
+    }, [investmentPercentagePremium, customPremiumAmountToSend, covered]);
 
 
     const handlePayCustomPremium = async () => {
@@ -228,14 +229,16 @@ const PayPremiumModal = ({
                                         </Stat>
                                     </FormControl>
                                     <FormControl mt={4}>
-                                        <FormLabel htmlFor="bonus-coverage" color="gray.600">Bonus coverage <Tooltip
-                                            label="Extra coverage from additional premiums paid beyond the policy coverage amount.">
-                                            <InfoOutlineIcon/>
-                                        </Tooltip>
+                                        <FormLabel htmlFor="bonus-coverage" color={bonusCoverage.gte(policyCoverageAmount) ? "green" : "gray.600"}>
+                                            {bonusCoverage.gte(policyCoverageAmount) ? "Maximum bonus coverage reached " : "Bonus coverage "}
+                                            <Tooltip
+                                                label="Extra coverage from additional premiums paid beyond the policy coverage amount.">
+                                                <InfoOutlineIcon/>
+                                            </Tooltip>
                                         </FormLabel>
                                         <Stat>
                                             <StatNumber fontSize="xl" color="gray.600">
-                                                {potentiallyCovered ? ethers.utils.formatEther(ethers.utils.parseEther(potentialCoverage).sub(policyCoverageAmount)) : '0.0'}
+                                                {potentiallyCovered ? ethers.utils.formatEther(bonusCoverage) : '0.0'}
                                                 <Icon as={FaEthereum} color="gray.700"/>
                                             </StatNumber>
                                         </Stat>
