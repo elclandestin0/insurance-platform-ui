@@ -134,9 +134,8 @@ const usePolicyContract = () => {
             console.log(ethers.utils.formatEther(premiumAmount));
             console.log(investmentPerecentage);
             // Assuming you have ethers.js or a similar library
-            const transaction = await policyMakerContract.payCustomPremium(policyId, investmentPerecentage, {
-                from: account,
-                value: premiumAmount
+            const transaction = await policyMakerContract.payCustomPremium(policyId, investmentPerecentage, premiumAmount, {
+                from: account
             });
             await transaction.wait(); // Wait for the transaction to be mined
             console.log('Premium paid successfully');

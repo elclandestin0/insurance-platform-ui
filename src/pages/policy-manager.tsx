@@ -207,11 +207,11 @@ const PolicyManager = () => {
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
-                            <StatLabel> Last Paid time </StatLabel>
+                            <StatLabel> Last Paid Time </StatLabel>
                             <StatNumber>{lastPaidTime ? convertEpochToReadableDate(lastPaidTime) : '0.0'}</StatNumber>
                         </Stat>
                         <Stat>
-                            <StatLabel> Total Coverage </StatLabel>
+                            <StatLabel> Maximum Claimable Coverage </StatLabel>
                             <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
