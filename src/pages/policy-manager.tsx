@@ -43,6 +43,9 @@ const PolicyManager = () => {
     const [refreshData, setRefreshData] = useState<boolean>(false);
     const [potentiallyCovered, setPotentiallyCovered] = useState(false);
     const [covered, setCovered] = useState(false);
+    const [potentiallyBonusCovered, setPotentiallyBonusCovered] = useState(false);
+    const [bonusCovered, setBonusCovered] = useState(false);
+
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
@@ -70,7 +73,11 @@ const PolicyManager = () => {
 
                 const coverage: BigNumber = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
-
+                
+                // Check if bonus covered. For now, this is a hard-coded value. In the future, however, as we update
+                // const coverageAmount: BigNumber = policyDetails.coverageAmount;
+                // coverage > coverageAmount.mul(2) ? setBonusCovered(true) : setBonusCovered(false);
+                
                 const amountCovered: BigNumber = await fetchAmountCoverageFunded(policyId, account);
                 setAmountCoverage(amountCovered);
 
@@ -79,12 +86,10 @@ const PolicyManager = () => {
 
                 const amountInvested: BigNumber = await fetchAmountInvestmentFunded(policyId, account);
                 setAmountInvestment(amountInvested);
-                console.log(potentialCoverage);
                 if (potentiallyCovered) {
                     const _bonusCoverage: BigNumber = await fetchPotentialCoverage(policyId, account, premiumAmountToSend);
                     setBonusCoverage(_bonusCoverage);
-                }
-                else {
+                } else {
                     setBonusCoverage(BigNumber.from(0));
                 }
             }
@@ -103,7 +108,6 @@ const PolicyManager = () => {
 
     const checkPotentialCoverage = async (id: any, amount: BigNumber) => {
         const _potentialCoverage = await fetchPotentialCoverage(id, account, amount);
-        console.log(ethers.utils.formatEther(_potentialCoverage));
         setPotentialCoverage(ethers.utils.formatEther(_potentialCoverage));
     }
 
@@ -168,7 +172,8 @@ const PolicyManager = () => {
                     <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
                         <Stat>
                             <StatLabel>Coverage Amount</StatLabel>
-                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
+                            <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum}
+                                                                                                color="currentcolor"/></StatNumber>
                         </Stat>
                         <Stat>
                             <StatLabel>Initial Premium Fee</StatLabel>

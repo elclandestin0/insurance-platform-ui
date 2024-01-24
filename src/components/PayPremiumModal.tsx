@@ -52,7 +52,7 @@ const PayPremiumModal = ({
                              totalCoverage,
                              handleClaim
                          }) => {
-    
+
     const {payCustomPremium} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [activeTab, setActiveTab] = useState('pay');
@@ -63,7 +63,7 @@ const PayPremiumModal = ({
     const [readableInvestmentAmount, setReadableInvestmentAmount] = useState<BigNumber>(BigNumber.from(0));
     const [customPremiumAmountToSend, setCustomPremiumAmountToSend] = useState<BigNumber>(BigNumber.from(0));
     const toast = useToast();
-    
+
     const handleInvestmentPercentageChange = (valueString: any) => {
         const value = valueString === "" ? 0 : parseFloat(valueString);
         setInvestmentPercentagePremium(value);
@@ -75,10 +75,9 @@ const PayPremiumModal = ({
         if (covered) {
             setActiveTab('custom');
         }
-        
+
         customPremiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
         customPremiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
-
     }, [bonusCoverage, investmentPercentagePremium, customPremiumAmountToSend, covered]);
 
 
@@ -223,7 +222,7 @@ const PayPremiumModal = ({
                                         )}
                                         <Stat>
                                             <StatNumber fontSize="xl" color="gray.600">
-                                                {potentialCoverage ? potentialCoverage : ethers.utils.formatEther(policyCoverageAmount)}
+                                                {ethers.utils.parseEther(potentialCoverage).gt(policyCoverageAmount) ? ethers.utils.formatEther(policyCoverageAmount) : potentialCoverage}
                                                 <Icon as={FaEthereum} color="gray.700"/>
                                             </StatNumber>
                                         </Stat>
@@ -236,7 +235,7 @@ const PayPremiumModal = ({
                                         </FormLabel>
                                         <Stat>
                                             <StatNumber fontSize="xl" color="gray.600">
-                                                {bonusCoverage ? ethers.utils.formatEther(bonusCoverage) : '0.0'}
+                                                {potentiallyCovered ? ethers.utils.formatEther(ethers.utils.parseEther(potentialCoverage).sub(policyCoverageAmount)) : '0.0'}
                                                 <Icon as={FaEthereum} color="gray.700"/>
                                             </StatNumber>
                                         </Stat>
@@ -276,7 +275,7 @@ const PayPremiumModal = ({
                                     <FormLabel htmlFor="investment-percentage">Investment Fund Percentage</FormLabel>
                                     <NumberInput
                                         id="investment-percentage"
-                                        defaultValue={investmentPercentagePremium}
+                                        defaultValue={totalCoverage >= totalCoverage.mul(2) ? investmentPercentagePremium : 100}
                                         min={0}
                                         max={100}
                                         onChange={handleInvestmentPercentageChange}
