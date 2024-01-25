@@ -246,8 +246,12 @@ const PolicyManager = () => {
                             <StatNumber>{policy.monthsGracePeriod}</StatNumber>
                         </Stat>
                         <Stat>
-                            <StatLabel
-                                color={gracePeriodExceeded ? "red" : "gray.400"}>{gracePeriodExceeded ? "Premium with Penalty" : "Calculated Premium"}</StatLabel>
+                            {gracePeriodExceeded ? (
+                                <StatLabel fontWeight="bold"
+                                           color="red">Premium with Penalty</StatLabel>
+                            ) : (<StatLabel
+                                    color="gray.400">Calculated Premium</StatLabel>
+                            )}
                             <StatNumber>{calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : '0.0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
