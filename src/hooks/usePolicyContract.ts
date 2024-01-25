@@ -254,11 +254,11 @@ const usePolicyContract = () => {
         try {
             return await policyMakerContract.coverageFundBalance(policyId);
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error fetching coverage fund balance :', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
-
+    
     const fetchInvestmentFundBalance = useCallback(async (policyId: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
@@ -267,7 +267,7 @@ const usePolicyContract = () => {
         try {
             return await policyMakerContract.investmentFundBalance(policyId);
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error fetching investment fund balance: ', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract]);
@@ -280,7 +280,7 @@ const usePolicyContract = () => {
         try {
             return await policyMakerContract.lastPremiumPaidTime(policyId, account);
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error fetching last paid time: ', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
@@ -293,7 +293,7 @@ const usePolicyContract = () => {
         try {
             return await policyMakerContract.calculateTotalCoverage(policyId, account);
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error fetching total coverage: ', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
@@ -307,7 +307,7 @@ const usePolicyContract = () => {
             console.log(ethers.utils.formatEther(await policyMakerContract.coverageFunded(policyId, account)));
             return await policyMakerContract.coverageFunded(policyId, account);
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error fetching amount coverage funded', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
@@ -320,7 +320,7 @@ const usePolicyContract = () => {
         try {
             return await policyMakerContract.investmentFunded(policyId, account);
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error fetching amount investment funded:', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
@@ -331,8 +331,9 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
         try {
-            console.log(policyId, account, amount);
+            console.log(ethers.utils.formatEther(amount));
             const potentialCoverage = await policyMakerContract.calculatePotentialCoverage(policyId, account, amount);
+            console.log(ethers.utils.formatEther(potentialCoverage));
             return potentialCoverage;
         } catch (err) {
             console.error('Error retrieving potential coverage:', err);
@@ -348,7 +349,7 @@ const usePolicyContract = () => {
         try {
             return await policyMakerContract.calculatePremiumAllocation(policyId, amount);
         } catch (err) {
-            console.error('Error retrieving premiums paid:', err);
+            console.error('Error retrieving premiums calculated:', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);

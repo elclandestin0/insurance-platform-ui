@@ -43,6 +43,7 @@ const PolicyManager = () => {
     const [refreshData, setRefreshData] = useState<boolean>(false);
     const [potentiallyCovered, setPotentiallyCovered] = useState(false);
     const [covered, setCovered] = useState(false);
+    const [gracePeriodExceeded, setGracePeriodExceeded] = useState(false);
     const [potentiallyBonusCovered, setPotentiallyBonusCovered] = useState(false);
     const [bonusCovered, setBonusCovered] = useState(false);
 
@@ -56,7 +57,9 @@ const PolicyManager = () => {
             if (policyId && account) {
                 // Load policy data 
                 const policyDetails: any = await fetchPolicy(policyId, account);
-                setPolicy(policyDetails);
+
+                if (!policy)
+                    setPolicy(policyDetails);
 
                 // load premium data
                 const calcPremium: BigNumber = await calculatePremium(policyId);
@@ -65,11 +68,14 @@ const PolicyManager = () => {
                     setPremiumAmountToSend(calcPremium);
                 }
 
-                const premiumsPaid: BigNumber = await fetchPremiumsPaid(policyId, account);
-                setPremiumsPaid(premiumsPaid);
-
                 const lastPaidTime: BigNumber = await fetchLastPaidTime(policyId, account);
                 setLastPaidTime(lastPaidTime);
+
+                const _gracePeriodExceeded = policyDetails ? await checkGracePeriodExceeded(policyId, account, policyDetails.monthsGracePeriod) : false;
+                setGracePeriodExceeded(_gracePeriodExceeded);
+
+                const premiumsPaid: BigNumber = await fetchPremiumsPaid(policyId, account);
+                setPremiumsPaid(premiumsPaid);
 
                 const coverage: BigNumber = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
@@ -97,7 +103,7 @@ const PolicyManager = () => {
         };
 
         loadData();
-    }, [policyId, account, fetchPolicy, calculatePremium, fetchPremiumsPaid, fetchTotalCoverage, fetchLastPaidTime, refreshData]);
+    }, [policyId, account, fetchPolicy, calculatePremium, fetchPremiumsPaid, fetchTotalCoverage, fetchLastPaidTime, refreshData, policy]);
 
     const handlePayPremium = async (id: any, amount: BigNumber) => {
         await payPremium(id, amount);
@@ -109,8 +115,44 @@ const PolicyManager = () => {
 
     const checkPotentialCoverage = async (id: any, amount: BigNumber) => {
         const _potentialCoverage = await fetchPotentialCoverage(id, account, amount);
+        console.log(ethers.utils.formatEther(_potentialCoverage));
         setPotentialCoverage(ethers.utils.formatEther(_potentialCoverage));
     }
+
+    const checkGracePeriodExceeded = async (policyId: any, account: any, gracePeriodMonths: any) => {
+        // Fetch the last paid time (timestamp in seconds)
+        const lastPaidTime = await fetchLastPaidTime(policyId, account);
+
+        // Convert lastPaidTime from BigNumber to a Date object
+        const lastPaidDate = new Date(lastPaidTime.toNumber() * 1000);
+
+        // Get the current time
+        const now = new Date();
+
+        // Convert grace period from months to milliseconds
+        // Assuming 30 days per month for simplicity
+        const gracePeriodMs = gracePeriodMonths * 30 * 24 * 60 * 60;
+
+        const provider = new ethers.providers.JsonRpcProvider();
+        const blockNow = await provider.getBlock('latest');
+        console.log(blockNow.timestamp);
+        console.log(lastPaidTime);
+
+        // Calculate the difference in milliseconds
+        const timeDiffMs = blockNow.timestamp - (lastPaidDate.getTime() / 1000);
+
+        console.log(timeDiffMs);
+
+        // Check if the difference exceeds the grace period
+        if (timeDiffMs > gracePeriodMs) {
+            console.log('The grace period has been exceeded.');
+            return true;
+        } else {
+            console.log('The grace period has not been exceeded.');
+            return false;
+        }
+    };
+
 
     const handlePremiumInput = async (e: any) => {
         // Ensure input is a valid number or default to "0.0"
@@ -204,7 +246,8 @@ const PolicyManager = () => {
                             <StatNumber>{policy.monthsGracePeriod}</StatNumber>
                         </Stat>
                         <Stat>
-                            <StatLabel>Calculated Premium</StatLabel>
+                            <StatLabel
+                                color={gracePeriodExceeded ? "red" : "gray.400"}>{gracePeriodExceeded ? "Premium with Penalty" : "Calculated Premium"}</StatLabel>
                             <StatNumber>{calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : '0.0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
