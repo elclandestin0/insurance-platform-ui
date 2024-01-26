@@ -89,14 +89,14 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract]);
 
-    const payInitialPremium = useCallback(async (policyId: any, premiumAmount: any) => {
-        if (!policyMakerContract || !policyId || !premiumAmount) {
+    const payInitialPremium = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or invalid parameters.");
             return;
         }
         try {
             // Assuming you have ethers.js or a similar library
-            const transaction = await policyMakerContract.payInitialPremium(policyId, ethers.utils.parseEther(premiumAmount), {
+            const transaction = await policyMakerContract.payInitialPremium(policyId, {
                 from: account
             });
             await transaction.wait(); // Wait for the transaction to be mined
@@ -258,7 +258,7 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
-    
+
     const fetchInvestmentFundBalance = useCallback(async (policyId: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");

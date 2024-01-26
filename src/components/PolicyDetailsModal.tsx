@@ -61,8 +61,8 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
         checkOwnershipStatus();
     }, [selectedPolicy, account]);
 
-    const handlePayPremium = async (id, amount) => {
-        await payInitialPremium(id, amount);
+    const handlePayPremium = async (id) => {
+        await payInitialPremium(id);
     };
 
 

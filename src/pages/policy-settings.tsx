@@ -8,9 +8,22 @@ import SubscribersTable from '@/components/SubsribersTable';
 import styles from "@/pages/page.module.css";
 import DeFiStakingModal from "@/components/DeFiStakingModal"; // Make sure the path is correct
 import {formatToWeiIfMoreThanThreeDecimalPlaces} from '@/utils/helpers';
+import PoolsTable from "@/components/PoolsTable";
 
 const PolicySettings: React.FC = () => {
-    const {fetchPremiumsPaid, isLoading, error, fetchSubscribers, fetchLastPaidTime, fetchCoverageFundBalance, fetchInvestmentFundBalance, fetchTotalCoverage, fetchTotalClaimed, fetchAmountCoverageFunded, fetchAmountInvestmentFunded} = usePolicyContract();
+    const {
+        fetchPremiumsPaid,
+        isLoading,
+        error,
+        fetchSubscribers,
+        fetchLastPaidTime,
+        fetchCoverageFundBalance,
+        fetchInvestmentFundBalance,
+        fetchTotalCoverage,
+        fetchTotalClaimed,
+        fetchAmountCoverageFunded,
+        fetchAmountInvestmentFunded
+    } = usePolicyContract();
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
@@ -109,8 +122,15 @@ const PolicySettings: React.FC = () => {
                                   timePerSubscriber={timePerSubscriber} coveragePerSubscriber={coveragePerSubscriber}
                                   claimedPerSubscriber={claimedPerSubscriber}/>
             )}
-            <Box flex="1" w="full" p={5} mt={4}> {/* This Box will take up the remaining space */}
-                <DeFiStakingModal investmentBalance={investmentBalance} policyId={policyId}/>
+            <Box flex="1" w="full" mt={4}> {/* This Box will take up the remaining space */}
+                <Grid mb={4} templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>
+                    <Stat>
+                        <StatLabel>Total Investment Balance</StatLabel>
+                        <StatNumber>{ethers.utils.formatEther(investmentBalance) || 0} <Icon
+                            as={FaEthereum}/></StatNumber>
+                    </Stat>
+                </Grid>
+                <PoolsTable investmentBalance={investmentBalance} policyId={policyId}/>
             </Box>
         </Flex>
     );

@@ -126,22 +126,15 @@ const PolicyManager = () => {
         // Convert lastPaidTime from BigNumber to a Date object
         const lastPaidDate = new Date(lastPaidTime.toNumber() * 1000);
 
-        // Get the current time
-        const now = new Date();
-
         // Convert grace period from months to milliseconds
         // Assuming 30 days per month for simplicity
         const gracePeriodMs = gracePeriodMonths * 30 * 24 * 60 * 60;
 
         const provider = new ethers.providers.JsonRpcProvider();
         const blockNow = await provider.getBlock('latest');
-        console.log(blockNow.timestamp);
-        console.log(lastPaidTime);
 
         // Calculate the difference in milliseconds
         const timeDiffMs = blockNow.timestamp - (lastPaidDate.getTime() / 1000);
-
-        console.log(timeDiffMs);
 
         // Check if the difference exceeds the grace period
         if (timeDiffMs > gracePeriodMs) {

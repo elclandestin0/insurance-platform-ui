@@ -32,30 +32,34 @@ const SubscribersTable = ({subscribers, premiumsPerSubscriber, timePerSubscriber
             <Table variant="unstyled">
                 <Thead>
                     <Tr>
-                        <Th>Subscriber ID</Th>
+                        <Th fontStyle="bold">Subscriber ID</Th>
                         <Th>Address</Th>
                         <Th>Premium paid</Th>
                         <Th>Last paid date</Th>
                         <Th>Available coverage to claim</Th>
                         <Th>Total claimed</Th>
-                        <Th isNumeric>Actions</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
                     {subscribers.map((address, index) => (
                         <React.Fragment key={index}>
-                            <Tr key={address} onClick={() => handleRowClick(index)} cursor="pointer" border="1px" borderColor="pink">
-                                <Td>Subscriber {index + 1}</Td>
-                                <Td>{address}</Td>
-                                <Td>{ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)} <Icon
-                                    as={FaEthereum}/></Td>
-                                <Td>{convertEpochToReadableDate(timePerSubscriber[address])}</Td>
-                                <Td>{ethers.utils.formatEther(coveragePerSubscriber[address] || 0)} <Icon
-                                    as={FaEthereum}/></Td>
-                                <Td>{ethers.utils.formatEther(claimedPerSubscriber[address])} <Icon as={FaEthereum}/>
-                                </Td>
-                                <Td isNumeric>
-                                    <Button size="sm">View Details</Button>
+                            <Tr key={address} onClick={() => handleRowClick(index)} cursor="pointer" border="1px"
+                                borderColor="pink" backgroundColor="white">
+                                <Td color="black" fontWeight="bold">Subscriber {index + 1}</Td>
+                                <Td color="black" fontWeight="bold">{address}</Td>
+                                <Td color="black"
+                                    fontWeight="bold">{ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)}
+                                    <Icon
+                                        as={FaEthereum}/></Td>
+                                <Td color="black"
+                                    fontWeight="bold">{convertEpochToReadableDate(timePerSubscriber[address])}</Td>
+                                <Td color="black"
+                                    fontWeight="bold">{ethers.utils.formatEther(coveragePerSubscriber[address] || 0)}
+                                    <Icon
+                                        as={FaEthereum}/></Td>
+                                <Td color="black"
+                                    fontWeight="bold">{ethers.utils.formatEther(claimedPerSubscriber[address])} <Icon
+                                    as={FaEthereum}/>
                                 </Td>
                             </Tr>
                             <Tr>

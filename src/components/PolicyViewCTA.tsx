@@ -12,7 +12,7 @@ const PolicyViewCTA = ({isOwner, initialPremium, policyId, onPayPremium}) => {
         if (isOwner) {
             router.push(`/policy-manager?policyId=${policyId}`);
         } else {
-            onPayPremium(policyId, initialPremium);
+            onPayPremium(policyId);
         }
     };
 
