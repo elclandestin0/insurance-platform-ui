@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Grid, Stat, StatLabel, StatNumber, Icon, Box, Flex} from '@chakra-ui/react';
 import {FaEthereum} from 'react-icons/fa';
-import {ethers} from "ethers";
-import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
+import {BigNumber, ethers} from "ethers";
+import usePolicyContract from '@/hooks/usePolicyContract';
 import {useRouter} from 'next/router';
 import SubscribersTable from '@/components/SubsribersTable';
 import styles from "@/pages/page.module.css";
-import DeFiStakingModal from "@/components/DeFiStakingModal"; // Make sure the path is correct
-import {formatToWeiIfMoreThanThreeDecimalPlaces} from '@/utils/helpers';
 import PoolsTable from "@/components/PoolsTable";
+import usePoolContract from "@/hooks/usePoolContract";
+import {wethAddress} from "@/contracts/addresses";
 
 const PolicySettings: React.FC = () => {
     const {
@@ -24,6 +24,7 @@ const PolicySettings: React.FC = () => {
         fetchAmountCoverageFunded,
         fetchAmountInvestmentFunded
     } = usePolicyContract();
+    const {fetchPoolReserveData, isPoolLoading} = usePoolContract();
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
@@ -31,15 +32,18 @@ const PolicySettings: React.FC = () => {
     const [timePerSubscriber, setTimePerSubscriber] = useState(null);
     const [coveragePerSubscriber, setCoveragePerSubscriber] = useState(null);
     const [claimedPerSubscriber, setClaimedPerSubscriber] = useState(null);
-    const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
-    const [coverageBalance, setCoverageBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
-    const [investmentBalance, setInvestmentBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
+    const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<BigNumber>(BigNumber.from(0));
+    const [coverageBalance, setCoverageBalance] = useState<BigNumber>(BigNumber.from(0));
+    const [investmentBalance, setInvestmentBalance] = useState<BigNumber>(BigNumber.from(0));
+
+    // Aave pool data
+    const [accruedToTreasury, setAccruedToTreasury] = useState<BigNumber>(BigNumber.from(0));
     const {policyId} = router.query;
 
     useEffect(() => {
         const fetchAllSubscribersAndPremiums = async () => {
             const fetchAllData = async () => {
-                if (!policyId || isLoading) return;
+                if (!policyId || isLoading || isPoolLoading) return;
 
                 try {
                     const _subscribers = await fetchSubscribers(policyId);
@@ -52,6 +56,9 @@ const PolicySettings: React.FC = () => {
                     const _coverageBalance = await fetchCoverageFundBalance(policyId);
                     const _investmentBalance = await fetchInvestmentFundBalance(policyId);
 
+                    const _reserveData = await fetchPoolReserveData(wethAddress);
+                    console.log(_reserveData);
+
                     for (const subscriber of _subscribers) {
                         const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
                         const lastPaidTime = await fetchLastPaidTime(policyId, subscriber);
@@ -62,7 +69,6 @@ const PolicySettings: React.FC = () => {
                         _timePerSubscriber[subscriber] = lastPaidTime;
                         _coveragePerSubscriber[subscriber] = coverageAmount;
                         _claimedPerSubscriber[subscriber] = claimed;
-
                     }
                     setCoverageBalance(_coverageBalance);
                     setInvestmentBalance(_investmentBalance);
@@ -73,6 +79,7 @@ const PolicySettings: React.FC = () => {
                     setTimePerSubscriber(_timePerSubscriber);
                     setCoveragePerSubscriber(_coveragePerSubscriber);
                     setClaimedPerSubscriber(_claimedPerSubscriber);
+                    setAccruedToTreasury(_reserveData.accruedToTreasury);
                 } catch (err) {
                     console.error('Error fetching data:', err);
                 }
@@ -130,7 +137,8 @@ const PolicySettings: React.FC = () => {
                             as={FaEthereum}/></StatNumber>
                     </Stat>
                 </Grid>
-                <PoolsTable investmentBalance={investmentBalance} policyId={policyId}/>
+                <PoolsTable investmentBalance={investmentBalance} policyId={policyId}
+                            accruedToTreasury={accruedToTreasury}/>
             </Box>
         </Flex>
     );

@@ -10,6 +10,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -76,6 +83,7 @@
       <workItem from="1705238098388" duration="7931000" />
       <workItem from="1705328898852" duration="23355000" />
       <workItem from="1706089334035" duration="31404000" />
+      <workItem from="1706221353992" duration="7549000" />
     </task>
     <servers />
   </component>
@@ -91,14 +99,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/PayPremiumModal.tsx</url>
-          <line>103</line>
-          <option name="timeStamp" value="1" />
+          <line>56</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/components/PayPremiumModal.tsx</url>
-          <line>56</line>
+          <url>file://$PROJECT_DIR$/src/pages/policy-settings.tsx</url>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="9" />
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

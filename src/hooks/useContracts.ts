@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
-import { ethers, Contract } from 'ethers';
+import {useState, useEffect} from 'react';
+import {ethers, Contract} from 'ethers';
 import PolicyMaker from '@/contracts/abis/PolicyMaker.json';
-import Payout from '@/contracts/abis/Payout.json';
-import { policyMakerAddress, payoutAddress } from '@/contracts/addresses';
+import IPool from '@/contracts/abis/IPool.json';
+import IERC20 from '@/contracts/abis/IERC20.json';
+import {aavePoolAddress, aWethAddress, policyMakerAddress} from '@/contracts/addresses';
 
 export function useContracts() {
     const [policyMakerContract, setPolicyMakerContract] = useState<Contract | null>(null);
-    const [payoutContract, setPayoutContract] = useState<Contract | null>(null);
-
+    const [poolContract, setPoolContract] = useState<Contract | null>(null);
+    const [aWethContract, setAwethContract] = useState<Contract | null>(null);
     useEffect(() => {
         const initializeContracts = async () => {
             if (typeof window.ethereum !== 'undefined') {
@@ -20,14 +21,21 @@ export function useContracts() {
                         signer
                     );
 
-                    const payout = new ethers.Contract(
-                        payoutAddress,
-                        Payout.abi,
+                    const aWeth = new ethers.Contract(
+                        aWethAddress,
+                        IERC20.abi,
+                        signer
+                    );
+
+                    const pool = new ethers.Contract(
+                        aavePoolAddress,
+                        IPool.abi,
                         signer
                     )
 
+                    setAwethContract(aWeth);
+                    setPoolContract(pool);
                     setPolicyMakerContract(policyMaker);
-                    setPayoutContract(payout);
                 } catch (error) {
                     console.error('Error initializing contracts:', error);
                 }
@@ -39,5 +47,5 @@ export function useContracts() {
         initializeContracts();
     }, []);
 
-    return { policyMakerContract, payoutContract };
+    return {policyMakerContract, aWethContract, poolContract};
 }

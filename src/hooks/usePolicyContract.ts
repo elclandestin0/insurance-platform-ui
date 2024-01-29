@@ -353,8 +353,7 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
-
-
+    
     const fetchTotalClaimed = useCallback(async (policyId: any, account: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");

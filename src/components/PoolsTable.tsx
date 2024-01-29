@@ -9,8 +9,9 @@ import {
     Box,
 } from '@chakra-ui/react';
 import DeFiStakingModal from "@/components/DeFiStakingModal";
+import {ethers} from "ethers";
 
-const PoolsTable = ({investmentBalance, policyId}) => {
+const PoolsTable = ({investmentBalance, policyId, accruedToTreasury}) => {
     const [selectedRow, setSelectedRow] = useState(null);
 
     return (
@@ -21,7 +22,7 @@ const PoolsTable = ({investmentBalance, policyId}) => {
                         <Th fontStyle="bold">Supply</Th>
                         <Th>Protocol name</Th>
                         <Th>Token name</Th>
-                        <Th>Liquidity Index</Th>
+                        <Th>Total accrued</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -34,6 +35,7 @@ const PoolsTable = ({investmentBalance, policyId}) => {
                             </Td>
                             <Td color="black" fontWeight="bold">Aave</Td>
                             <Td color="black" fontWeight="bold">WETH</Td>
+                            <Td color="black" fontWeight="bold">{ethers.utils.formatEther(accruedToTreasury)}</Td>
                             <Td color="black" fontWeight="bold">Liquidity Index</Td>
                         </Tr>
                     </React.Fragment>
