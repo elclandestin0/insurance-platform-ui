@@ -11,7 +11,7 @@ import {
 import DeFiStakingModal from "@/components/DeFiStakingModal";
 import {ethers} from "ethers";
 
-const PoolsTable = ({investmentBalance, policyId, accruedToTreasury}) => {
+const PoolsTable = ({investmentBalance, policyId, accruedToTreasury, aTokenBalance}) => {
     const [selectedRow, setSelectedRow] = useState(null);
 
     return (
@@ -22,7 +22,7 @@ const PoolsTable = ({investmentBalance, policyId, accruedToTreasury}) => {
                         <Th fontStyle="bold">Supply</Th>
                         <Th>Protocol name</Th>
                         <Th>Token name</Th>
-                        <Th>Total accrued</Th>
+                        <Th>Total aWeth accrued</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -35,7 +35,7 @@ const PoolsTable = ({investmentBalance, policyId, accruedToTreasury}) => {
                             </Td>
                             <Td color="black" fontWeight="bold">Aave</Td>
                             <Td color="black" fontWeight="bold">WETH</Td>
-                            <Td color="black" fontWeight="bold">{ethers.utils.formatEther(accruedToTreasury)}</Td>
+                            <Td color="black" fontWeight="bold">{ethers.utils.formatEther(aTokenBalance)}</Td>
                             <Td color="black" fontWeight="bold">Liquidity Index</Td>
                         </Tr>
                     </React.Fragment>

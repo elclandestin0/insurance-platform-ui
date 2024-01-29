@@ -8,7 +8,8 @@ import SubscribersTable from '@/components/SubsribersTable';
 import styles from "@/pages/page.module.css";
 import PoolsTable from "@/components/PoolsTable";
 import usePoolContract from "@/hooks/usePoolContract";
-import {wethAddress} from "@/contracts/addresses";
+import {policyMakerAddress, wethAddress} from "@/contracts/addresses";
+import useTokenContract from "@/hooks/useTokenContract";
 
 const PolicySettings: React.FC = () => {
     const {
@@ -24,7 +25,9 @@ const PolicySettings: React.FC = () => {
         fetchAmountCoverageFunded,
         fetchAmountInvestmentFunded
     } = usePolicyContract();
+
     const {fetchPoolReserveData, isPoolLoading} = usePoolContract();
+    const {fetchTokenBalance} = useTokenContract();
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
@@ -38,6 +41,7 @@ const PolicySettings: React.FC = () => {
 
     // Aave pool data
     const [accruedToTreasury, setAccruedToTreasury] = useState<BigNumber>(BigNumber.from(0));
+    const [aTokenBalance, setATokenBalance] = useState<BigNumber>(BigNumber.from(0));
     const {policyId} = router.query;
 
     useEffect(() => {
@@ -58,6 +62,10 @@ const PolicySettings: React.FC = () => {
 
                     const _reserveData = await fetchPoolReserveData(wethAddress);
                     console.log(_reserveData);
+
+                    const _tokenBalance = await fetchTokenBalance(policyMakerAddress);
+                    console.log(ethers.utils.formatEther(_tokenBalance));
+
 
                     for (const subscriber of _subscribers) {
                         const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
@@ -80,6 +88,7 @@ const PolicySettings: React.FC = () => {
                     setCoveragePerSubscriber(_coveragePerSubscriber);
                     setClaimedPerSubscriber(_claimedPerSubscriber);
                     setAccruedToTreasury(_reserveData.accruedToTreasury);
+                    setATokenBalance(_tokenBalance);
                 } catch (err) {
                     console.error('Error fetching data:', err);
                 }
@@ -138,7 +147,7 @@ const PolicySettings: React.FC = () => {
                     </Stat>
                 </Grid>
                 <PoolsTable investmentBalance={investmentBalance} policyId={policyId}
-                            accruedToTreasury={accruedToTreasury}/>
+                            accruedToTreasury={accruedToTreasury} aTokenBalance={aTokenBalance}/>
             </Box>
         </Flex>
     );

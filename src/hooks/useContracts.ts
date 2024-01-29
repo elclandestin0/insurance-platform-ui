@@ -32,7 +32,7 @@ export function useContracts() {
                         IPool.abi,
                         signer
                     )
-
+                    
                     setAwethContract(aWeth);
                     setPoolContract(pool);
                     setPolicyMakerContract(policyMaker);
