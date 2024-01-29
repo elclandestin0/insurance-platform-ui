@@ -23,7 +23,9 @@ const PolicySettings: React.FC = () => {
         fetchTotalCoverage,
         fetchTotalClaimed,
         fetchAmountCoverageFunded,
-        fetchAmountInvestmentFunded
+        fetchAmountInvestmentFunded,
+        fetchTotalPoolSupplied,
+        fetchTotalAccrued
     } = usePolicyContract();
 
     const {fetchPoolReserveData, isPoolLoading} = usePoolContract();
@@ -42,6 +44,9 @@ const PolicySettings: React.FC = () => {
     // Aave pool data
     const [accruedToTreasury, setAccruedToTreasury] = useState<BigNumber>(BigNumber.from(0));
     const [aTokenBalance, setATokenBalance] = useState<BigNumber>(BigNumber.from(0));
+    const [poolSupplied, setPoolSupplied] = useState<BigNumber>(BigNumber.from(0));
+    const [totalAccrued, setTotalAccrued] = useState<BigNumber>(BigNumber.from(0));
+
     const {policyId} = router.query;
 
     useEffect(() => {
@@ -59,13 +64,11 @@ const PolicySettings: React.FC = () => {
 
                     const _coverageBalance = await fetchCoverageFundBalance(policyId);
                     const _investmentBalance = await fetchInvestmentFundBalance(policyId);
-
                     const _reserveData = await fetchPoolReserveData(wethAddress);
-                    console.log(_reserveData);
-
                     const _tokenBalance = await fetchTokenBalance(policyMakerAddress);
-                    console.log(ethers.utils.formatEther(_tokenBalance));
-
+                    const _poolSupplied = await fetchTotalPoolSupplied(policyId);
+                    const _totalAccrued = await fetchTotalAccrued(policyId);
+                    console.log(ethers.utils.formatEther(_totalAccrued));
 
                     for (const subscriber of _subscribers) {
                         const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
@@ -89,6 +92,8 @@ const PolicySettings: React.FC = () => {
                     setClaimedPerSubscriber(_claimedPerSubscriber);
                     setAccruedToTreasury(_reserveData.accruedToTreasury);
                     setATokenBalance(_tokenBalance);
+                    setPoolSupplied(_poolSupplied);
+                    setTotalAccrued(_totalAccrued);
                 } catch (err) {
                     console.error('Error fetching data:', err);
                 }
@@ -143,6 +148,11 @@ const PolicySettings: React.FC = () => {
                     <Stat>
                         <StatLabel>Total Investment Balance</StatLabel>
                         <StatNumber>{ethers.utils.formatEther(investmentBalance) || 0} <Icon
+                            as={FaEthereum}/></StatNumber>
+                    </Stat>
+                    <Stat>
+                        <StatLabel>Total Supplied</StatLabel>
+                        <StatNumber>{ethers.utils.formatEther(poolSupplied) || 0} <Icon
                             as={FaEthereum}/></StatNumber>
                     </Stat>
                 </Grid>

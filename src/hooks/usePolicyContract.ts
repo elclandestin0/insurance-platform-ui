@@ -354,6 +354,33 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
     
+    const fetchTotalPoolSupplied = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.totalSupplied(policyId);
+        } catch (err) {
+            console.error('Error retrieving premiums calculated:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
+    const fetchTotalAccrued = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.calculateTotalAccrued(policyId);
+        } catch (err) {
+            console.error('Error retrieving premiums calculated:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
+
     const fetchTotalClaimed = useCallback(async (policyId: any, account: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
@@ -433,7 +460,9 @@ const usePolicyContract = () => {
         checkIfPotentiallyCovered,
         fetchPremiumCalculation,
         payCustomPremium,
-        investInAavePool
+        investInAavePool,
+        fetchTotalPoolSupplied,
+        fetchTotalAccrued
     };
 };
 
