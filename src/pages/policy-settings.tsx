@@ -33,10 +33,11 @@ const PolicySettings: React.FC = () => {
     const router = useRouter();
     const [subscribersCount, setSubscribersCount] = useState(null);
     const [subscribers, setSubscribers] = useState(null);
-    const [premiumsPerSubscriber, setPremiumsPerSubscriber] = useState(null);
-    const [timePerSubscriber, setTimePerSubscriber] = useState(null);
-    const [coveragePerSubscriber, setCoveragePerSubscriber] = useState(null);
-    const [claimedPerSubscriber, setClaimedPerSubscriber] = useState(null);
+    const [premiumsPerSubscriber, setPremiumsPerSubscriber] = useState<BigNumber[]>(null);
+    const [timePerSubscriber, setTimePerSubscriber] = useState<BigNumber[]>(null);
+    const [coveragePerSubscriber, setCoveragePerSubscriber] = useState<BigNumber[]>(null);
+    const [claimedPerSubscriber, setClaimedPerSubscriber] = useState<BigNumber[]>(null);
+    const [investmentFundedPerSubscriber, setInvestmentFundedPerSubscriber] = useState<BigNumber[]>(null);
     const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<BigNumber>(BigNumber.from(0));
     const [coverageBalance, setCoverageBalance] = useState<BigNumber>(BigNumber.from(0));
     const [investmentBalance, setInvestmentBalance] = useState<BigNumber>(BigNumber.from(0));
@@ -50,59 +51,58 @@ const PolicySettings: React.FC = () => {
     const {policyId} = router.query;
 
     useEffect(() => {
-        const fetchAllSubscribersAndPremiums = async () => {
-            const fetchAllData = async () => {
-                if (!policyId || isLoading || isPoolLoading) return;
+        const fetchAllData = async () => {
+            if (!policyId || isLoading || isPoolLoading) return;
+            try {
+                const _subscribers = await fetchSubscribers(policyId);
+                let _totalPremiums = ethers.BigNumber.from(0);
+                let _premiumsPerSubscriber = {};
+                let _timePerSubscriber = {};
+                let _coveragePerSubscriber = {};
+                let _claimedPerSubscriber = {};
+                let _investmentFundedPerSubscriber = {};
 
-                try {
-                    const _subscribers = await fetchSubscribers(policyId);
-                    let _totalPremiums = ethers.BigNumber.from(0);
-                    let _premiumsPerSubscriber = {};
-                    let _timePerSubscriber = {};
-                    let _coveragePerSubscriber = {};
-                    let _claimedPerSubscriber = {};
+                const _coverageBalance = await fetchCoverageFundBalance(policyId);
+                const _investmentBalance = await fetchInvestmentFundBalance(policyId);
+                const _reserveData = await fetchPoolReserveData(wethAddress);
+                const _tokenBalance = await fetchTokenBalance(policyMakerAddress);
+                const _poolSupplied = await fetchTotalPoolSupplied(policyId);
+                const _totalAccrued = await fetchTotalAccrued(policyId);
 
-                    const _coverageBalance = await fetchCoverageFundBalance(policyId);
-                    const _investmentBalance = await fetchInvestmentFundBalance(policyId);
-                    const _reserveData = await fetchPoolReserveData(wethAddress);
-                    const _tokenBalance = await fetchTokenBalance(policyMakerAddress);
-                    const _poolSupplied = await fetchTotalPoolSupplied(policyId);
-                    const _totalAccrued = await fetchTotalAccrued(policyId);
-                    console.log(ethers.utils.formatEther(_totalAccrued));
+                for (const subscriber of _subscribers) {
+                    const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
+                    const lastPaidTime = await fetchLastPaidTime(policyId, subscriber);
+                    const coverageAmount = await fetchTotalCoverage(policyId, subscriber);
+                    const claimed = await fetchTotalClaimed(policyId, subscriber);
+                    const investmentFunded = await fetchAmountInvestmentFunded(policyId, subscriber);
+                    _totalPremiums = _totalPremiums.add(premiumPaid);
+                    _premiumsPerSubscriber[subscriber] = premiumPaid;
+                    _timePerSubscriber[subscriber] = lastPaidTime;
+                    _coveragePerSubscriber[subscriber] = coverageAmount;
+                    _claimedPerSubscriber[subscriber] = claimed;
+                    _investmentFundedPerSubscriber[subscriber] = investmentFunded;
 
-                    for (const subscriber of _subscribers) {
-                        const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
-                        const lastPaidTime = await fetchLastPaidTime(policyId, subscriber);
-                        const coverageAmount = await fetchTotalCoverage(policyId, subscriber);
-                        const claimed = await fetchTotalClaimed(policyId, subscriber);
-                        _totalPremiums = _totalPremiums.add(premiumPaid);
-                        _premiumsPerSubscriber[subscriber] = premiumPaid;
-                        _timePerSubscriber[subscriber] = lastPaidTime;
-                        _coveragePerSubscriber[subscriber] = coverageAmount;
-                        _claimedPerSubscriber[subscriber] = claimed;
-                    }
-                    setCoverageBalance(_coverageBalance);
-                    setInvestmentBalance(_investmentBalance);
-                    setSubscribers(_subscribers);
-                    setSubscribersCount(_subscribers.length);
-                    setTotalPremiumsPaid(_totalPremiums);
-                    setPremiumsPerSubscriber(_premiumsPerSubscriber);
-                    setTimePerSubscriber(_timePerSubscriber);
-                    setCoveragePerSubscriber(_coveragePerSubscriber);
-                    setClaimedPerSubscriber(_claimedPerSubscriber);
-                    setAccruedToTreasury(_reserveData.accruedToTreasury);
-                    setATokenBalance(_tokenBalance);
-                    setPoolSupplied(_poolSupplied);
-                    setTotalAccrued(_totalAccrued);
-                } catch (err) {
-                    console.error('Error fetching data:', err);
                 }
-            };
-
-            fetchAllData();
+                setCoverageBalance(_coverageBalance);
+                setInvestmentBalance(_investmentBalance);
+                setSubscribers(_subscribers);
+                setSubscribersCount(_subscribers.length);
+                setTotalPremiumsPaid(_totalPremiums);
+                setPremiumsPerSubscriber(_premiumsPerSubscriber);
+                setTimePerSubscriber(_timePerSubscriber);
+                setCoveragePerSubscriber(_coveragePerSubscriber);
+                setClaimedPerSubscriber(_claimedPerSubscriber);
+                setInvestmentFundedPerSubscriber(_investmentFundedPerSubscriber)
+                setAccruedToTreasury(_reserveData.accruedToTreasury);
+                setATokenBalance(_tokenBalance);
+                setPoolSupplied(_poolSupplied);
+                setTotalAccrued(_totalAccrued);
+            } catch (err) {
+                console.error('Error fetching data:', err);
+            }
         };
 
-        fetchAllSubscribersAndPremiums();
+        fetchAllData();
     }, [isLoading, fetchPremiumsPaid, fetchSubscribers, fetchTotalCoverage, fetchLastPaidTime, policyId]);
 
 
@@ -141,7 +141,9 @@ const PolicySettings: React.FC = () => {
             {subscribers != null && (
                 <SubscribersTable subscribers={subscribers} premiumsPerSubscriber={premiumsPerSubscriber}
                                   timePerSubscriber={timePerSubscriber} coveragePerSubscriber={coveragePerSubscriber}
-                                  claimedPerSubscriber={claimedPerSubscriber}/>
+                                  claimedPerSubscriber={claimedPerSubscriber}
+                                  investmentBalance={investmentBalance.add(poolSupplied)}
+                                  investmentFundedPerSubscriber={investmentFundedPerSubscriber}/>
             )}
             <Box flex="1" w="full" mt={4}> {/* This Box will take up the remaining space */}
                 <Grid mb={4} templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>
@@ -156,8 +158,7 @@ const PolicySettings: React.FC = () => {
                             as={FaEthereum}/></StatNumber>
                     </Stat>
                 </Grid>
-                <PoolsTable investmentBalance={investmentBalance} policyId={policyId}
-                            accruedToTreasury={accruedToTreasury} aTokenBalance={aTokenBalance}/>
+                <PoolsTable investmentBalance={investmentBalance} policyId={policyId} aTokenBalance={totalAccrued}/>
             </Box>
         </Flex>
     );

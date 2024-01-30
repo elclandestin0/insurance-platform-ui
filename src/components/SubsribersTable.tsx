@@ -13,19 +13,38 @@ import {
     Icon
 } from '@chakra-ui/react';
 import {FaEthereum} from 'react-icons/fa';
-import {ethers} from 'ethers';
+import {BigNumber, ethers} from 'ethers';
 import {convertEpochToReadableDate} from '@/utils/helpers';
 
-const SubscribersTable = ({subscribers, premiumsPerSubscriber, timePerSubscriber, coveragePerSubscriber, claimedPerSubscriber}) => {
-    const [selectedRow, setSelectedRow] = useState(null);
+interface SubscribersTableProps {
+    subscribers: any[];
+    premiumsPerSubscriber: BigNumber[];
+    timePerSubscriber: BigNumber[];
+    coveragePerSubscriber: BigNumber[];
+    claimedPerSubscriber: BigNumber[];
+    investmentBalance: BigNumber;
+    investmentFundedPerSubscriber: BigNumber[];
+}
 
+const SubscribersTable: React.FC<SubscribersTableProps> = ({
+                                                               subscribers,
+                                                               premiumsPerSubscriber,
+                                                               timePerSubscriber,
+                                                               coveragePerSubscriber,
+                                                               claimedPerSubscriber,
+                                                               investmentBalance,
+                                                               investmentFundedPerSubscriber,
+                                                           }) => {
+
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [percentageInvested, setPercentageInvested] = useState('0');
     const handleRowClick = (index) => {
         setSelectedRow(selectedRow === index ? null : index);
     };
 
     useEffect(() => {
-        console.log(coveragePerSubscriber);
-    }, [coveragePerSubscriber])
+        if (!investmentFundedPerSubscriber || !investmentBalance) return;
+    }, [coveragePerSubscriber, investmentFundedPerSubscriber, investmentBalance])
 
     return (
         <Box w="full">
@@ -37,6 +56,8 @@ const SubscribersTable = ({subscribers, premiumsPerSubscriber, timePerSubscriber
                         <Th>Premium paid</Th>
                         <Th>Last paid date</Th>
                         <Th>Available coverage to claim</Th>
+                        <Th> Total investment funded </Th>
+                        <Th> % of investment funded </Th>
                         <Th>Total claimed</Th>
                     </Tr>
                 </Thead>
@@ -56,7 +77,16 @@ const SubscribersTable = ({subscribers, premiumsPerSubscriber, timePerSubscriber
                                 <Td color="black"
                                     fontWeight="bold">{ethers.utils.formatEther(coveragePerSubscriber[address] || 0)}
                                     <Icon
-                                        as={FaEthereum}/></Td>
+                                        as={FaEthereum}/>
+                                </Td>
+                                <Td color="black"
+                                    fontWeight="bold"> {ethers.utils.formatEther((investmentFundedPerSubscriber[address].mul(ethers.utils.parseEther("100")).div(investmentBalance)))} %
+                                </Td>
+                                <Td color="black"
+                                    fontWeight="bold"> {ethers.utils.formatEther(investmentFundedPerSubscriber[address])}
+                                    <Icon
+                                        as={FaEthereum}/>
+                                </Td>
                                 <Td color="black"
                                     fontWeight="bold">{ethers.utils.formatEther(claimedPerSubscriber[address])} <Icon
                                     as={FaEthereum}/>

@@ -11,7 +11,7 @@ import {
 import DeFiStakingModal from "@/components/DeFiStakingModal";
 import {ethers} from "ethers";
 
-const PoolsTable = ({investmentBalance, policyId, accruedToTreasury, aTokenBalance}) => {
+const PoolsTable = ({investmentBalance, policyId, aTokenBalance}) => {
     const [selectedRow, setSelectedRow] = useState(null);
 
     return (
