@@ -353,7 +353,7 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
-    
+
     const fetchTotalPoolSupplied = useCallback(async (policyId: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
@@ -375,7 +375,21 @@ const usePolicyContract = () => {
         try {
             return await policyMakerContract.calculateTotalAccrued(policyId);
         } catch (err) {
-            console.error('Error retrieving premiums calculated:', err);
+            console.error('Error retrieving total accrued tokens:', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
+
+    const fetchRewards = useCallback(async (policyId: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.calculateRewards(policyId);
+        } catch (err) {
+            console.error('Error retrieving calculated rewards: ', err);
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
@@ -462,7 +476,8 @@ const usePolicyContract = () => {
         payCustomPremium,
         investInAavePool,
         fetchTotalPoolSupplied,
-        fetchTotalAccrued
+        fetchTotalAccrued,
+        fetchRewards
     };
 };
 

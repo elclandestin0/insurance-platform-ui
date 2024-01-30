@@ -24,6 +24,7 @@ interface SubscribersTableProps {
     claimedPerSubscriber: BigNumber[];
     investmentBalance: BigNumber;
     investmentFundedPerSubscriber: BigNumber[];
+    rewardsPerSubscriber: BigNumber[];
 }
 
 const SubscribersTable: React.FC<SubscribersTableProps> = ({
@@ -34,10 +35,9 @@ const SubscribersTable: React.FC<SubscribersTableProps> = ({
                                                                claimedPerSubscriber,
                                                                investmentBalance,
                                                                investmentFundedPerSubscriber,
+                                                               rewardsPerSubscriber
                                                            }) => {
-
     const [selectedRow, setSelectedRow] = useState(null);
-    const [percentageInvested, setPercentageInvested] = useState('0');
     const handleRowClick = (index) => {
         setSelectedRow(selectedRow === index ? null : index);
     };
@@ -59,6 +59,7 @@ const SubscribersTable: React.FC<SubscribersTableProps> = ({
                         <Th> Total investment funded </Th>
                         <Th> % of investment funded </Th>
                         <Th>Total claimed</Th>
+                        <Th>Total rewards</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -80,16 +81,20 @@ const SubscribersTable: React.FC<SubscribersTableProps> = ({
                                         as={FaEthereum}/>
                                 </Td>
                                 <Td color="black"
-                                    fontWeight="bold"> {ethers.utils.formatEther((investmentFundedPerSubscriber[address].mul(ethers.utils.parseEther("100")).div(investmentBalance)))} %
-                                </Td>
-                                <Td color="black"
                                     fontWeight="bold"> {ethers.utils.formatEther(investmentFundedPerSubscriber[address])}
                                     <Icon
                                         as={FaEthereum}/>
                                 </Td>
                                 <Td color="black"
+                                    fontWeight="bold"> {ethers.utils.formatEther((investmentFundedPerSubscriber[address].mul(ethers.utils.parseEther("100")).div(investmentBalance)))} %
+                                </Td>
+                                <Td color="black"
                                     fontWeight="bold">{ethers.utils.formatEther(claimedPerSubscriber[address])} <Icon
                                     as={FaEthereum}/>
+                                </Td>
+                                <Td color="black"
+                                    fontWeight="bold">{ethers.utils.formatEther(rewardsPerSubscriber[address])}
+                                    <Icon as={FaEthereum}/>
                                 </Td>
                             </Tr>
                             <Tr>
