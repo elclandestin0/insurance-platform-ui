@@ -26,6 +26,7 @@ const PolicySettings: React.FC = () => {
         fetchAmountInvestmentFunded,
         fetchTotalPoolSupplied,
         fetchTotalAccrued,
+        fetchCalculatedRewards,
         fetchRewards
     } = usePolicyContract();
 
@@ -38,7 +39,8 @@ const PolicySettings: React.FC = () => {
     const [timePerSubscriber, setTimePerSubscriber] = useState<BigNumber[]>(null);
     const [coveragePerSubscriber, setCoveragePerSubscriber] = useState<BigNumber[]>(null);
     const [claimedPerSubscriber, setClaimedPerSubscriber] = useState<BigNumber[]>(null);
-    const [rewardsPerSubscriber, setRewardsPerSubscriber] = useState<BigNumber[]>(null);
+    const [calculatedRewardsPerSubscriber, setCalculatedRewardsPerSubscriber] = useState<BigNumber[]>(null);
+    const [availableRewardsPerSubscriber, setAvailableRewardsPerSubscriber] = useState<BigNumber[]>(null);
     const [investmentFundedPerSubscriber, setInvestmentFundedPerSubscriber] = useState<BigNumber[]>(null);
     const [totalPremiumsPaid, setTotalPremiumsPaid] = useState<BigNumber>(BigNumber.from(0));
     const [coverageBalance, setCoverageBalance] = useState<BigNumber>(BigNumber.from(0));
@@ -65,7 +67,8 @@ const PolicySettings: React.FC = () => {
                 let _coveragePerSubscriber = {};
                 let _claimedPerSubscriber = {};
                 let _investmentFundedPerSubscriber = {};
-                let _rewardsPerSubscriber = {}
+                let _calculatedRewardsPerSubscriber = {}
+                let _availableRewardsPerSubscriber = {}
 
                 const _coverageBalance = await fetchCoverageFundBalance(policyId);
                 const _investmentBalance = await fetchInvestmentFundBalance(policyId);
@@ -73,7 +76,7 @@ const PolicySettings: React.FC = () => {
                 const _tokenBalance = await fetchTokenBalance(policyMakerAddress);
                 const _poolSupplied = await fetchTotalPoolSupplied(policyId);
                 const _totalAccrued = await fetchTotalAccrued(policyId);
-                const _rewards = await fetchRewards(policyId);
+                const _rewards = await fetchCalculatedRewards(policyId);
 
                 for (const [index, subscriber] of _subscribers.entries()) {
                     const premiumPaid = await fetchPremiumsPaid(policyId, subscriber);
@@ -81,6 +84,7 @@ const PolicySettings: React.FC = () => {
                     const coverageAmount = await fetchTotalCoverage(policyId, subscriber);
                     const claimed = await fetchTotalClaimed(policyId, subscriber);
                     const investmentFunded = await fetchAmountInvestmentFunded(policyId, subscriber);
+                    const availableReward = await fetchRewards(policyId, subscriber);
                     const reward = _rewards[index].reward;
 
                     _totalPremiums = _totalPremiums.add(premiumPaid);
@@ -89,7 +93,8 @@ const PolicySettings: React.FC = () => {
                     _coveragePerSubscriber[subscriber] = coverageAmount;
                     _claimedPerSubscriber[subscriber] = claimed;
                     _investmentFundedPerSubscriber[subscriber] = investmentFunded;
-                    _rewardsPerSubscriber[subscriber] = reward;
+                    _calculatedRewardsPerSubscriber[subscriber] = reward;
+                    _availableRewardsPerSubscriber[subscriber] = availableReward;
                 }
 
                 setCoverageBalance(_coverageBalance);
@@ -102,11 +107,12 @@ const PolicySettings: React.FC = () => {
                 setCoveragePerSubscriber(_coveragePerSubscriber);
                 setClaimedPerSubscriber(_claimedPerSubscriber);
                 setInvestmentFundedPerSubscriber(_investmentFundedPerSubscriber)
+                setCalculatedRewardsPerSubscriber(_calculatedRewardsPerSubscriber);
+                setAvailableRewardsPerSubscriber(_availableRewardsPerSubscriber);
                 setAccruedToTreasury(_reserveData.accruedToTreasury);
                 setATokenBalance(_tokenBalance);
                 setPoolSupplied(_poolSupplied);
                 setTotalAccrued(_totalAccrued);
-                setRewardsPerSubscriber(_rewardsPerSubscriber);
             } catch (err) {
                 console.error('Error fetching data:', err);
             }
@@ -154,7 +160,8 @@ const PolicySettings: React.FC = () => {
                                   claimedPerSubscriber={claimedPerSubscriber}
                                   investmentBalance={investmentBalance.add(poolSupplied)}
                                   investmentFundedPerSubscriber={investmentFundedPerSubscriber}
-                                  rewardsPerSubscriber={rewardsPerSubscriber}/>
+                                  calculatedRewardsPerSubscriber={calculatedRewardsPerSubscriber}
+                                  availableRewardsPerSubscriber={availableRewardsPerSubscriber}/>
             )}
             <Box flex="1" w="full" mt={4}> {/* This Box will take up the remaining space */}
                 <Grid mb={4} templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>

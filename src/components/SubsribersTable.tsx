@@ -24,7 +24,8 @@ interface SubscribersTableProps {
     claimedPerSubscriber: BigNumber[];
     investmentBalance: BigNumber;
     investmentFundedPerSubscriber: BigNumber[];
-    rewardsPerSubscriber: BigNumber[];
+    calculatedRewardsPerSubscriber: BigNumber[];
+    availableRewardsPerSubscriber: BigNumber[];
 }
 
 const SubscribersTable: React.FC<SubscribersTableProps> = ({
@@ -35,7 +36,8 @@ const SubscribersTable: React.FC<SubscribersTableProps> = ({
                                                                claimedPerSubscriber,
                                                                investmentBalance,
                                                                investmentFundedPerSubscriber,
-                                                               rewardsPerSubscriber
+                                                               calculatedRewardsPerSubscriber,
+                                                               availableRewardsPerSubscriber
                                                            }) => {
     const [selectedRow, setSelectedRow] = useState(null);
     const handleRowClick = (index) => {
@@ -57,9 +59,10 @@ const SubscribersTable: React.FC<SubscribersTableProps> = ({
                         <Th>Last paid date</Th>
                         <Th>Available coverage to claim</Th>
                         <Th> Total investment funded </Th>
-                        <Th> % of investment funded </Th>
+                        <Th> % of rewards stake </Th>
                         <Th>Total claimed</Th>
-                        <Th>Total rewards</Th>
+                        <Th>Calculated rewards</Th>
+                        <Th>Available rewards</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -93,7 +96,11 @@ const SubscribersTable: React.FC<SubscribersTableProps> = ({
                                     as={FaEthereum}/>
                                 </Td>
                                 <Td color="black"
-                                    fontWeight="bold">{ethers.utils.formatEther(rewardsPerSubscriber[address])}
+                                    fontWeight="bold">{ethers.utils.formatEther(calculatedRewardsPerSubscriber[address])}
+                                    <Icon as={FaEthereum}/>
+                                </Td>
+                                <Td color="black"
+                                    fontWeight="bold">{ethers.utils.formatEther(availableRewardsPerSubscriber[address])}
                                     <Icon as={FaEthereum}/>
                                 </Td>
                             </Tr>

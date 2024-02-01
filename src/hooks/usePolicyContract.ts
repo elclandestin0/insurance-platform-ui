@@ -379,9 +379,7 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
-
-
-    const fetchRewards = useCallback(async (policyId: any) => {
+    const fetchCalculatedRewards = useCallback(async (policyId: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
             return ethers.BigNumber.from(0);
@@ -393,8 +391,18 @@ const usePolicyContract = () => {
             return ethers.BigNumber.from(0);
         }
     }, [policyMakerContract, account]);
-
-
+    const fetchRewards = useCallback(async (policyId: any, account: any) => {
+        if (!policyMakerContract || !policyId) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.rewards(policyId, account);
+        } catch (err) {
+            console.error('Error retrieving calculated rewards: ', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
     const fetchTotalClaimed = useCallback(async (policyId: any, account: any) => {
         if (!policyMakerContract || !policyId) {
             console.error("Contract not initialized or missing parameters.");
@@ -477,6 +485,7 @@ const usePolicyContract = () => {
         investInAavePool,
         fetchTotalPoolSupplied,
         fetchTotalAccrued,
+        fetchCalculatedRewards,
         fetchRewards
     };
 };

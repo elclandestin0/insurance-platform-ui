@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae58f35e-deb5-4d75-be05-db70c4e19c85" name="Changes" comment="" />
+    <list default="true" id="ae58f35e-deb5-4d75-be05-db70c4e19c85" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.insurance-platform-ui.dir/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +16,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript JSX File" />
+        <option value="JSON File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -84,6 +88,8 @@
       <workItem from="1705328898852" duration="23355000" />
       <workItem from="1706089334035" duration="31404000" />
       <workItem from="1706221353992" duration="7549000" />
+      <workItem from="1706528914088" duration="20811000" />
+      <workItem from="1706723215948" duration="7000" />
     </task>
     <servers />
   </component>
@@ -103,9 +109,9 @@
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/pages/policy-settings.tsx</url>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="10" />
+          <url>file://$PROJECT_DIR$/src/hooks/usePolicyContract.ts</url>
+          <line>6</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
