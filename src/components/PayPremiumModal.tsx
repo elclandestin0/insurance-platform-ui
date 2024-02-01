@@ -50,10 +50,11 @@ const PayPremiumModal = ({
                              investmentPercentage,
                              coveragePercentage,
                              totalCoverage,
-                             handleClaim
+                             handleClaim,
+                             claimableRewards
                          }) => {
 
-    const {payCustomPremium} = usePolicyContract();
+    const {payCustomPremium, withdrawRewardsFromPolicy} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [activeTab, setActiveTab] = useState('pay');
     const [isHovering, setIsHovering] = useState(false);
@@ -85,6 +86,10 @@ const PayPremiumModal = ({
     const handlePayCustomPremium = async () => {
         await payCustomPremium(policyId, Number(investmentPercentagePremium), customPremiumAmountToSend);
     };
+
+    const handleWithdrawRewards = async () => {
+        await withdrawRewardsFromPolicy(policyId, claimableRewards);
+    }
 
     const handleLockClick = () => {
         if (!covered) {
@@ -138,7 +143,7 @@ const PayPremiumModal = ({
                                             fontWeight={activeTab === 'custom' ? 'bold' : 'normal'}
                                             color={activeTab === 'custom' ? 'gold' : 'gray.400'}
                                         >
-                                            Bonus
+                                            Pay +
                                         </Text>
                                         {!covered && (
                                             <IconButton
@@ -147,7 +152,6 @@ const PayPremiumModal = ({
                                                 variant="ghost"
                                                 isRound
                                                 size="sm"
-                                                ml={1}
                                                 onClick={handleLockClick}
                                                 color={isHovering ? "gold" : "gray.400"}
                                             />
@@ -229,7 +233,8 @@ const PayPremiumModal = ({
                                         </Stat>
                                     </FormControl>
                                     <FormControl mt={4}>
-                                        <FormLabel htmlFor="bonus-coverage" color={bonusCoverage.gte(policyCoverageAmount) ? "green" : "gray.600"}>
+                                        <FormLabel htmlFor="bonus-coverage"
+                                                   color={bonusCoverage.gte(policyCoverageAmount) ? "green" : "gray.600"}>
                                             {bonusCoverage.gte(policyCoverageAmount) ? "Maximum bonus coverage reached " : "Bonus coverage "}
                                             <Tooltip
                                                 label="Extra coverage from additional premiums paid beyond the policy coverage amount.">
@@ -338,7 +343,7 @@ const PayPremiumModal = ({
                             <>
                                 <FormControl mt={4}>
                                     <FormLabel htmlFor="premium-coverage" color="gray.600">
-                                        Amount to claim
+                                        Coverage to claim
                                     </FormLabel>
                                     <Stat>
                                         <StatNumber fontSize="xl" color="gray.600">
@@ -346,7 +351,19 @@ const PayPremiumModal = ({
                                             <Icon as={FaEthereum} color="gray.700"/>
                                         </StatNumber>
                                     </Stat>
-                                    
+
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel htmlFor="premium-coverage" color="gray.600">
+                                        Rewards to claim
+                                    </FormLabel>
+                                    <Stat>
+                                        <StatNumber fontSize="xl" color="gray.600">
+                                            {ethers.utils.formatEther(claimableRewards) ? ethers.utils.formatEther(claimableRewards) : '0.0'}
+                                            <Icon as={FaEthereum} color="gray.700"/>
+                                        </StatNumber>
+                                    </Stat>
+
                                 </FormControl>
                             </>
                         )}
@@ -387,6 +404,14 @@ const PayPremiumModal = ({
                                 <>
                                     <Button variant="ghost" colorScheme="blue" mr={3} onClick={onClose}>
                                         Close
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        colorScheme="pink"
+                                        mr={3}
+                                        onClick={handleWithdrawRewards}
+                                    >
+                                        Claim Rewards
                                     </Button>
                                     <Button
                                         colorScheme="pink"

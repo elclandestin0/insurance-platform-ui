@@ -26,7 +26,7 @@ import ManagePremiumModal from "@/components/PayPremiumModal";
 const PolicyManager = () => {
     const router = useRouter();
     const {policyId} = router.query;
-    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, checkIfPotentiallyCovered, fetchPremiumCalculation} = usePolicyContract();
+    const {fetchPolicy, payPremium, calculatePremium, handlePayout, fetchPremiumsPaid, fetchLastPaidTime, fetchTotalCoverage, fetchPotentialCoverage, fetchAmountCoverageFunded, fetchAmountInvestmentFunded, checkIfCovered, checkIfPotentiallyCovered, fetchPremiumCalculation, fetchRewards} = usePolicyContract();
     const {account} = useMetaMask();
     const [policy, setPolicy] = useState(null);
     const [potentialCoverage, setPotentialCoverage] = useState<string>("0.0");
@@ -46,6 +46,7 @@ const PolicyManager = () => {
     const [gracePeriodExceeded, setGracePeriodExceeded] = useState(false);
     const [potentiallyBonusCovered, setPotentiallyBonusCovered] = useState(false);
     const [bonusCovered, setBonusCovered] = useState(false);
+    const [claimableRewards, setClaimableRewards] = useState<BigNumber>(BigNumber.from(0));
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,6 +81,8 @@ const PolicyManager = () => {
                 const coverage: BigNumber = await fetchTotalCoverage(policyId, account);
                 setTotalCoverage(coverage);
 
+                const rewards: BigNumber = await fetchRewards(policyId, account);
+                setClaimableRewards(rewards);
                 // Check if bonus covered. For now, this is a hard-coded value. In the future, however, as we update
                 // const coverageAmount: BigNumber = policyDetails.coverageAmount;
                 // coverage > coverageAmount.mul(2) ? setBonusCovered(true) : setBonusCovered(false);
@@ -284,7 +287,8 @@ const PolicyManager = () => {
                                             totalCoverage={totalCoverage} handleClaim={handleClaim}
                                             policyCoverageAmount={policy.coverageAmount}
                                             investmentPercentage={policy.investmentFundPercentage}
-                                            coveragePercentage={policy.coverageFundPercentage}/>
+                                            coveragePercentage={policy.coverageFundPercentage}
+                                            claimableRewards={claimableRewards}/>
                         {/*<Button colorScheme="blue" onClick={openModal}>Pay Premium</Button>*/}
                     </Flex>
                 </Box>

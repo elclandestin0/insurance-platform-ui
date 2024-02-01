@@ -236,6 +236,19 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const withdrawRewardsFromPolicy = useCallback(async (policyId: any, amount: any) => {
+        if (!policyMakerContract || !policyId || !amount) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await policyMakerContract.withdrawReward(policyId, amount);
+        } catch (err) {
+            console.error('Error retrieving calculated rewards: ', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
+
     const calculatePremium = useCallback(async (policyId: any) => {
         if (!policyMakerContract || !policyId || !account) {
             console.error("Contract not initialized or missing parameters.");
@@ -502,7 +515,8 @@ const usePolicyContract = () => {
         fetchTotalAccrued,
         fetchCalculatedRewards,
         fetchRewards,
-        withdrawRewardsFromPool
+        withdrawRewardsFromPool,
+        withdrawRewardsFromPolicy
     };
 };
 
