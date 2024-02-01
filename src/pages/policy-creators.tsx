@@ -4,7 +4,6 @@ import {
     Flex,
     Text,
     SimpleGrid,
-    Divider,
     Button,
     Modal,
     ModalOverlay,
@@ -15,9 +14,8 @@ import {
     ModalFooter,
     Input,
     Stat,
-    StatLabel,
+    Stack,
     StatNumber,
-    Icon,
     Card,
     CardHeader,
     Heading,
@@ -26,12 +24,13 @@ import {
 import styles from "@/pages/page.module.css";
 import {useContracts} from '@/hooks/useContracts';
 import {useMetaMask} from "@/contexts/MetaMaskContext";
-import {ethers, BigNumber} from "ethers";
+import {ethers} from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
 import {useRouter} from 'next/router';
 import {FaEthereum} from "react-icons/fa";
 
 const PolicyCreators: React.FC = () => {
+    const {account} = useMetaMask();
     const {policyMakerContract} = useContracts();
     const {policies, error} = usePolicyContract();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,6 +51,12 @@ const PolicyCreators: React.FC = () => {
     const handleButtonClick = (policyId: any) => {
         router.push(`/policy-settings?policyId=${policyId}`);
     };
+
+    useEffect(() => {
+        if (policies[0]) {
+            console.log()
+        }
+    }, [account, policies])
 
 
     if (error) {
@@ -113,7 +118,16 @@ const PolicyCreators: React.FC = () => {
                                         <Text>View policy details.</Text>
                                     </CardBody>
                                     <CardFooter>
-                                        <Button onClick={() => handleButtonClick(policy.id)}>View details</Button>
+                                        <Stack direction="column" spacing={5}>
+                                            {
+                                                ethers.utils.getAddress(account) == policies[0].creator ?
+                                                    (<Button variant="outline" colorScheme="teal"
+                                                             onClick={() => handleButtonClick(policy.id)}>Manage
+                                                        settings</Button>) : (<></>)
+                                            }
+                                            <Button variant="ghost" onClick={() => console.log("hello")}>View
+                                                details</Button>
+                                        </Stack>
                                     </CardFooter>
                                 </Card>
                             </>
@@ -124,8 +138,9 @@ const PolicyCreators: React.FC = () => {
                         <StatNumber> 0 policies found </StatNumber>
                     </Stat>
                 )}
-                <Button mt={4} onClick={openModal} colorScheme="pink" size="md">Create new policy</Button>
-            </Box>
+                <Flex mt={5} justifyContent="center">
+                    <Button onClick={openModal} colorScheme="pink" size="md">Create new policy</Button>
+                </Flex> </Box>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <ModalOverlay/>
                 <ModalContent>

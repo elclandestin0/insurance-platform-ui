@@ -45,11 +45,11 @@ const usePolicyContract = () => {
                         duration: Number(policy.duration),
                         penaltyRate: Number(policy.penaltyRate),
                         monthsGracePeriod: Number(policy.monthsGracePeriod),
+                        creator: policy.creator
                     };
 
                     allPolicies.push(formattedPolicy); // Update loading state
                 }
-
                 setPolicies(allPolicies);
                 setIsLoading(false);
 
