@@ -76,8 +76,6 @@ const PayPremiumModal = ({
         if (covered) {
             setActiveTab('custom');
         }
-        console.log(potentialCoverage);
-        console.log(ethers.utils.formatEther(policyCoverageAmount));
         customPremiumAmountToSend ? setReadableCoverageAmount((customPremiumAmountToSend.mul(BigNumber.from(coveragePercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
         customPremiumAmountToSend ? setReadableInvestmentAmount((customPremiumAmountToSend.mul(BigNumber.from(investmentPercentagePremium))).div(BigNumber.from(100))) : setReadableCoverageAmount(BigNumber.from(0));
     }, [investmentPercentagePremium, customPremiumAmountToSend, covered]);

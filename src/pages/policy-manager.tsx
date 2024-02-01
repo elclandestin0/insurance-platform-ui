@@ -57,7 +57,7 @@ const PolicyManager = () => {
         const loadData = async () => {
             if (policyId && account) {
                 // Load policy data 
-                const policyDetails: any = await fetchPolicy(policyId, account);
+                const policyDetails: any = await fetchPolicy(policyId);
 
                 if (!policy)
                     setPolicy(policyDetails);

@@ -10,6 +10,7 @@ import PoolsTable from "@/components/PoolsTable";
 import usePoolContract from "@/hooks/usePoolContract";
 import {policyMakerAddress, wethAddress} from "@/contracts/addresses";
 import useTokenContract from "@/hooks/useTokenContract";
+import {useMetaMask} from "@/contexts/MetaMaskContext";
 
 const PolicySettings: React.FC = () => {
     const {
@@ -22,14 +23,14 @@ const PolicySettings: React.FC = () => {
         fetchInvestmentFundBalance,
         fetchTotalCoverage,
         fetchTotalClaimed,
-        fetchAmountCoverageFunded,
         fetchAmountInvestmentFunded,
         fetchTotalPoolSupplied,
         fetchTotalAccrued,
         fetchCalculatedRewards,
-        fetchRewards
+        fetchRewards,
+        fetchPolicy
     } = usePolicyContract();
-
+    const {account} = useMetaMask();
     const {fetchPoolReserveData, isPoolLoading} = usePoolContract();
     const {fetchTokenBalance} = useTokenContract();
     const router = useRouter();
@@ -57,6 +58,8 @@ const PolicySettings: React.FC = () => {
     useEffect(() => {
         const fetchAllData = async () => {
             if (!policyId || isLoading || isPoolLoading) return;
+            const policy = await fetchPolicy(policyId);
+            if (ethers.utils.getAddress(account) != policy?.creator) router.push('/policy-creators');
             try {
                 const _subscribers = await fetchSubscribers(policyId);
                 if (!_subscribers) return;

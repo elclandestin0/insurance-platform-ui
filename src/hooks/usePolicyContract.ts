@@ -65,14 +65,15 @@ const usePolicyContract = () => {
 
     };
 
-    const fetchPolicy = useCallback(async (policyId: String, address: String) => {
-        if (!policyMakerContract || !policyId || !address) {
+    const fetchPolicy = useCallback(async (policyId: String) => {
+        if (!policyMakerContract || !policyId) {
             return null;
         }
         try {
             const policy = await policyMakerContract.policies(policyId);
             return {
                 id: policyId,
+                creator: policy.creator,
                 coverageAmount: policy.coverageAmount.toString(),
                 initialPremiumFee: policy.initialPremiumFee.toString(),
                 initialCoveragePercentage: policy.initialCoveragePercentage.toString(),
