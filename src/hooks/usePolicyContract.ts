@@ -2,10 +2,11 @@ import {useCallback, useEffect, useState} from 'react';
 import {useContracts} from './useContracts'; // Import your useContracts hook
 import {useMetaMask} from '@/contexts/MetaMaskContext';
 import {BigNumber, ethers} from "ethers";
+import {wethAddress} from "@/contracts/addresses";
 
 
 const usePolicyContract = () => {
-    const {policyMakerContract} = useContracts();
+    const {policyMakerContract, aWethContract} = useContracts();
     const {account} = useMetaMask(); // Get the current account from MetaMask
     const [policies, setPolicies] = useState([]);
     const [ownedPolicies, setOwnedPolicies] = useState([]);
@@ -220,6 +221,20 @@ const usePolicyContract = () => {
         }
     }, [policyMakerContract, account]);
 
+    const withdrawRewardsFromPool = useCallback(async (policyId: any, amount: any) => {
+        if (!policyMakerContract || !policyId || !amount) {
+            console.error("Contract not initialized or missing parameters.");
+            return ethers.BigNumber.from(0);
+        }
+        try {
+            return await aWethContract.approve(policyMakerContract.address, amount).then(() => {
+                policyMakerContract.withdrawFromAavePool(policyId, wethAddress, amount);
+            });
+        } catch (err) {
+            console.error('Error retrieving calculated rewards: ', err);
+            return ethers.BigNumber.from(0);
+        }
+    }, [policyMakerContract, account]);
 
     const calculatePremium = useCallback(async (policyId: any) => {
         if (!policyMakerContract || !policyId || !account) {
@@ -486,7 +501,8 @@ const usePolicyContract = () => {
         fetchTotalPoolSupplied,
         fetchTotalAccrued,
         fetchCalculatedRewards,
-        fetchRewards
+        fetchRewards,
+        withdrawRewardsFromPool
     };
 };
 

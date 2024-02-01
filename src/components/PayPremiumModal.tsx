@@ -346,6 +346,7 @@ const PayPremiumModal = ({
                                             <Icon as={FaEthereum} color="gray.700"/>
                                         </StatNumber>
                                     </Stat>
+                                    
                                 </FormControl>
                             </>
                         )}

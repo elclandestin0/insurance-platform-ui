@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import DeFiStakingModal from "@/components/DeFiStakingModal";
 import {ethers} from "ethers";
+import DeFiWithdrawModal from "@/components/DeFiWithdrawModal";
 
 const PoolsTable = ({investmentBalance, policyId, aTokenBalance}) => {
     const [selectedRow, setSelectedRow] = useState(null);
@@ -23,6 +24,7 @@ const PoolsTable = ({investmentBalance, policyId, aTokenBalance}) => {
                         <Th>Protocol name</Th>
                         <Th>Token name</Th>
                         <Th>Total aWeth accrued</Th>
+                        <Th>Withdraw rewards</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -36,7 +38,10 @@ const PoolsTable = ({investmentBalance, policyId, aTokenBalance}) => {
                             <Td color="black" fontWeight="bold">Aave</Td>
                             <Td color="black" fontWeight="bold">WETH</Td>
                             <Td color="black" fontWeight="bold">{ethers.utils.formatEther(aTokenBalance)}</Td>
-                            <Td color="black" fontWeight="bold">Liquidity Index</Td>
+                            <Td color="black" fontWeight="bold"
+                                isNumeric>
+                                <DeFiWithdrawModal investmentBalance={investmentBalance} policyId={policyId}/>
+                            </Td>
                         </Tr>
                     </React.Fragment>
                 </Tbody>
