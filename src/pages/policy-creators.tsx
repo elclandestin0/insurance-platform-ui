@@ -19,7 +19,7 @@ import {
     Card,
     CardHeader,
     Heading,
-    CardBody, CardFooter
+    CardBody, CardFooter, useDisclosure
 } from '@chakra-ui/react';
 import styles from "@/pages/page.module.css";
 import {useContracts} from '@/hooks/useContracts';
@@ -28,6 +28,7 @@ import {ethers} from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract'; // Import the custom hook
 import {useRouter} from 'next/router';
 import {FaEthereum} from "react-icons/fa";
+import PolicyDetailsModal from "@/components/PolicyDetailsModal";
 
 const PolicyCreators: React.FC = () => {
     const {account} = useMetaMask();
@@ -44,12 +45,20 @@ const PolicyCreators: React.FC = () => {
     const [coveragePerentage, setCoveragePercentage] = useState('');
     const [investmentPercentage, setInvestmentPercentage] = useState('');
     const router = useRouter(); // Initialize useRouter
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const [selectedPolicy, setSelectedPolicy] = useState(null);
+    const {checkPolicyOwnership} = usePolicyContract();
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
     const handleButtonClick = (policyId: any) => {
         router.push(`/policy-settings?policyId=${policyId}`);
+    };
+
+    const handlePolicyClick = (policy) => {
+        setSelectedPolicy(policy);
+        onOpen();
     };
 
     useEffect(() => {
@@ -125,7 +134,7 @@ const PolicyCreators: React.FC = () => {
                                                              onClick={() => handleButtonClick(policy.id)}>Manage
                                                         settings</Button>) : (<></>)
                                             }
-                                            <Button variant="ghost" onClick={() => console.log("hello")}>View
+                                            <Button variant="ghost" onClick={() => handlePolicyClick(policy)}>View
                                                 details</Button>
                                         </Stack>
                                     </CardFooter>
@@ -178,6 +187,13 @@ const PolicyCreators: React.FC = () => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <PolicyDetailsModal
+                isOpen={isOpen}
+                onClose={onClose}
+                selectedPolicy={selectedPolicy}
+                checkOwnership={checkPolicyOwnership}
+                viewOnly={true}
+            />
         </Flex>
     );
 }

@@ -71,6 +71,7 @@ const PolicyOwners: React.FC = ({policy}) => {
                 onClose={onClose}
                 selectedPolicy={selectedPolicy}
                 checkOwnership={checkPolicyOwnership}
+                viewOnly={false}
             />
         </Flex>
     );

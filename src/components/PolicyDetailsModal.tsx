@@ -36,9 +36,10 @@ interface PolicyDetailsModalProps {
     onClose: () => void;
     selectedPolicy: Policy | null;
     checkOwnership: (policyId: number, accountAddress: String) => Promise<boolean>;
+    viewOnly: boolean;
 }
 
-const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose, selectedPolicy, checkOwnership}) => {
+const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose, selectedPolicy, checkOwnership, viewOnly}) => {
     const {payInitialPremium} = usePolicyContract();
     const [isOwner, setIsOwner] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -114,14 +115,17 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
                                     <StatNumber>{selectedPolicy.monthsGracePeriod}</StatNumber>
                                 </Stat>
                             </Grid>
-                            <Flex justifyContent="flex-end" mt={4}>
-                                <PolicyViewCTA
-                                    isOwner={isOwner}
-                                    initialPremium={selectedPolicy ? ethers.utils.formatEther(selectedPolicy.initialPremiumFee) : '0'}
-                                    policyId={selectedPolicy.id}
-                                    onPayPremium={handlePayPremium}
-                                />
-                            </Flex>
+                            {
+                                !viewOnly &&
+                                <Flex justifyContent="flex-end" mt={4}>
+                                    <PolicyViewCTA
+                                        isOwner={isOwner}
+                                        initialPremium={selectedPolicy ? ethers.utils.formatEther(selectedPolicy.initialPremiumFee) : '0'}
+                                        policyId={selectedPolicy.id}
+                                        onPayPremium={handlePayPremium}
+                                    />
+                                </Flex>
+                            }
                             <>
 
                             </>
