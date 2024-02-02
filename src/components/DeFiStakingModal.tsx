@@ -69,7 +69,7 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
             <Button onClick={onOpen} colorScheme="pink" size="md">Supply to Aave Pool</Button>
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay/>
-                <ModalContent borderRadius="xl" backgroundColor="white" p={4}>
+                <ModalContent borderRadius="xl" backgroundColor="#27405d" p={4}>
                     <ModalHeader color="gray.700" fontSize="lg">
                         <Flex direction="row" justify="space-between" align="center">
                             <Box>
@@ -77,7 +77,7 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
                                     <Text
                                         fontSize="md"
                                         fontWeight={activeTab === 'pay' ? 'bold' : 'normal'}
-                                        color={activeTab === 'pay' ? 'black' : 'gray.400'}
+                                        color={activeTab === 'pay' ? 'white' : 'gray.400'}
                                         cursor="pointer"
                                     >
                                         Invest
@@ -91,15 +91,16 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
                         {
                             activeTab == "pay" && (
                                 <>
-                                    <Stat>
+                                    <Stat color="white">
                                         <StatLabel>Investment fund</StatLabel>
                                         <StatNumber> {investmentBalance.gt(BigNumber.from(0)) ? ethers.utils.formatUnits(investmentBalance) : "0.0"}
                                             <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
                                     </Stat>
                                     <FormControl mt={4}>
-                                        <FormLabel htmlFor="premium-amount" color="gray.600">You pay</FormLabel>
+                                        <FormLabel htmlFor="premium-amount" color="white">You pay</FormLabel>
                                         <Input
                                             id="premium-amount"
+                                            color="white"
                                             placeholder="Premium amount"
                                             defaultValue={investmentBalance ? ethers.utils.formatEther(investmentBalance) : "0.0"}
                                             onChange={handleInvestmentInput}
