@@ -182,27 +182,26 @@ const PolicyManager = () => {
         <Flex
             width="100vw"
             justifyContent="center"
-            p={4}
+            pt={10}
             overflow="auto"
             align="start"
-            height="auto"
-            mt={10}
+            height="100vh"
+            backgroundColor="#243b55"
         >
             {policy ? (
                 <Box
-                    borderWidth="1px"
                     borderRadius="lg"
                     overflow="hidden"
                     p={6}
                     width="80%"
                     maxWidth="1000px"
-                    bg="white"
+                    bg="#27405d"
                     boxShadow="lg"
                 >
                     <Flex justify="space-between" align="center">
-                        <Heading as="h1" size="xl">Policy Manager</Heading>
+                        <Heading as="h1" size="xl" color="white">Policy Manager</Heading>
                         <StatGroup>
-                            <Stat>
+                            <Stat color="white">
                                 <StatLabel>ID</StatLabel>
                                 <StatNumber>{policy.id}</StatNumber>
                             </Stat>
@@ -210,67 +209,67 @@ const PolicyManager = () => {
                     </Flex>
                     <Divider my={4}/>
                     <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel>Coverage Amount</StatLabel>
                             <StatNumber>{ethers.utils.formatEther(policy.coverageAmount)} <Icon as={FaEthereum}
                                                                                                 color="currentcolor"/></StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel>Initial Premium Fee</StatLabel>
                             <StatNumber>{ethers.utils.formatEther(policy.initialPremiumFee)} <Icon as={FaEthereum}
                                                                                                    color="currentcolor"/></StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel>Initial Coverage Percentage</StatLabel>
                             <StatNumber>{policy.initialCoveragePercentage}%</StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel>Premium Rate</StatLabel>
                             <StatNumber>{ethers.utils.formatEther(policy.premiumRate)} <Icon as={FaEthereum} ml={1}
                                                                                              color="currentcolor"/></StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel>Duration</StatLabel>
                             <StatNumber>{policy.duration} days</StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel>Penalty Rate</StatLabel>
                             <StatNumber>{policy.penaltyRate}%</StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel>Months Grace Period</StatLabel>
                             <StatNumber>{policy.monthsGracePeriod}</StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             {gracePeriodExceeded ? (
                                 <StatLabel fontWeight="bold"
                                            color="red">Premium with Penalty</StatLabel>
                             ) : (<StatLabel
-                                    color="gray.400">Calculated Premium</StatLabel>
+                                    color="white">Calculated Premium</StatLabel>
                             )}
                             <StatNumber>{calculatedPremium ? ethers.utils.formatEther(calculatedPremium) : '0.0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel> Premiums Paid </StatLabel>
                             <StatNumber>{premiumsPaid ? ethers.utils.formatEther(premiumsPaid) : '0.0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel> Last Paid Time </StatLabel>
                             <StatNumber>{lastPaidTime ? convertEpochToReadableDate(lastPaidTime) : '0.0'}</StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel> Maximum Claimable Coverage </StatLabel>
                             <StatNumber>{totalCoverage ? ethers.utils.formatEther(totalCoverage) : '0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel> Amount in Coverage Fund </StatLabel>
                             <StatNumber>{amountCoverage ? ethers.utils.formatEther(amountCoverage) : '0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>
                         </Stat>
-                        <Stat>
+                        <Stat color="white">
                             <StatLabel> Amount in Investment Fund </StatLabel>
                             <StatNumber>{amountInvestment ? ethers.utils.formatEther(amountInvestment) : '0'}<Icon
                                 as={FaEthereum} color="currentcolor"/></StatNumber>

@@ -119,7 +119,7 @@ const PolicyCreators: React.FC = () => {
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
                         {policies.map((policy) => (
                             <>
-                                <Card key={policy.id} backgroundColor="#27405d" borderColor="#00B3A4" borderWidth="2px">
+                                <Card key={policy.id} backgroundColor="#27405d">
                                     <CardHeader>
                                         <Heading color="white" size='md'>Policy ID: {policy.id.toString()}</Heading>
                                     </CardHeader>

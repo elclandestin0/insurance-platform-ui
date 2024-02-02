@@ -48,15 +48,15 @@ const PolicyOwners: React.FC = ({policy}) => {
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
                         {policies.map((policy) => (
                             <>
-                                <Card key={policy.id}>
+                                <Card key={policy.id} backgroundColor="#27405d">
                                     <CardHeader>
-                                        <Heading size='md'>Policy ID: {policy.id.toString()}</Heading>
+                                        <Heading color="white" size='md'>Policy ID: {policy.id.toString()}</Heading>
                                     </CardHeader>
                                     <CardBody>
-                                        <Text>View policy details.</Text>
+                                        <Text color="white">View policy details.</Text>
                                     </CardBody>
                                     <CardFooter>
-                                        <Button onClick={() => handlePolicyClick(policy)}>View details</Button>
+                                        <Button colorScheme="pink" onClick={() => handlePolicyClick(policy)}>View details</Button>
                                     </CardFooter>
                                 </Card>
                             </>

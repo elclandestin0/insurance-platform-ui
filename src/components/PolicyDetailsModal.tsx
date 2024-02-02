@@ -70,8 +70,8 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
             <ModalOverlay/>
-            <ModalContent borderRadius="xl" borderColor="teal"  backgroundColor="#27405d" p={4}>
-                <ModalHeader color="black" fontSize="lg" fontWeight="bold" textAlign="center"
+            <ModalContent borderRadius="xl" backgroundColor="#27405d" p={4}>
+                <ModalHeader color="white" fontSize="lg" fontWeight="bold" textAlign="center"
                              borderTopRadius="10px">
                     Policy Details
                 </ModalHeader>
@@ -80,37 +80,37 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
                     {selectedPolicy && (
                         <Box>
                             <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
-                                <Stat>
+                                <Stat color="white">
                                     <StatLabel>Coverage Amount</StatLabel>
                                     <StatNumber>{ethers.utils.formatEther(selectedPolicy.coverageAmount)} <Icon
                                         as={FaEthereum} color="currentcolor"/></StatNumber>
                                 </Stat>
-                                <Stat>
+                                <Stat color="white">
                                     <StatLabel>Initial Premium Fee</StatLabel>
                                     <StatNumber>{ethers.utils.formatEther(selectedPolicy.initialPremiumFee)} <Icon
                                         as={FaEthereum}
                                         color="currentcolor"/></StatNumber>
                                 </Stat>
-                                <Stat>
+                                <Stat color="white">
                                     <StatLabel>Initial Coverage Percentage</StatLabel>
                                     <StatNumber>{selectedPolicy.initialCoveragePercentage}%</StatNumber>
                                 </Stat>
-                                <Stat>
+                                <Stat color="white">
                                     <StatLabel>Premium Rate</StatLabel>
                                     <StatNumber>{ethers.utils.formatEther(selectedPolicy.premiumRate)} <Icon
                                         as={FaEthereum}
                                         ml={1}
                                         color="currentcolor"/></StatNumber>
                                 </Stat>
-                                <Stat>
+                                <Stat color="white">
                                     <StatLabel>Duration</StatLabel>
                                     <StatNumber>{selectedPolicy.duration} days</StatNumber>
                                 </Stat>
-                                <Stat>
+                                <Stat color="white">
                                     <StatLabel>Penalty Rate</StatLabel>
                                     <StatNumber>{selectedPolicy.penaltyRate}%</StatNumber>
                                 </Stat>
-                                <Stat>
+                                <Stat color="white">
                                     <StatLabel>Months Grace Period</StatLabel>
                                     <StatNumber>{selectedPolicy.monthsGracePeriod}</StatNumber>
                                 </Stat>

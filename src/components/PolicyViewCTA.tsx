@@ -18,9 +18,7 @@ const PolicyViewCTA = ({isOwner, initialPremium, policyId, onPayPremium}) => {
 
     return (
         <Button
-            colorScheme={isOwner ? 'blue' : 'purple'}
-            backgroundColor={buttonBgColor}
-            _hover={{bg: buttonHoverColor}}
+            colorScheme="pink"
             p={4}
             onClick={handleButtonClick}
         >
