@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Grid, Stat, StatLabel, StatNumber, Icon, Box, Flex} from '@chakra-ui/react';
+import {Grid, Stat, StatLabel, StatNumber, Icon, Box, Flex, Heading} from '@chakra-ui/react';
 import {FaEthereum} from 'react-icons/fa';
 import {BigNumber, ethers} from "ethers";
 import usePolicyContract from '@/hooks/usePolicyContract';
@@ -136,6 +136,9 @@ const PolicySettings: React.FC = () => {
     return (
         <Flex className={styles.subscribersContainer} height="100vh">
             <Box p={5} w="full">
+                <Heading as="h1" size="xl" mb={10}>
+                    Policy Management Console
+                </Heading>
                 <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>
                     <Stat>
                         <StatLabel>Total Subscribers</StatLabel>

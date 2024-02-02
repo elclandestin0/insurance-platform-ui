@@ -29,16 +29,16 @@ const PoolsTable = ({investmentBalance, policyId, aTokenBalance}) => {
                 </Thead>
                 <Tbody>
                     <React.Fragment key={0}>
-                        <Tr key={0} cursor="pointer" border="1px"
-                            borderColor="pink" backgroundColor="white">
-                            <Td color="black" fontWeight="bold"
+                        <Tr key={0} cursor="pointer" border="2px"
+                            borderColor="teal" backgroundColor="#27405d">
+                            <Td color="white" fontWeight="bold"
                                 isNumeric>
                                 <DeFiStakingModal investmentBalance={investmentBalance} policyId={policyId}/>
                             </Td>
-                            <Td color="black" fontWeight="bold">Aave</Td>
-                            <Td color="black" fontWeight="bold">WETH</Td>
-                            <Td color="black" fontWeight="bold">{ethers.utils.formatEther(aTokenBalance)}</Td>
-                            <Td color="black" fontWeight="bold"
+                            <Td color="white" fontWeight="bold">Aave</Td>
+                            <Td color="white" fontWeight="bold">WETH</Td>
+                            <Td color="white" fontWeight="bold">{ethers.utils.formatEther(aTokenBalance)}</Td>
+                            <Td color="white" fontWeight="bold"
                                 isNumeric>
                                 <DeFiWithdrawModal investmentBalance={investmentBalance} policyId={policyId}/>
                             </Td>

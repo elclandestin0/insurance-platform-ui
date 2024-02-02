@@ -119,22 +119,22 @@ const PolicyCreators: React.FC = () => {
                     <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
                         {policies.map((policy) => (
                             <>
-                                <Card key={policy.id}>
+                                <Card key={policy.id} backgroundColor="#27405d" borderColor="#00B3A4" borderWidth="2px">
                                     <CardHeader>
-                                        <Heading size='md'>Policy ID: {policy.id.toString()}</Heading>
+                                        <Heading color="white" size='md'>Policy ID: {policy.id.toString()}</Heading>
                                     </CardHeader>
                                     <CardBody>
-                                        <Text>View policy details.</Text>
+                                        <Text color="white" >View policy details.</Text>
                                     </CardBody>
                                     <CardFooter>
                                         <Stack direction="column" spacing={5}>
                                             {
                                                 ethers.utils.getAddress(account) == policies[0].creator ?
-                                                    (<Button variant="outline" colorScheme="teal"
+                                                    (<Button colorScheme="pink"
                                                              onClick={() => handleButtonClick(policy.id)}>Manage
                                                         settings</Button>) : (<></>)
                                             }
-                                            <Button variant="ghost" onClick={() => handlePolicyClick(policy)}>View
+                                            <Button color="white" variant="ghost" onClick={() => handlePolicyClick(policy)}>View
                                                 details</Button>
                                         </Stack>
                                     </CardFooter>

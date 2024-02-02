@@ -70,7 +70,7 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
             <ModalOverlay/>
-            <ModalContent borderRadius="xl" backgroundColor="white" p={4}>
+            <ModalContent borderRadius="xl" borderColor="teal"  backgroundColor="#27405d" p={4}>
                 <ModalHeader color="black" fontSize="lg" fontWeight="bold" textAlign="center"
                              borderTopRadius="10px">
                     Policy Details
