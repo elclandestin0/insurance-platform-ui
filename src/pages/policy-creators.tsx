@@ -3,7 +3,6 @@ import {
     Box,
     Flex,
     Text,
-    SimpleGrid,
     Button,
     Modal,
     ModalOverlay,
@@ -12,14 +11,23 @@ import {
     ModalCloseButton,
     ModalBody,
     ModalFooter,
-    Input,
     Stat,
     Stack,
     StatNumber,
     Card,
     CardHeader,
     Heading,
-    CardBody, CardFooter, useDisclosure
+    CardBody,
+    CardFooter,
+    useDisclosure,
+    Grid,
+    Icon,
+    FormControl,
+    NumberInput,
+    NumberInputField,
+    FormLabel,
+    Input,
+    StatLabel
 } from '@chakra-ui/react';
 import styles from "@/pages/page.module.css";
 import {useContracts} from '@/hooks/useContracts';
@@ -116,7 +124,8 @@ const PolicyCreators: React.FC = () => {
               p={4}>
             <Box p={5}>
                 {policies.length > 0 ? (
-                    <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
+                    <Grid templateColumns="repeat(auto-fill)" gap={5} justifyContent="center"
+                          px={5}>
                         {policies.map((policy) => (
                             <>
                                 <Card key={policy.id} backgroundColor="#27405d">
@@ -124,24 +133,25 @@ const PolicyCreators: React.FC = () => {
                                         <Heading color="white" size='md'>Policy ID: {policy.id.toString()}</Heading>
                                     </CardHeader>
                                     <CardBody>
-                                        <Text color="white" >View policy details.</Text>
+                                        <Text color="white">View policy details.</Text>
                                     </CardBody>
                                     <CardFooter>
                                         <Stack direction="column" spacing={5}>
                                             {
                                                 ethers.utils.getAddress(account) == policies[0].creator ?
-                                                    (<Button colorScheme="pink"
+                                                    (<Button colorScheme="teal"
                                                              onClick={() => handleButtonClick(policy.id)}>Manage
                                                         settings</Button>) : (<></>)
                                             }
-                                            <Button color="white" variant="ghost" onClick={() => handlePolicyClick(policy)}>View
+                                            <Button color="white" variant="outline"
+                                                    onClick={() => handlePolicyClick(policy)}>View
                                                 details</Button>
                                         </Stack>
                                     </CardFooter>
                                 </Card>
                             </>
                         ))}
-                    </SimpleGrid>
+                    </Grid>
                 ) : (
                     <Stat mt={4}>
                         <StatNumber> 0 policies found </StatNumber>
@@ -149,40 +159,74 @@ const PolicyCreators: React.FC = () => {
                 )}
                 <Flex mt={5} justifyContent="center">
                     <Button onClick={openModal} colorScheme="pink" size="md">Create new policy</Button>
-                </Flex> </Box>
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                </Flex>
+            </Box>
+            <Modal size="xl" isOpen={isModalOpen} onClose={closeModal} width="400px">
                 <ModalOverlay/>
-                <ModalContent>
-                    <ModalHeader>Create New Policy</ModalHeader>
-                    <ModalCloseButton/>
+                <ModalContent borderRadius="xl" backgroundColor="#27405d" p={4}>
+                    <ModalHeader color="white" fontSize="lg" fontWeight="bold" textAlign="center"
+                                 borderTopRadius="10px">Create New Policy</ModalHeader>
+                    <ModalCloseButton color="white"/>
                     <ModalBody>
                         <form onSubmit={handleSubmit}>
-                            <Input mt={4} placeholder="Coverage Amount" value={coverageAmount}
-                                   onChange={(e) => setCoverageAmount(e.target.value)}/>
-                            <Input mt={4} placeholder="Initial Premium Fee" value={initialPremiumFee}
-                                   onChange={(e) => setInitialPremiumFee(e.target.value)}/>
-                            <Input mt={4} placeholder="Initial Coverage Percentage" value={initialCoveragePercentage}
-                                   onChange={(e) => setInitialCoveragePercentage(e.target.value)}/>
-                            <Input mt={4} placeholder="Premium Rate" value={premiumRate}
-                                   onChange={(e) => setPremiumRate(e.target.value)}/>
-                            <Input mt={4} placeholder="Duration" value={duration}
-                                   onChange={(e) => setDuration(e.target.value)}/>
-                            <Input mt={4} placeholder="Penalty Rate" value={penaltyRate}
-                                   onChange={(e) => setPenaltyRate(e.target.value)}/>
-                            <Input mt={4} placeholder="Months Grace Period" value={monthsGracePeriod}
-                                   onChange={(e) => setMonthsGracePeriod(e.target.value)}/>
-                            <Input mt={4} placeholder="Investment Percentage" value={investmentPercentage}
-                                   onChange={(e) => setInvestmentPercentage(e.target.value)}/>
-                            <Input mt={4} placeholder="Coverage Percentage" value={coveragePerentage}
-                                   onChange={(e) => setCoveragePercentage(e.target.value)}/>
-                            <Button mt={4} type="submit">
-                                Create Policy
-                            </Button>
+                            <Grid columns={2} spacing={5}
+                                  templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>
+                                <Stat>
+                                    <StatLabel color="white"> Coverage amount</StatLabel>
+                                    <Input mt={4} color="white" value={coverageAmount}
+                                           onChange={(e) => setCoverageAmount(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Initial Premium Fee </StatLabel>
+                                    <Input mt={4} color="white"
+                                           value={initialPremiumFee}
+                                           onChange={(e) => setInitialPremiumFee(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Initial Coverage Percentage</StatLabel>
+                                    <Input mt={4} color="white"
+                                           value={initialCoveragePercentage}
+                                           onChange={(e) => setInitialCoveragePercentage(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Premium Rate </StatLabel>
+                                    <Input mt={4} color="white" value={premiumRate}
+                                           onChange={(e) => setPremiumRate(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Duration</StatLabel>
+                                    <Input mt={4} color="white" value={duration}
+                                           onChange={(e) => setDuration(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Penalty Rate</StatLabel>
+                                    <Input mt={4} color="white" value={penaltyRate}
+                                           onChange={(e) => setPenaltyRate(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Months Grace Period</StatLabel>
+                                    <Input mt={4} color="white"
+                                           value={monthsGracePeriod}
+                                           onChange={(e) => setMonthsGracePeriod(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Investment Percentage</StatLabel>
+                                    <Input mt={4} color="white"
+                                           value={investmentPercentage}
+                                           onChange={(e) => setInvestmentPercentage(e.target.value)}/>
+                                </Stat>
+                                <Stat>
+                                    <StatLabel color="white"> Coverage Percentage</StatLabel>
+                                    <Input mt={4} color="white"
+                                           value={coveragePerentage}
+                                           onChange={(e) => setCoveragePercentage(e.target.value)}/>
+                                </Stat>
+                            </Grid>
                         </form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={closeModal}>
-                            Close
+                        <Button colorScheme="pink" type="submit">
+                            Create Policy
                         </Button>
                     </ModalFooter>
                 </ModalContent>

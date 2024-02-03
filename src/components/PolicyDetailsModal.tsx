@@ -75,7 +75,7 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
                              borderTopRadius="10px">
                     Policy Details
                 </ModalHeader>
-                <ModalCloseButton color="black"/>
+                <ModalCloseButton color="white"/>
                 <ModalBody p={6}>
                     {selectedPolicy && (
                         <Box>

@@ -234,7 +234,7 @@ const PolicyManager = () => {
                         </Stat>
                         <Stat color="white">
                             <StatLabel>Penalty Rate</StatLabel>
-                            <StatNumber>{policy.penaltyRate}%</StatNumber>
+                            <StatNumber color="red">{policy.penaltyRate}%</StatNumber>
                         </Stat>
                         <Stat color="white">
                             <StatLabel>Months Grace Period</StatLabel>

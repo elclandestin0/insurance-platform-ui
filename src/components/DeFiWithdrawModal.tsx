@@ -71,7 +71,7 @@ const DeFiWithdrawModal = ({investmentBalance, policyId}) => {
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay/>
                 <ModalContent borderRadius="xl" backgroundColor="#27405d" p={4}>
-                    <ModalHeader color="gray.700" fontSize="lg">
+                    <ModalHeader color="white" fontSize="lg">
                         <Flex direction="row" justify="space-between" align="center">
                             <Box>
                                 <Flex direction="row" align="center">
@@ -120,9 +120,6 @@ const DeFiWithdrawModal = ({investmentBalance, policyId}) => {
                         {
                             activeTab == "withdraw" && (
                                 <>
-                                    <Button variant="ghost" colorScheme="blue" mr={3} onClick={onClose}>
-                                        Close
-                                    </Button>
                                     <Button
                                         colorScheme="pink"
                                         onClick={handleWithdrawRewards}

@@ -170,7 +170,7 @@ const PolicySettings: React.FC = () => {
                                   availableRewardsPerSubscriber={availableRewardsPerSubscriber}/>
             )}
             <Box flex="1" w="full" mt={4}> {/* This Box will take up the remaining space */}
-                <Grid mb={4} templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>
+                <Grid mb={4} p={5} templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>
                     <Stat>
                         <StatLabel>Total Investment Balance</StatLabel>
                         <StatNumber>{ethers.utils.formatEther(investmentBalance) || 0} <Icon

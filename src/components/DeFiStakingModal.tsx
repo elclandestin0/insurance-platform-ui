@@ -84,7 +84,7 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
                                     </Text>
                                 </Flex>
                             </Box>
-                            <ModalCloseButton position="absolute" right="4" top="4"/>
+                            <ModalCloseButton position="absolute" right="4" top="4" color="white"/>
                         </Flex>
                     </ModalHeader>
                     <ModalBody>
@@ -118,9 +118,6 @@ const DeFiStakingModal = ({investmentBalance, policyId}) => {
                         {
                             activeTab == "pay" && (
                                 <>
-                                    <Button variant="ghost" colorScheme="blue" mr={3} onClick={onClose}>
-                                        Close
-                                    </Button>
                                     <Button
                                         colorScheme="pink"
                                         onClick={() => handleSupplyToAavePool(policyId, investmentAmount)}

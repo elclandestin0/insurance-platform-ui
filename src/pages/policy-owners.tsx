@@ -45,7 +45,7 @@ const PolicyOwners: React.FC = ({policy}) => {
               p={4}>
             <Box p={5}>
                 {policies.length > 0 ? (
-                    <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5}>
+                    <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5} placeItems="center">
                         {policies.map((policy) => (
                             <>
                                 <Card key={policy.id} backgroundColor="#27405d">
