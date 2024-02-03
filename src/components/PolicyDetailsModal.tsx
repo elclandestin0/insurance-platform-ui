@@ -80,7 +80,7 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
                     {selectedPolicy && (
                         <Box>
                             <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
-                                <Stat color="white">
+                                <Stat color="green.300">
                                     <StatLabel>Coverage Amount</StatLabel>
                                     <StatNumber>{ethers.utils.formatEther(selectedPolicy.coverageAmount)} <Icon
                                         as={FaEthereum} color="currentcolor"/></StatNumber>
@@ -106,11 +106,11 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
                                     <StatLabel>Duration</StatLabel>
                                     <StatNumber>{selectedPolicy.duration} days</StatNumber>
                                 </Stat>
-                                <Stat color="white">
+                                <Stat color="red.300">
                                     <StatLabel>Penalty Rate</StatLabel>
                                     <StatNumber>{selectedPolicy.penaltyRate}%</StatNumber>
                                 </Stat>
-                                <Stat color="white">
+                                <Stat color="yellow.300">
                                     <StatLabel>Months Grace Period</StatLabel>
                                     <StatNumber>{selectedPolicy.monthsGracePeriod}</StatNumber>
                                 </Stat>

@@ -34,25 +34,25 @@ import {InfoOutlineIcon} from '@chakra-ui/icons';
 import {FaLock} from "react-icons/fa";
 import usePolicyContract from "@/hooks/usePolicyContract";
 
-const PayPremiumModal = ({
-                             calculatedPremium,
-                             potentialCoverage,
-                             premiumAmountToSend,
-                             handlePremiumInput,
-                             handlePayPremium,
-                             policyId,
-                             bonusCoverage,
-                             potentiallyCovered,
-                             covered,
-                             premiumCoverage,
-                             premiumInvestment,
-                             policyCoverageAmount,
-                             investmentPercentage,
-                             coveragePercentage,
-                             totalCoverage,
-                             handleClaim,
-                             claimableRewards
-                         }) => {
+const ManagePremiumModal = ({
+                                calculatedPremium,
+                                potentialCoverage,
+                                premiumAmountToSend,
+                                handlePremiumInput,
+                                handlePayPremium,
+                                policyId,
+                                bonusCoverage,
+                                potentiallyCovered,
+                                covered,
+                                premiumCoverage,
+                                premiumInvestment,
+                                policyCoverageAmount,
+                                investmentPercentage,
+                                coveragePercentage,
+                                totalCoverage,
+                                handleClaim,
+                                claimableRewards
+                            }) => {
 
     const {payCustomPremium, withdrawRewardsFromPolicy} = usePolicyContract();
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -103,7 +103,8 @@ const PayPremiumModal = ({
 
     return (
         <>
-            <Button onClick={onOpen} colorScheme="pink" size="md">Manage</Button>
+            <Button onClick={onOpen} colorScheme="pink" size="lg" width="full" borderRadius="md"
+                    shadow="md">Manage Your Policy</Button>
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay/>
                 <ModalContent borderRadius="xl" backgroundColor="#27405d" p={4}>
@@ -280,7 +281,8 @@ const PayPremiumModal = ({
                                     />
                                 </FormControl>
                                 <FormControl mt={4}>
-                                    <FormLabel htmlFor="investment-percentage" color="white">Investment Fund Percentage</FormLabel>
+                                    <FormLabel htmlFor="investment-percentage" color="white">Investment Fund
+                                        Percentage</FormLabel>
                                     <NumberInput
                                         id="investment-percentage"
                                         color="white"
@@ -435,4 +437,4 @@ const PayPremiumModal = ({
     )
 };
 
-export default PayPremiumModal;
+export default ManagePremiumModal;
