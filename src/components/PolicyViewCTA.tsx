@@ -18,13 +18,15 @@ const PolicyViewCTA = ({isOwner, initialPremium, policyId, onPayPremium}) => {
 
     return (
         <Button
+            width="100%"
+            size="xl"
             colorScheme="pink"
             p={4}
             onClick={handleButtonClick}
         >
             <Flex direction="row" align="center" justify="center" width="100%">
                 {isOwner ? (
-                    <Text>Manage Your Policy</Text>
+                    <Text>Access Policy Manager</Text>
                 ) : (
                     <>
                         <Text>Subscribe</Text>

@@ -45,6 +45,8 @@ const usePolicyContract = () => {
                         duration: Number(policy.duration),
                         penaltyRate: Number(policy.penaltyRate),
                         monthsGracePeriod: Number(policy.monthsGracePeriod),
+                        investmentFundPercentage: Number(policy.investmentFundPercentage),
+                        coverageFundPercentage: Number(policy.coverageFundPercentage),
                         creator: policy.creator
                     };
 

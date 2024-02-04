@@ -58,8 +58,8 @@ const ManagePremiumModal = ({
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [activeTab, setActiveTab] = useState('pay');
     const [isHovering, setIsHovering] = useState(false);
-    const [investmentPercentagePremium, setInvestmentPercentagePremium] = useState(50); // Default to 50%
-    const [coveragePercentagePremium, setCoveragePercentagePremium] = useState(50);// Default to 50%
+    const [investmentPercentagePremium, setInvestmentPercentagePremium] = useState(100); // Default to 50%
+    const [coveragePercentagePremium, setCoveragePercentagePremium] = useState(0);// Default to 50%
     const [readableCoverageAmount, setReadableCoverageAmount] = useState<BigNumber>(BigNumber.from(0));
     const [readableInvestmentAmount, setReadableInvestmentAmount] = useState<BigNumber>(BigNumber.from(0));
     const [customPremiumAmountToSend, setCustomPremiumAmountToSend] = useState<BigNumber>(BigNumber.from(0));
@@ -170,7 +170,7 @@ const ManagePremiumModal = ({
 
                                 </Flex>
                             </Box>
-                            <ModalCloseButton position="absolute" right="4" top="4"/>
+                            <ModalCloseButton color="white" position="absolute" right="4" top="4"/>
                         </Flex>
                     </ModalHeader>
                     <ModalBody>
@@ -219,14 +219,14 @@ const ManagePremiumModal = ({
                                     </FormControl>
                                     <FormControl mt={4}>
                                         {potentiallyCovered ? (
-                                            <FormLabel htmlFor="coverage-amount" color="green">You will be fully
+                                            <FormLabel htmlFor="coverage-amount" color="green.300">You will be fully
                                                 covered</FormLabel>
                                         ) : (
                                             <FormLabel htmlFor="coverage-amount" color="white">You will receive in
                                                 coverage</FormLabel>
                                         )}
                                         <Stat>
-                                            <StatNumber fontSize="xl" color="white">
+                                            <StatNumber fontSize="xl" color={potentiallyCovered ? "green.300" :"white"}>
                                                 {ethers.utils.parseEther(potentialCoverage).gt(policyCoverageAmount) ? ethers.utils.formatEther(policyCoverageAmount) : potentialCoverage}
                                                 <Icon as={FaEthereum} color="white"/>
                                             </StatNumber>
@@ -281,8 +281,7 @@ const ManagePremiumModal = ({
                                     />
                                 </FormControl>
                                 <FormControl mt={4}>
-                                    <FormLabel htmlFor="investment-percentage" color="white">Investment Fund
-                                        Percentage</FormLabel>
+                                    <FormLabel htmlFor="investment-percentage" color="white">Percentage to Investment Fund</FormLabel>
                                     <NumberInput
                                         id="investment-percentage"
                                         color="white"
@@ -300,8 +299,9 @@ const ManagePremiumModal = ({
                                     </NumberInput>
                                 </FormControl>
                                 <FormControl mt={4}>
-                                    <FormLabel htmlFor="coverage-percentage" color="white">Coverage Fund
-                                        Percentage</FormLabel>
+                                    <FormLabel htmlFor="coverage-percentage" color="white">
+                                        Percentage to Coverage Fund
+                                    </FormLabel>
                                     <NumberInput
                                         color="white"
                                         focusBorderColor="pink.400"
@@ -320,26 +320,26 @@ const ManagePremiumModal = ({
                                 </FormControl>
                                 <FormControl mt={4}>
                                     <FormLabel htmlFor="premium-investment" color="white">Amount to investment fund
-                                        <Text fontSize="sm" color="gray.500">
+                                        <Text fontSize="sm" color="gray.400">
                                             {ethers.utils.formatUnits(investmentPercentagePremium, 0)}% of your premium
                                         </Text>
                                     </FormLabel>
                                     <Stat>
                                         <StatNumber fontSize="xl" color="white">
-                                            {ethers.utils.formatEther(readableInvestmentAmount) ? ethers.utils.formatEther(readableInvestmentAmount) : '0.0'}
+                                            {ethers.utils.formatEther(readableInvestmentAmount) ? parseFloat(ethers.utils.formatEther(readableInvestmentAmount)).toFixed(2) : '0.0'}
                                             <Icon as={FaEthereum} color="white"/>
                                         </StatNumber>
                                     </Stat>
                                 </FormControl>
                                 <FormControl mt={4}>
                                     <FormLabel htmlFor="premium-coverage" color="white">Amount to coverage fund
-                                        <Text fontSize="sm" color="gray.500">
+                                        <Text fontSize="sm" color="gray.400">
                                             {ethers.utils.formatUnits(coveragePercentagePremium, 0)}% of your premium
                                         </Text>
                                     </FormLabel>
                                     <Stat>
                                         <StatNumber fontSize="xl" color="white">
-                                            {ethers.utils.formatEther(readableCoverageAmount) ? ethers.utils.formatEther(readableCoverageAmount) : '0.0'}
+                                            {ethers.utils.formatEther(readableCoverageAmount) ? parseFloat(ethers.utils.formatEther(readableCoverageAmount)).toFixed(2) : '0.0'}
                                             <Icon as={FaEthereum} color="white"/>
                                         </StatNumber>
                                     </Stat>
@@ -366,7 +366,7 @@ const ManagePremiumModal = ({
                                     </FormLabel>
                                     <Stat>
                                         <StatNumber fontSize="xl" color="white">
-                                            {ethers.utils.formatEther(claimableRewards) ? ethers.utils.formatEther(claimableRewards) : '0.0'}
+                                            {ethers.utils.formatEther(claimableRewards) ? parseFloat(ethers.utils.formatEther(claimableRewards)).toFixed(2) : '0.0'}
                                             <Icon as={FaEthereum} color="white"/>
                                         </StatNumber>
                                     </Stat>

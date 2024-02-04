@@ -40,7 +40,7 @@ const PoolsTable = ({investmentBalance, policyId, aTokenBalance}) => {
                             <Td color="white" fontWeight="bold">{ethers.utils.formatEther(aTokenBalance)}</Td>
                             <Td color="white" fontWeight="bold"
                                 isNumeric>
-                                <DeFiWithdrawModal investmentBalance={investmentBalance} policyId={policyId}/>
+                                <DeFiWithdrawModal investmentBalance={investmentBalance} policyId={policyId} totalAccrued={aTokenBalance}/>
                             </Td>
                         </Tr>
                     </React.Fragment>

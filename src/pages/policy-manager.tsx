@@ -208,7 +208,7 @@ const PolicyManager = () => {
                             </StatGroup>
                         </Flex>
                         <Divider my={4}/>
-                        <Heading as="h2" size="md" color="gray.300" mt={6} mb={4} fontWeight="normal">
+                        <Heading size="md" color="gray.300" mb={6} fontWeight="normal">
                             Policy Details
                         </Heading>
                         <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
@@ -243,10 +243,19 @@ const PolicyManager = () => {
                                 <StatLabel>Duration</StatLabel>
                                 <StatNumber>{policy.duration} days</StatNumber>
                             </Stat>
-
+                            <Stat color="gray.300">
+                                <StatLabel> Percentage to Coverage Fund </StatLabel>
+                                <StatNumber>{policy.coverageFundPercentage ? policy.coverageFundPercentage : '0'}%
+                                    <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
+                            </Stat>
+                            <Stat color="gray.300">
+                                <StatLabel> Percentage to Investment Fund </StatLabel>
+                                <StatNumber>{policy.investmentFundPercentage ? policy.investmentFundPercentage : '0'}%
+                                    <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
+                            </Stat>
                         </Grid>
                         <Divider my={4}/>
-                        <Heading as="h2" size="md" color="gray.300" mt={6} mb={4} fontWeight="normal">
+                        <Heading size="md" color="gray.300" mb={6} fontWeight="normal">
                             Your Status
                         </Heading><Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
                         <Stat color="yellow.300">

@@ -24,6 +24,8 @@ interface Policy {
     coverageAmount: string;
     initialPremiumFee: string;
     initialCoveragePercentage: string;
+    coverageFundPercentage: number;
+    investmentFundPercentage: number;
     premiumRate: string;
     duration: number;
     penaltyRate: number;
@@ -68,7 +70,7 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
 
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+        <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
             <ModalOverlay/>
             <ModalContent borderRadius="xl" backgroundColor="#27405d" p={4}>
                 <ModalHeader color="white" fontSize="lg" fontWeight="bold" textAlign="center"
@@ -79,11 +81,19 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
                 <ModalBody p={6}>
                     {selectedPolicy && (
                         <Box>
-                            <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(3, 1fr)'}} gap={6}>
+                            <Grid templateColumns={{sm: '1fr', md: '1fr 1fr', lg: 'repeat(2, 1fr)'}} gap={6}>
                                 <Stat color="green.300">
                                     <StatLabel>Coverage Amount</StatLabel>
                                     <StatNumber>{ethers.utils.formatEther(selectedPolicy.coverageAmount)} <Icon
                                         as={FaEthereum} color="currentcolor"/></StatNumber>
+                                </Stat>
+                                <Stat color="red.300">
+                                    <StatLabel>Penalty Rate</StatLabel>
+                                    <StatNumber>{selectedPolicy.penaltyRate}%</StatNumber>
+                                </Stat>
+                                <Stat color="yellow.300">
+                                    <StatLabel>Months Grace Period</StatLabel>
+                                    <StatNumber>{selectedPolicy.monthsGracePeriod}</StatNumber>
                                 </Stat>
                                 <Stat color="white">
                                     <StatLabel>Initial Premium Fee</StatLabel>
@@ -106,18 +116,20 @@ const PolicyDetailsModal: React.FC<PolicyDetailsModalProps> = ({isOpen, onClose,
                                     <StatLabel>Duration</StatLabel>
                                     <StatNumber>{selectedPolicy.duration} days</StatNumber>
                                 </Stat>
-                                <Stat color="red.300">
-                                    <StatLabel>Penalty Rate</StatLabel>
-                                    <StatNumber>{selectedPolicy.penaltyRate}%</StatNumber>
+                                <Stat color="gray.300">
+                                    <StatLabel> Percentage to Coverage Fund </StatLabel>
+                                    <StatNumber>{selectedPolicy.coverageFundPercentage ? selectedPolicy.coverageFundPercentage : '0'}%
+                                        <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
                                 </Stat>
-                                <Stat color="yellow.300">
-                                    <StatLabel>Months Grace Period</StatLabel>
-                                    <StatNumber>{selectedPolicy.monthsGracePeriod}</StatNumber>
+                                <Stat color="gray.300">
+                                    <StatLabel> Percentage to Investment Fund </StatLabel>
+                                    <StatNumber>{selectedPolicy.investmentFundPercentage ? selectedPolicy.investmentFundPercentage : '0'}%
+                                        <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
                                 </Stat>
                             </Grid>
                             {
                                 !viewOnly &&
-                                <Flex justifyContent="flex-end" mt={4}>
+                                <Flex justifyContent="flex-end" mt={10}>
                                     <PolicyViewCTA
                                         isOwner={isOwner}
                                         initialPremium={selectedPolicy ? ethers.utils.formatEther(selectedPolicy.initialPremiumFee) : '0'}

@@ -21,11 +21,7 @@ import {
     CardFooter,
     useDisclosure,
     Grid,
-    Icon,
-    FormControl,
-    NumberInput,
-    NumberInputField,
-    FormLabel,
+    SimpleGrid,
     Input,
     StatLabel
 } from '@chakra-ui/react';
@@ -124,8 +120,7 @@ const PolicyCreators: React.FC = () => {
               p={4}>
             <Box p={5}>
                 {policies.length > 0 ? (
-                    <Grid templateColumns="repeat(auto-fill)" gap={5} justifyContent="center"
-                          px={5}>
+                    <SimpleGrid columns={{sm: 1, md: 2, lg: 3}} spacing={5} placeItems="center">
                         {policies.map((policy) => (
                             <>
                                 <Card key={policy.id} backgroundColor="#27405d">
@@ -151,7 +146,7 @@ const PolicyCreators: React.FC = () => {
                                 </Card>
                             </>
                         ))}
-                    </Grid>
+                    </SimpleGrid>
                 ) : (
                     <Stat mt={4}>
                         <StatNumber> 0 policies found </StatNumber>
@@ -225,7 +220,7 @@ const PolicyCreators: React.FC = () => {
                         </form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="pink" type="submit">
+                        <Button colorScheme="pink" type="submit" onClick={handleSubmit}>
                             Create Policy
                         </Button>
                     </ModalFooter>

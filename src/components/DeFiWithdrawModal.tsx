@@ -23,7 +23,7 @@ import {FaEthereum} from "react-icons/fa";
 import {wethAddress} from "@/contracts/addresses";
 
 
-const DeFiWithdrawModal = ({investmentBalance, policyId}) => {
+const DeFiWithdrawModal = ({investmentBalance, policyId, totalAccrued}) => {
     const [selectedPool, setSelectedPool] = useState('');
     const [amountToStake, setAmountToStake] = useState('');
     const {withdrawRewardsFromPool} = usePolicyContract();
@@ -67,7 +67,7 @@ const DeFiWithdrawModal = ({investmentBalance, policyId}) => {
 
     return (
         <>
-            <Button onClick={onOpen} colorScheme="pink" size="md"> Withdraw from Aave Pool </Button>
+            <Button onClick={onOpen} colorScheme="teal" size="md"> Withdraw from Aave Pool </Button>
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay/>
                 <ModalContent borderRadius="xl" backgroundColor="#27405d" p={4}>
@@ -80,7 +80,6 @@ const DeFiWithdrawModal = ({investmentBalance, policyId}) => {
                                         fontWeight={activeTab === 'pay' ? 'bold' : 'normal'}
                                         color={activeTab === 'pay' ? 'black' : 'gray.400'}
                                         cursor="pointer"
-                                        color="white"
                                     >
                                         Withdraw
                                     </Text>
@@ -94,12 +93,12 @@ const DeFiWithdrawModal = ({investmentBalance, policyId}) => {
                             activeTab == "withdraw" && (
                                 <>
                                     <Stat color="white"> 
-                                        <StatLabel>Investment fund</StatLabel>
-                                        <StatNumber> {investmentBalance.gt(BigNumber.from(0)) ? ethers.utils.formatUnits(investmentBalance) : "0.0"}
+                                        <StatLabel>Total rewards</StatLabel>
+                                        <StatNumber> {investmentBalance.gt(BigNumber.from(0)) ? parseFloat(ethers.utils.formatEther(totalAccrued)).toFixed(2) : "0.0"}
                                             <Icon as={FaEthereum} color="currentcolor"/></StatNumber>
                                     </Stat>
                                     <FormControl mt={4}>
-                                        <FormLabel htmlFor="premium-amount" color="white">You pay</FormLabel>
+                                        <FormLabel htmlFor="premium-amount" color="white">Withdrawal amount</FormLabel>
                                         <Input
                                             id="premium-amount"
                                             color="white"

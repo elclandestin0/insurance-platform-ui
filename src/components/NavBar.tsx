@@ -5,7 +5,7 @@ import UniDawg from '../../public/unidawg.png';
 
 const NavBar = () => {
     return (
-        <Flex bg="blue.800" color="white" justifyContent="space-between" alignItems="center" p="4">
+        <Flex bg="#27405d" color="white" justifyContent="space-between" alignItems="center" p="4">
             <Box fontSize="48px" fontWeight="bold">
             <img src="/unidawg.png" alt="Logo" style={{ width: '48px', height: '48px' }} />
             </Box>

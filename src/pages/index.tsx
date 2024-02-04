@@ -53,7 +53,7 @@ const Home: React.FC = () => {
         <Flex className={styles.main} height="100vh" alignItems="center" justifyContent="center" p={10}>
             <Grid templateColumns="repeat(1, 1fr)" gap={10}>
                 <Button
-                    colorScheme={'purple'}
+                    colorScheme={'pink'}
                     p={4}
                     onClick={() => {
                         router.push(`/policy-owners`);
@@ -63,13 +63,13 @@ const Home: React.FC = () => {
                 </Button>
                 <Button
                     variant="outline"
-                    colorScheme={'purple'}
+                    colorScheme={'pink'}
                     p={4}
                     onClick={() => {
                         router.push(`/policy-creators`);
                     }}
                 >
-                    <Text>View Portal</Text>
+                    <Text>View Creators' Portal</Text>
                 </Button>
             </Grid>
         </Flex>

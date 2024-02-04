@@ -7,10 +7,7 @@ import {
     Th,
     Td,
     Box,
-    Collapse,
-    Button,
-    Text,
-    Icon, Grid, Stat, StatLabel, StatNumber
+    Icon
 } from '@chakra-ui/react';
 import {FaEthereum} from 'react-icons/fa';
 import {BigNumber, ethers} from 'ethers';
@@ -70,78 +67,39 @@ const SubscribersTable: React.FC<SubscribersTableProps> = ({
                         <React.Fragment key={index}>
                             <Tr key={address} onClick={() => handleRowClick(index)} cursor="pointer" border="2px"
                                 borderColor="teal" backgroundColor="#27405d">
-                                <Td color="white" fontWeight="bold">Subscriber {index + 1}</Td>
-                                <Td color="white" fontWeight="bold">{address}</Td>
+                                <Td color="white" fontWeight="normal">Subscriber {index + 1}</Td>
+                                <Td color="white" fontWeight="normal">{address}</Td>
                                 <Td color="white"
-                                    fontWeight="bold">{ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)}
+                                    fontWeight="normal">{parseFloat(ethers.utils.formatEther(premiumsPerSubscriber[address] || 0)).toFixed(2)}
                                     <Icon
                                         as={FaEthereum}/></Td>
                                 <Td color="white"
-                                    fontWeight="bold">{convertEpochToReadableDate(timePerSubscriber[address])}</Td>
-                                <Td color="white"
-                                    fontWeight="bold">{ethers.utils.formatEther(coveragePerSubscriber[address] || 0)}
+                                    fontWeight="normal">{convertEpochToReadableDate(timePerSubscriber[address])}</Td>
+                                <Td color="green.300"
+                                    fontWeight="normal">{parseFloat(ethers.utils.formatEther(coveragePerSubscriber[address] || 0)).toFixed(2)}
                                     <Icon
                                         as={FaEthereum}/>
                                 </Td>
                                 <Td color="white"
-                                    fontWeight="bold"> {ethers.utils.formatEther(investmentFundedPerSubscriber[address])}
+                                    fontWeight="normal"> {parseFloat(ethers.utils.formatEther(investmentFundedPerSubscriber[address] || 0)).toFixed(2)}
                                     <Icon
                                         as={FaEthereum}/>
                                 </Td>
                                 <Td color="white"
-                                    fontWeight="bold"> {ethers.utils.formatEther((investmentFundedPerSubscriber[address].mul(ethers.utils.parseEther("100")).div(investmentBalance)))} %
+                                    fontWeight="normal"> {parseFloat(ethers.utils.formatEther((investmentFundedPerSubscriber[address].mul(ethers.utils.parseEther("100")).div(investmentBalance)))).toFixed(2)} %
                                 </Td>
                                 <Td color="white"
-                                    fontWeight="bold">{ethers.utils.formatEther(claimedPerSubscriber[address])} <Icon
-                                    as={FaEthereum}/>
+                                    fontWeight="normal">{parseFloat(ethers.utils.formatEther(claimedPerSubscriber[address] || 0)).toFixed(2)}
+                                    <Icon
+                                        as={FaEthereum}/>
                                 </Td>
                                 <Td color="white"
-                                    fontWeight="bold">{ethers.utils.formatEther(calculatedRewardsPerSubscriber[address])}
+                                    fontWeight="normal">{parseFloat(ethers.utils.formatEther(calculatedRewardsPerSubscriber[address] || 0)).toFixed(2)}
                                     <Icon as={FaEthereum}/>
                                 </Td>
                                 <Td color="white"
-                                    fontWeight="bold">{ethers.utils.formatEther(availableRewardsPerSubscriber[address])}
+                                    fontWeight="normal">{parseFloat(ethers.utils.formatEther(availableRewardsPerSubscriber[address] || 0)).toFixed(2)}
                                     <Icon as={FaEthereum}/>
-                                </Td>
-                            </Tr>
-                            <Tr>
-                                <Td colSpan={3}>
-                                    <Collapse in={selectedRow === index} animateOpacity>
-                                        <Box p={4} shadow="md" display={{base: "block", md: "none"}}>
-                                            <Box overflowX="scroll">
-                                                <Grid templateColumns="repeat(3, minmax(120px, 1fr))" gap={4}>
-                                                    <Stat>
-                                                        <StatLabel>Available rewards</StatLabel>
-                                                        <StatNumber>{ethers.utils.formatEther(availableRewardsPerSubscriber[address]) || 0}
-                                                            <Icon
-                                                                as={FaEthereum}/>
-                                                        </StatNumber>
-                                                    </Stat>
-                                                    <Stat>
-                                                        <StatLabel>Available rewards</StatLabel>
-                                                        <StatNumber>{ethers.utils.formatEther(availableRewardsPerSubscriber[address]) || 0}
-                                                            <Icon
-                                                                as={FaEthereum}/>
-                                                        </StatNumber>
-                                                    </Stat>
-                                                    <Stat>
-                                                        <StatLabel>Available rewards</StatLabel>
-                                                        <StatNumber>{ethers.utils.formatEther(availableRewardsPerSubscriber[address]) || 0}
-                                                            <Icon
-                                                                as={FaEthereum}/>
-                                                        </StatNumber>
-                                                    </Stat>
-                                                    <Stat>
-                                                        <StatLabel>Available rewards</StatLabel>
-                                                        <StatNumber>{ethers.utils.formatEther(availableRewardsPerSubscriber[address]) || 0}
-                                                            <Icon
-                                                                as={FaEthereum}/>
-                                                        </StatNumber>
-                                                    </Stat>
-                                                </Grid>
-                                            </Box>
-                                        </Box>
-                                    </Collapse>
                                 </Td>
                             </Tr>
                         </React.Fragment>
